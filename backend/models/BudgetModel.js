@@ -35,8 +35,3 @@ Budget.belongsTo(Category, {
 });
 
 export default Budget;
-
-(async () => {
-  await db.sequelize.sync();
-})();
-

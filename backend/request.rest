@@ -1,0 +1,74 @@
+//////////////////////// CRUD USER ////////////////////////////
+###
+GET http://localhost:5000/users
+
+###
+POST http://localhost:5000/users
+Content-Type: application/json
+
+{
+    "username": "junet",
+    "password": "12345"
+}
+
+###
+PATCH http://localhost:5000/users/ferdy
+Content-Type: application/json
+
+{
+    "password": "12345"
+}
+
+###
+DELETE http://localhost:5000/users/junet
+
+
+### Login
+POST http://localhost:5000/login
+Content-Type: application/json
+
+{
+    "username": "junet",
+    "password": "12345"
+}
+
+//////////////////////// CRUD WALLET ////////////////////////////
+
+###
+GET http://localhost:5000/wallets
+
+###
+POST http://localhost:5000/wallets
+Content-Type: application/json
+
+{
+    "name": "OVO",
+    "balance": 1500000,
+    "user_id": 1
+}
+
+###
+DELETE http://localhost:5000/wallets/junet/GOPAY
+
+
+###
+PATCH http://localhost:5000/wallets/junet/GOPAY
+Content-Type: application/json
+
+{
+    "balance": 75000000
+}
+
+//////////////////////// CRUD CATEGORY ////////////////////////////
+###
+GET http://localhost:5000/categories
+
+###
+POST http://localhost:5000/categories
+Content-Type: application/json
+
+{
+    "title": "Transportasi",
+    "description": "Budget untuk biaya bensin dan service motor",
+    "user_id": 1
+}

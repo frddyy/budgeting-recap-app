@@ -4,7 +4,7 @@ import Wallet from "./WalletModel.js";
 import Category from "./CategoryModel.js";
 
 const User = db.sequelize.define(
-  "Users",
+  "users",
   {
     username: {
       type: DataTypes.STRING(32),
@@ -43,7 +43,3 @@ User.hasMany(Wallet, {
 });
 
 export default User;
-
-(async () => {
-  await db.sequelize.sync();
-})();

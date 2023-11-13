@@ -23,6 +23,7 @@ const sequelize = new Sequelize(env.database, env.username, env.password, {
     acquire: env.pool.acquire,
     idle: env.pool.idle,
   },
+  logging: (msg) => console.log(`[Sequelize] ${msg}`),
 });
 
 const db = {
