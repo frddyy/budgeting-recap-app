@@ -6,6 +6,9 @@ import cors from "cors";
 import UserRoute from "./routes/UserRoute.js";
 import WalletRoute from "./routes/WalletRoute.js";
 import CategoryRoute from "./routes/CategoryRoute.js";
+import IncomeRoute from "./routes/IncomeRoute.js";
+import BudgetRoute from "./routes/BudgetRoute.js";
+import ExpenseRoute from "./routes/ExpenseRoute.js";
 
 // dotenv.config();
 const port = 5000;
@@ -18,6 +21,9 @@ app.use(express.json());
 app.use(UserRoute);
 app.use(WalletRoute);
 app.use(CategoryRoute);
+app.use(IncomeRoute);
+app.use(BudgetRoute);
+app.use(ExpenseRoute);
 // app.use(express.static('public'));
 
 // (async () => {

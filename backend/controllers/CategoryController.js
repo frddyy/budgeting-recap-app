@@ -59,63 +59,86 @@ export const getAllCategories = async (req, res) => {
 
 // Update a category
 export const updateCategory = async (req, res) => {
-  const categoryId = parseInt(req.params.id); // Assuming you provide the category ID in the URL
+  const { username, title } = req.params; // Assuming you provide the category ID in the URL
   const updatedCategoryData = req.body;
 
-  if (!updatedCategoryData.title) {
-    return res.status(400).json({ error: 'Title is required for a category' });
-  }
-
   try {
-    const existingCategory = await prisma.category.findUnique({
-      where: {
-        title: updatedCategoryData.title,
-      },
+    // Find the user by username
+    const user = await prisma.user.findUnique({
+      where: { username },
     });
 
-    if (existingCategory && existingCategory.id !== categoryId) {
-      return res.status(400).json({ error: 'Category with the same title already exists' });
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
     }
 
-    const category = await prisma.category.update({
+    // Find the category by user ID and category name
+    const category = await prisma.category.findFirst({
       where: {
-        id: categoryId,
+        user_id: user.id,
+        title: title,
       },
-      data: updatedCategoryData,
     });
 
-    res.status(200).json({ msg: 'Category updated successfully', category });
+     if (!category) {
+       return res.status(404).json({ error: "Category not found" });
+     }
+
+     const updatedCategory = await prisma.category.update({
+       where: {
+         id: category.id,
+         title: title,
+       },
+       data: updatedCategoryData,
+     });
+
+    res.status(200).json({ msg: "Category updated successfully", category: updatedCategory });
   } catch (error) {
     console.error('Error updating category:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: `Internal server error: ${error.message}` });
   }
 };
 
 // Delete a category
 export const deleteCategory = async (req, res) => {
-  const categoryId = parseInt(req.params.id); // Assuming you provide the category ID in the URL
+  const { username, title } = req.params; // Assuming you provide the category ID in the URL
 
   try {
-    const category = await prisma.category.findUnique({
+    // Find the user by username
+    const user = await prisma.user.findUnique({
+      where: { username },
+    });
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Find the category by user ID and category name
+    const category = await prisma.category.findFirst({
       where: {
-        id: categoryId,
+        user_id: user.id,
+        title: title,
       },
     });
 
     if (!category) {
-      return res.status(404).json({ error: 'Category not found' });
+      return res.status(404).json({ error: "Category not found" });
     }
 
+    // Delete the wallet
     await prisma.category.delete({
       where: {
-        id: categoryId,
+        id: category.id,
+        title: title,
       },
     });
 
-    res.status(204).json({ msg: 'Category deleted successfully' });
+    res.status(200).json({
+      msg: "Category deleted successfully",
+    });
   } catch (error) {
-    console.error('Error deleting category:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error("Error updating category:", error);
+    res.status(500).json({ error: `Internal server error: ${error.message}` });
   }
 };
 

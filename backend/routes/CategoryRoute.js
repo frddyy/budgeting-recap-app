@@ -15,7 +15,7 @@ router.post("/categories", createCategory);
 router.get("/categories", getAllCategories);
 
 // Update a category by username and title
-router.put("/categories/:username/:title", updateCategory);
+router.patch("/categories/:username/:title", updateCategory);
 
 // Delete a category by username and title
 router.delete("/categories/:username/:title", deleteCategory);
