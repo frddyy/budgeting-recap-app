@@ -36,7 +36,7 @@ model Income {
   title       String
   amount      Int
   description String?
-  date        DateTime?
+  date        DateTime? @db.Date
   wallet_id    Int
   wallet      Wallet @relation(fields: [wallet_id], references: [id])
 }
@@ -46,7 +46,7 @@ model Expense {
   title       String
   amount      Int
   description String?
-  date        DateTime?
+  date        DateTime? @db.Date
   wallet_id   Int
   wallet      Wallet @relation(fields: [wallet_id], references: [id])
   budget_id   Int?
@@ -66,7 +66,7 @@ model Budget {
   id         Int       @id @default(autoincrement())
   amount     Int
   amount_now Int
-  date       DateTime
+  date       DateTime? @db.Date
   category_id Int
   category   Category @relation(fields: [category_id], references: [id])
   expenses   Expense[]

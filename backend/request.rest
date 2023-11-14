@@ -35,14 +35,14 @@ Content-Type: application/json
 //////////////////////// CRUD WALLET ////////////////////////////
 
 ###
-GET http://localhost:5000/wallets
+GET http://localhost:5000/wallets/junet
 
 ###
 POST http://localhost:5000/wallets
 Content-Type: application/json
 
 {
-    "name": "OVO",
+    "name": "BCA",
     "balance": 1500000,
     "user_id": 1
 }
@@ -68,7 +68,95 @@ POST http://localhost:5000/categories
 Content-Type: application/json
 
 {
-    "title": "Transportasi",
-    "description": "Budget untuk biaya bensin dan service motor",
+    "title": "Hiburan",
+    "description": "Dugem boss",
     "user_id": 1
 }
+
+###
+PATCH http://localhost:5000/categories/junet/Transportasi
+Content-Type: application/json
+
+{
+    "description": "Budget untuk biaya bensin dan service motor sama mobil pajero"
+}
+
+###
+DELETE http://localhost:5000/categories/junet/Hiburan
+
+//////////////////////// CRUD INCOMES ////////////////////////////
+###
+GET  http://localhost:5000/incomes/junet
+
+###
+POST http://localhost:5000/incomes
+Content-Type: application/json
+
+{
+    "title": "Uang Bulanan",
+    "amount": 3000000,
+    "description": "Transferan dari ibu",
+    "date": "2023-11-14T09:30:00Z",
+    "wallet_id": 2
+}
+
+
+###
+GET  http://localhost:5000/incomes-period/junet?startDate=2023-11-14&endDate=2023-11-15
+
+
+###
+DELETE http://localhost:5000/incomes/junet/2
+
+//////////////////////// CRUD BUDGET ////////////////////////////
+###
+GET  http://localhost:5000/budgets/junet
+
+###
+POST http://localhost:5000/budgets
+Content-Type: application/json
+
+{
+    "amount": 999000,
+    "date": "2023-11-14T09:30:00Z",
+    "category_id": 1
+}
+
+###
+PATCH  http://localhost:5000/budgets/junet/2
+Content-Type: application/json
+
+{
+    "amount_now": 450000,
+}
+
+###
+DELETE http://localhost:5000/budgets/junet/3
+
+//////////////////////// CRUD EXPENSE ////////////////////////////
+###
+GET  http://localhost:5000/expenses/junet
+
+###
+POST http://localhost:5000/expenses
+Content-Type: application/json
+
+{
+    "title": "Marlboro",
+    "amount": 24000,
+    "description": "tadi beli rokok di warung",
+    "date": "2023-11-14T09:30:00Z",
+    "wallet_id": 1,
+    "budget_id": 1
+}
+
+###
+PATCH http://localhost:5000/expenses/junet/3
+Content-Type: application/json
+
+{
+    "amount": 35000
+}
+
+###
+DELETE  http://localhost:5000/expenses/junet/4

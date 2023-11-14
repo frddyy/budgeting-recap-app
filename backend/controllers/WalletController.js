@@ -39,7 +39,7 @@ export const createWallet = async (req, res) => {
     res.status(201).json({ msg: 'Wallet created successfully' });
   } catch (error) {
     console.error('Error creating wallet:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: `Internal server error: ${error.message}` });
   }
 };
 
@@ -61,7 +61,7 @@ export const getWalletByUsername = async (req, res) => {
     }
   } catch (error) {
     console.error("Error retrieving wallets:", error);
-    res.status(500).json({ error: "Internal server error" });
+    res.status(500).json({ error: `Internal server error: ${error.message}` });
   }
 };
 export const updateWallet = async (req, res) => {
@@ -101,7 +101,7 @@ export const updateWallet = async (req, res) => {
     res.status(200).json({ msg: 'Wallet updated successfully', wallet: updatedWallet });
   } catch (error) {
     console.error('Error updating wallet:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: `Internal server error: ${error.message}` });
   }
 };
 
@@ -141,7 +141,7 @@ export const deleteWallet = async (req, res) => {
     res.status(200).json({ msg: "Wallet deleted successfully" });
   } catch (error) {
     console.error('Error deleting wallet:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: `Internal server error: ${error.message}` });
   }
 };
 
