@@ -43,10 +43,6 @@ export const createWallet = async (req, res) => {
   }
 };
 
-
-
-
-
 export const getWalletByUsername = async (req, res) => {
   try {
     const response = await prisma.wallet.findMany({

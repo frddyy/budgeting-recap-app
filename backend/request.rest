@@ -7,7 +7,7 @@ POST http://localhost:5000/users
 Content-Type: application/json
 
 {
-    "username": "junet",
+    "username": "ferdy",
     "password": "12345"
 }
 
@@ -28,22 +28,22 @@ POST http://localhost:5000/login
 Content-Type: application/json
 
 {
-    "username": "junet",
+    "username": "ferdy",
     "password": "12345"
 }
 
 //////////////////////// CRUD WALLET ////////////////////////////
 
 ###
-GET http://localhost:5000/wallets/junet
+GET http://localhost:5000/wallets/ferdy
 
 ###
 POST http://localhost:5000/wallets
 Content-Type: application/json
 
 {
-    "name": "BCA",
-    "balance": 1500000,
+    "name": "DANA",
+    "balance": -200000,
     "user_id": 1
 }
 
@@ -68,8 +68,8 @@ POST http://localhost:5000/categories
 Content-Type: application/json
 
 {
-    "title": "Hiburan",
-    "description": "Dugem boss",
+    "title": "Makanan",
+    "description": " Belanja bahan makanan dan makan di luar",
     "user_id": 1
 }
 
@@ -93,11 +93,11 @@ POST http://localhost:5000/incomes
 Content-Type: application/json
 
 {
-    "title": "Uang Bulanan",
-    "amount": 3000000,
-    "description": "Transferan dari ibu",
+    "title": "Bonus",
+    "amount": -20000,
+    "description": "rezeki nich",
     "date": "2023-11-14T09:30:00Z",
-    "wallet_id": 2
+    "wallet_id": 1
 }
 
 
@@ -110,14 +110,14 @@ DELETE http://localhost:5000/incomes/junet/2
 
 //////////////////////// CRUD BUDGET ////////////////////////////
 ###
-GET  http://localhost:5000/budgets/junet
+GET  http://localhost:5000/budgets/ferdy
 
 ###
 POST http://localhost:5000/budgets
 Content-Type: application/json
 
 {
-    "amount": 999000,
+    "amount": -200000,
     "date": "2023-11-14T09:30:00Z",
     "category_id": 1
 }
@@ -135,19 +135,18 @@ DELETE http://localhost:5000/budgets/junet/3
 
 //////////////////////// CRUD EXPENSE ////////////////////////////
 ###
-GET  http://localhost:5000/expenses/junet
+GET  http://localhost:5000/expenses/ferdy
 
 ###
 POST http://localhost:5000/expenses
 Content-Type: application/json
 
 {
-    "title": "Marlboro",
-    "amount": 24000,
-    "description": "tadi beli rokok di warung",
+    "title": "poya-poya",
+    "amount": 1200000,
+    "description": "ngabisin duit",
     "date": "2023-11-14T09:30:00Z",
-    "wallet_id": 1,
-    "budget_id": 1
+    "wallet_id": 2
 }
 
 ###
