@@ -43,12 +43,12 @@ Content-Type: application/json
 
 {
     "name": "DANA",
-    "balance": -200000,
+    "balance": 200000,
     "user_id": 1
 }
 
 ###
-DELETE http://localhost:5000/wallets/junet/GOPAY
+DELETE http://localhost:5000/wallets/ferdy/BRI
 
 
 ###
