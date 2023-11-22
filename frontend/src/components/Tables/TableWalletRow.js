@@ -22,7 +22,7 @@ const formatBalanceToRp = (balance) => {
   return formattedBalance;
 };
 
-function TableWalletRow({ wallet, onEdit, onDelete }) {
+function TableWalletRow({ wallet, onEdit, onDelete, index}) {
   const textColor = useColorModeValue("gray.700", "white");
   const bgColor = useColorModeValue("#F8F9FA", "gray.800");
 
@@ -30,7 +30,7 @@ function TableWalletRow({ wallet, onEdit, onDelete }) {
     <Tr>
       <Td>
         <Text fontSize="md" color={textColor} fontWeight="bold" pb=".5rem">
-          {wallet.id}
+          {index}
         </Text>
       </Td>
       <Td>
@@ -54,7 +54,7 @@ function TableWalletRow({ wallet, onEdit, onDelete }) {
             bg="transparent"
             mb={{ sm: "10px", md: "0px" }}
             me={{ md: "12px" }}
-            onClick={onEdit}
+            onClick={() => onEdit(wallet.id)}
           >
             <Flex color={textColor} cursor="pointer" align="center" p="12px">
               <Icon as={FaPencilAlt} me="4px" />
