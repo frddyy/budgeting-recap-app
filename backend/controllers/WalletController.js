@@ -43,10 +43,6 @@ export const createWallet = async (req, res) => {
   }
 };
 
-
-
-
-
 export const getWalletByUsername = async (req, res) => {
   try {
     const response = await prisma.wallet.findMany({
@@ -130,13 +126,19 @@ export const deleteWallet = async (req, res) => {
       return res.status(404).json({ error: "Wallet not found" });
     }
 
-    // Delete the wallet
-    await prisma.wallet.delete({
-      where: {
-        id: wallet.id,
-        name: wallet_name,
-      },
-    });
+    // Start a transaction to delete related records before deleting the wallet
+    await prisma.$transaction([
+      prisma.expense.deleteMany({
+        where: { wallet_id: wallet.id },
+      }),
+      prisma.income.deleteMany({
+        where: { wallet_id: wallet.id },
+      }),
+      // Include other related deletes if necessary
+      prisma.wallet.delete({
+        where: { id: wallet.id },
+      }),
+    ]);
 
     res.status(200).json({ msg: "Wallet deleted successfully" });
   } catch (error) {
