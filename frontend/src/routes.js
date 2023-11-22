@@ -60,6 +60,7 @@ var dashRoutes = [
     icon: <DocumentIcon color="inherit" />,
     component: SignIn,
     layout: "/auth",
+    hidden: true,
   },
   {
     path: "/signup",
@@ -69,6 +70,7 @@ var dashRoutes = [
     secondaryNavbar: true,
     component: SignUp,
     layout: "/auth",
+    hidden: true,
   },
   // {
   //   path: "/rtl-support-page",

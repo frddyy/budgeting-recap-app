@@ -1,6 +1,6 @@
 //////////////////////// CRUD USER ////////////////////////////
 ###
-GET http://localhost:5000/users
+GET http://localhost:5000/users/rezaananta
 
 ###
 POST http://localhost:5000/users
@@ -37,7 +37,7 @@ Content-Type: application/json
 //////////////////////// CRUD WALLET ////////////////////////////
 
 ###
-GET http://localhost:5000/wallets/ferdy
+GET http://localhost:5000/wallets/rezaananta
 
 ###
 POST http://localhost:5000/wallets
