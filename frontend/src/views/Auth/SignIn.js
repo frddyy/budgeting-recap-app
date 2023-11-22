@@ -22,7 +22,7 @@ import signInImage from "assets/img/signInImage.png";
 
 function SignIn() {
   const history = useHistory(); // Use useHistory
-  // setPageAttributes();
+  
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -37,6 +37,11 @@ function SignIn() {
   };
 
   const [error, setError] = useState(null);
+
+  const handleSignup = () => {
+    // Redirect to the signup page
+    history.push("/auth/signup");
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -180,7 +185,13 @@ function SignIn() {
             >
               <Text color={textColor} fontWeight="medium">
                 Don't have an account?
-                <Link color={titleColor} as="span" ms="5px" fontWeight="bold">
+                <Link
+                  color={titleColor}
+                  as="span"
+                  ms="5px"
+                  fontWeight="bold"
+                  onClick={handleSignup}
+                >
                   Sign Up
                 </Link>
               </Text>
