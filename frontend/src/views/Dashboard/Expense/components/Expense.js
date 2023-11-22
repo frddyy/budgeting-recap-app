@@ -86,7 +86,7 @@ const Wallets = ({ title }) => {
             {title}
           </Text>
           <Button bg={bgButton} color="white" fontSize="xs" variant="no-hover">
-            ADD NEW WALLET
+            ADD NEW Expense
           </Button>
         </Flex>
       </CardHeader>
@@ -95,8 +95,12 @@ const Wallets = ({ title }) => {
           <Thead>
             <Tr my=".8rem" pl="0px">
               <Th color="gray.400">No</Th>
-              <Th color="gray.400">Wallet Name</Th>
-              <Th color="gray.400">Balance</Th>
+              <Th color="gray.400">Title</Th>
+              <Th color="gray.400">Amount</Th>
+              <Th color="gray.400">Description</Th>
+              <Th color="gray.400">Date</Th>
+              <Th color="gray.400">Wallet</Th>
+              <Th color="gray.400">Budget</Th>
               <Th color="gray.400">Actions</Th>
             </Tr>
           </Thead>
