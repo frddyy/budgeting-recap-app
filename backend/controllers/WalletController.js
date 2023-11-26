@@ -59,7 +59,6 @@ export const createWallet = async (req, res) => {
 };
 
 
-
 export const getWalletByUsername = async (req, res) => {
   try {
     const response = await prisma.wallet.findMany({
@@ -77,6 +76,7 @@ export const getWalletByUsername = async (req, res) => {
     res.status(500).json({ error: `Internal server error: ${error.message}` });
   }
 };
+
 export const updateWallet = async (req, res) => {
   const { username, wallet_name } = req.params;
   const updatedWalletData = {

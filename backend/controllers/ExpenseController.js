@@ -5,6 +5,9 @@ const prisma = new PrismaClient();
 // Controller untuk membuat Expense baru
 export const createExpense = async (req, res) => {
   try {
+    // Log request body untuk debugging
+    console.log("Request body:", req.body);
+
     const response = await prisma.expense.create({
       data: {
         title: req.body.title,
@@ -12,7 +15,6 @@ export const createExpense = async (req, res) => {
         description: req.body.description,
         date: req.body.date,
         wallet_id: req.body.wallet_id,
-        // Optional: Uncomment the line below if you want to associate the expense with a budget
         budget_id: req.body.budget_id,
       },
     });
@@ -22,9 +24,10 @@ export const createExpense = async (req, res) => {
       .json({ msg: "Expense created successfully", data: response });
   } catch (error) {
     console.error("Error:", error);
-    res.status(500).json({ msg: "Internal Server Error" });
+    res.status(500).json({ msg: "Internal Server Error", error: error.message });
   }
 };
+
 
 // Controller untuk mendapatkan semua Expenses
 export const getAllExpenses = async (req, res) => {
