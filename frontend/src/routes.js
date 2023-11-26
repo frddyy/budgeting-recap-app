@@ -54,6 +54,7 @@ var dashRoutes = [
     component: Wallets,
     layout: "/admin",
   },
+  {
     path: "/income",
     name: "Income",
     rtlName: "لوحة القيادة",
