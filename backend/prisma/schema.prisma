@@ -1,0 +1,70 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         Int        @id @default(autoincrement())
+  username   String     @unique
+  password   String
+  email      String?
+  full_name  String?
+  image      String?
+  categories Category[]
+  wallets    Wallet[]
+}
+
+model Wallet {
+  id       Int       @id @default(autoincrement())
+  name     String
+  balance  Int
+  user_id  Int
+  expenses Expense[]
+  incomes  Income[]
+  user     User      @relation(fields: [user_id], references: [id])
+}
+
+model Income {
+  id          Int       @id @default(autoincrement())
+  title       String
+  amount      Int
+  description String?
+  date        DateTime? @db.Date
+  wallet_id   Int
+  wallet      Wallet    @relation(fields: [wallet_id], references: [id])
+}
+
+model Expense {
+  id          Int       @id @default(autoincrement())
+  title       String
+  amount      Int
+  description String?
+  date        DateTime? @db.Date
+  wallet_id   Int
+  budget_id   Int?
+  budget      Budget?   @relation(fields: [budget_id], references: [id])
+  wallet      Wallet    @relation(fields: [wallet_id], references: [id])
+}
+
+model Category {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String?
+  user_id     Int
+  budgets     Budget[]
+  user        User     @relation(fields: [user_id], references: [id])
+}
+
+model Budget {
+  id          Int       @id @default(autoincrement())
+  amount      Int
+  amount_now  Int
+  date        DateTime? @db.Date
+  category_id Int
+  category    Category  @relation(fields: [category_id], references: [id])
+  expenses    Expense[]
+}
