@@ -86,7 +86,7 @@ const Wallets = ({ title }) => {
             {title}
           </Text>
           <Button bg={bgButton} color="white" fontSize="xs" variant="no-hover">
-            ADD NEW Income
+            ADD NEW INCOME
           </Button>
         </Flex>
       </CardHeader>

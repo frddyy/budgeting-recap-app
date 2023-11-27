@@ -1,20 +1,20 @@
 //////////////////////// CRUD USER ////////////////////////////
 ###
-GET http://localhost:5000/users/rezaananta
+GET http://localhost:5000/users
 
 ###
 POST http://localhost:5000/users
 Content-Type: application/json
 
 {   
-    "full_name": "Arya Dahlan",
-    "username": "abots",
-    "password": "12345",
-    "confirmPassword": "12345"
+    "full_name": "Reza Ananta",
+    "username": "rezaanta",
+    "password": "ananta229",
+    "confirmPassword": "ananta229"
 }
 
 ###
-PATCH http://localhost:5000/users/ferdy
+PATCH http://localhost:5000/users/junet
 Content-Type: application/json
 
 {
@@ -37,15 +37,15 @@ Content-Type: application/json
 //////////////////////// CRUD WALLET ////////////////////////////
 
 ###
-GET http://localhost:5000/wallets/rezaananta
+GET http://localhost:5000/wallets/ferdy
 
 ###
 POST http://localhost:5000/wallets
 Content-Type: application/json
 
 {
-    "name": "DANA",
-    "balance": 200000,
+    "name": "BCA",
+    "balance": 2000000,
     "user_id": 1
 }
 
@@ -63,28 +63,27 @@ Content-Type: application/json
 
 //////////////////////// CRUD CATEGORY ////////////////////////////
 ###
-GET http://localhost:5000/categories
+GET http://localhost:5000/categories/ferdy
 
 ###
 POST http://localhost:5000/categories
 Content-Type: application/json
 
 {
-    "title": "Makanan",
-    "description": " Belanja bahan makanan dan makan di luar",
+    "name": "Hiburan",
     "user_id": 1
 }
 
 ###
-PATCH http://localhost:5000/categories/junet/Transportasi
+PATCH http://localhost:5000/categories/ferdy/Hiburan
 Content-Type: application/json
 
 {
-    "description": "Budget untuk biaya bensin dan service motor sama mobil pajero"
+    "name": "Makanan"
 }
 
 ###
-DELETE http://localhost:5000/categories/junet/Hiburan
+DELETE http://localhost:5000/categories/ferdy/Hiburan
 
 //////////////////////// CRUD INCOMES ////////////////////////////
 ###
@@ -112,43 +111,48 @@ DELETE http://localhost:5000/incomes/junet/2
 
 //////////////////////// CRUD BUDGET ////////////////////////////
 ###
-GET  http://localhost:5000/budgets/ferdy
+GET  http://localhost:5000/budgets/rezaanta
+
+###
+GET  http://localhost:5000/budgets/ferdy/Transport
 
 ###
 POST http://localhost:5000/budgets
 Content-Type: application/json
 
 {
-    "amount": -200000,
-    "date": "2023-11-14T09:30:00Z",
-    "category_id": 1
+    "title": "A",
+    "amount": 550000,
+    "date": "2023-11-25T09:30:00Z",
+    "category_id": 7
 }
 
 ###
-PATCH  http://localhost:5000/budgets/junet/2
+PATCH  http://localhost:5000/budgets/ferdy/1
 Content-Type: application/json
 
 {
-    "amount_now": 450000,
+    "amount_now": 150000
 }
 
 ###
-DELETE http://localhost:5000/budgets/junet/3
+DELETE http://localhost:5000/budgets/ferdy/11
 
 //////////////////////// CRUD EXPENSE ////////////////////////////
 ###
-GET  http://localhost:5000/expenses/ferdy
+GET  http://localhost:5000/expenses/rezaanta
 
 ###
 POST http://localhost:5000/expenses
 Content-Type: application/json
 
 {
-    "title": "poya-poya",
-    "amount": 1200000,
-    "description": "ngabisin duit",
-    "date": "2023-11-14T09:30:00Z",
-    "wallet_id": 2
+    "title": "Servis Motor Beat",
+    "amount": 350000,
+    "description": "servis cvt, ganti oli, ganti rem lampu",
+    "date": "2023-11-25T09:30:00Z",
+    "wallet_id": 1,
+    "budget_id": 6
 }
 
 ###
