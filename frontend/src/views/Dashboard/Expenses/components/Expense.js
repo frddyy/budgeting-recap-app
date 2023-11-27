@@ -14,22 +14,28 @@ import {
 import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
 import CardHeader from "components/Card/CardHeader.js";
-import TableWalletRow from "components/Tables/TableWalletRow";
+import TableExpenseRow from "components/Tables/TableExpenseRow";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import axios from "axios";
 import Cookies from "js-cookie";
+import AddExpense from "components/AddData/AddExpense";
+import EditExpense from "components/EditData/EditExpense";
 
-const Wallets = ({ title }) => {
+const Expenses = ({ title }) => {
   const textColor = useColorModeValue("gray.700", "white");
   const bgButton = useColorModeValue(
     "linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)",
     "gray.800"
   );
 
-  const [walletData, setWalletData] = useState([]);
+  const [expenseData, setExpenseData] = useState([]);
   const [username, setUsername] = useState("");
-  const [selectedAction, setSelectedAction] = useState(null);
+  const [isAddExpenseModalOpen, setIsAddExpenseModalOpen] = useState(false);
+  const [isEditExpenseModalOpen, setIsEditExpenseModalOpen] = useState(false);
+
+  const [selectedExpense, setSelectedExpense] = useState(null);
+
 
   const history = useHistory();
 
@@ -37,46 +43,56 @@ const Wallets = ({ title }) => {
     const storedUsername = Cookies.get("username");
     if (storedUsername) {
       setUsername(storedUsername);
+      fetchExpenses(storedUsername); // Fetch expenses after setting username
     }
   }, []);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        if (username) {
-          const response = await axios.get(
-            `http://localhost:5000/wallets/${username}`
-          );
-          setWalletData(response.data.data || []);
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
+
+  const fetchExpenses = async (username) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5000/expenses/${username}`
+      );
+      console.log("Full response:", response); // Log the full response
+
+      // Accessing the expenses array from the response
+      if (response && response.data && response.data.expenses) {
+        setExpenseData(response.data.expenses); // Set the expenses array to state
       }
-    };
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
-    fetchData();
-  }, [username]);
 
-  const handleDelete = async (walletName) => {
+
+  const handleDelete = async (expense_id) => {
     try {
       const response = await axios.delete(
-        `http://localhost:5000/wallets/${username}/${walletName}`
+        `http://localhost:5000/expenses/${username}/${expense_id}`
       );
-      const updatedWalletData = walletData.filter(
-        (wallet) => wallet.name !== walletName
+      const updatedExpenseData = expenseData.filter(
+        (expense) => expense.id !== expense_id
       );
-      setWalletData(updatedWalletData);
+      setExpenseData(updatedExpenseData);
     } catch (error) {
-      console.error("Error deleting wallet:", error);
+      console.error("Error deleting expense:", error);
       console.error("Detailed error response:", error.response); // Log the detailed error response
     }
   };
 
-  const handleEdit = (walletName) => {
-    // Logika untuk mengarahkan pengguna ke halaman atau formulir edit
-    // Misalnya, Anda dapat menggunakan react-router-dom untuk ini
-    // Contoh: history.push(`/edit-wallet/${walletId}`);
+  const handleAddButton = () => {
+    console.log("Add button clicked");
+    setIsAddExpenseModalOpen(true);
   };
+
+  const handleEdit = (expense) => {
+    // Set the selectedExpense to the expense data that needs to be edited
+    setSelectedExpense(expense);
+    setIsEditExpenseModalOpen(true);
+  };
+
+
 
   return (
     <Card my="22px" overflowX={{ sm: "scroll", xl: "hidden" }}>
@@ -85,7 +101,13 @@ const Wallets = ({ title }) => {
           <Text fontSize="lg" color={textColor} fontWeight="bold">
             {title}
           </Text>
-          <Button bg={bgButton} color="white" fontSize="xs" variant="no-hover">
+          <Button
+            bg={bgButton}
+            color="white"
+            fontSize="xs"
+            variant="no-hover"
+            onClick={handleAddButton}
+          >
             ADD NEW Expense
           </Button>
         </Flex>
@@ -105,19 +127,38 @@ const Wallets = ({ title }) => {
             </Tr>
           </Thead>
           <Tbody>
-            {walletData.map((wallet) => (
-              <TableWalletRow
-                key={wallet.id}
-                wallet={wallet}
-                onDelete={() => handleDelete(wallet.name)}
-                onEdit={() => handleEdit(wallet.name)}
+            {expenseData.map((expense, index) => (
+              <TableExpenseRow
+                key={expense.id}
+                index={index + 1}
+                expense={expense}
+                onDelete={() => handleDelete(expense.id)}
+                onEdit={() => handleEdit(expense)}
               />
             ))}
           </Tbody>
         </Table>
       </CardBody>
+      <AddExpense
+        isOpen={isAddExpenseModalOpen}
+        onClose={() => setIsAddExpenseModalOpen(false)}
+        onSuccess={() => {
+          // Fungsi yang akan dipanggil ketika expense berhasil ditambahkan
+          setIsAddExpenseModalOpen(false);
+          // Reload atau fetch ulang data expense di sini jika diperlukan
+        }}
+      />
+      <EditExpense
+        isOpen={isEditExpenseModalOpen}
+        onClose={() => setIsEditExpenseModalOpen(false)}
+        onSuccess={() => {
+          // Perform any actions needed on successful addition
+          setIsEditExpenseModalOpen(false);
+        }}
+        expenseData={selectedExpense} // Pass selectedExpense as expenseData
+      />
     </Card>
   );
 };
 
-export default Wallets;
+export default Expenses;
