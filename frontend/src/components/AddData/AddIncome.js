@@ -108,7 +108,7 @@ const AddIncome = ({ isOpen, onClose, onSuccess }) => {
         if (onSuccess) {
           onSuccess();
         }
-        history.push("/admin/incomes");
+        history.push("/admin/income");
         setShowSuccessAlert(true);
         setMsg("Income successfully created!");
       } else {

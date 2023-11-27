@@ -18,8 +18,8 @@ import Cookies from "js-cookie";
 import Swal from "sweetalert2";
 import { useHistory } from "react-router-dom";
 
-const EditWallet = ({ isOpen, onClose, onSuccess, walletData }) => {
-  const [wallet, setWallet] = useState({ name: "", balance: "" });
+const EditIncome = ({ isOpen, onClose, onSuccess, incomeData }) => {
+  const [income, setIncome] = useState({ name: "", balance: "" });
   const [username, setUsername] = useState("");
 
   useEffect(() => {
@@ -38,55 +38,53 @@ const EditWallet = ({ isOpen, onClose, onSuccess, walletData }) => {
 
   const history = useHistory();
 
-  // Gunakan walletData untuk mengatur state
   useEffect(() => {
-    if (isOpen && walletData) {
-      setWallet({
-        name: walletData.name,
-        balance: walletData.balance,
+    if (isOpen && incomeData) {
+      setIncome({
+        name: incomeData.name,
+        balance: incomeData.balance,
       });
     }
-  }, [isOpen, walletData]);
+  }, [isOpen, incomeData]);
 
-  const fetchWalletData = async (walletName) => {
+  const fetchIncomeData = async (incomeName) => {
     if (!username) return;
     try {
       const response = await axios.get(
-        `http://localhost:5000/wallets/${username}/${walletName}`
+        `http://localhost:5000/incomes/${username}/${incomeName}`
       );
       if (response.status === 200) {
-        // Setelah mendapatkan data dari API, update state 'wallet'
-        setWallet({
+        setIncome({
           name: response.data.name, // Asumsi 'name' adalah properti dari data yang diterima
           balance: response.data.balance, // Asumsi 'balance' adalah properti dari data yang diterima
         });
       }
     } catch (error) {
-      console.error("Error fetching wallet:", error);
+      console.error("Error fetching income:", error);
     }
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setWallet((prevState) => ({ ...prevState, [name]: value }));
+    setIncome((prevState) => ({ ...prevState, [name]: value }));
   };
 
-  const updateWallet = async (e) => {
+  const updateIncome = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
       const response = await axios.patch(
-        `http://localhost:5000/wallets/${username}/${wallet.name}`, // Gunakan wallet.name
-        wallet
+        `http://localhost:5000/incomes/${username}/${income.name}`, // Gunakan income.name
+        income
       );
 
       if (response.status === 200) {
         setShowSuccessAlert(true);
-        setMsg("Wallet successfully updated!");
+        setMsg("Income successfully updated!");
         Swal.fire({
-          title: "Update Wallet Success",
-          text: "Your wallet has been updated successfully!",
+          title: "Update Income Success",
+          text: "Your Income has been updated successfully!",
           icon: "success",
           confirmButtonText: "OK",
         }).then(() => {
@@ -96,15 +94,15 @@ const EditWallet = ({ isOpen, onClose, onSuccess, walletData }) => {
         if (onSuccess) {
           onSuccess();
         }
-        history.push("/admin/wallets");
+        history.push("/admin/income");
       } else {
         setShowErrorMsg(true);
-        setMsg("Failed to update wallet. Please try again.");
+        setMsg("Failed to update income. Please try again.");
       }
     } catch (error) {
-      console.error("Error updating wallet:", error);
+      console.error("Error updating income:", error);
       setShowErrorMsg(true);
-      setMsg("Failed to update wallet. Please try again.");
+      setMsg("Failed to update income. Please try again.");
     } finally {
       setLoading(false);
       handleClose();
@@ -120,58 +118,112 @@ const EditWallet = ({ isOpen, onClose, onSuccess, walletData }) => {
   };
 
   return (
-    <Modal
-      initialFocusRef={initialRef}
-      isOpen={isOpen}
-      onClose={handleClose}
-      zIndex={10}
-    >
-      <ModalOverlay />
-      <form onSubmit={updateWallet}>
-        <ModalContent>
-          <ModalHeader>Edit your wallet</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody pb={6}>
-            {showSuccessAlert && <Alert status="success">{msg}</Alert>}
-            {showErrorMsg && <Alert status="error">{msg}</Alert>}
-            <FormControl>
-              <FormLabel>Wallet Name</FormLabel>
-              <Input
-                ref={initialRef}
-                placeholder="Wallet Name"
-                name="name"
-                value={wallet.name}
-                onChange={handleInputChange}
-                readOnly
-              />
-            </FormControl>
-            <FormControl mt={4}>
-              <FormLabel>Balance</FormLabel>
-              <Input
-                placeholder="Balance"
-                name="balance"
-                value={wallet.balance}
-                onChange={handleInputChange}
-              />
-            </FormControl>
-          </ModalBody>
-          <ModalFooter>
-            <Button
-              type="submit"
-              colorScheme="blue"
-              mr={3}
-              isLoading={isLoading}
-            >
-              Save
-            </Button>
-            <Button onClick={handleClose} colorScheme="red">
-              Cancel
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </form>
-    </Modal>
+    <>
+      <Modal
+        initialFocusRef={initialRef}
+        isOpen={isOpen}
+        onClose={handleClose}
+        zIndex={10}
+      >
+        <ModalOverlay
+          bg="none"
+          backdropFilter="auto"
+          backdropInvert="80%"
+          backdropBlur="2px"
+        />
+        <form onSubmit={updateIncome}>
+          <ModalContent
+            style={{
+              borderRadius: "20px", // Adjust the border-radius to your preference
+            }}
+          >
+            <ModalHeader>Edit your income</ModalHeader>
+            <ModalCloseButton onClick={handleClose} />
+            <ModalBody pb={6}>
+              {showSuccessAlert && <Alert severity="success">{msg}</Alert>}
+              {showErrorMsg && <Alert severity="error">{msg}</Alert>}
+              <FormControl>
+                <FormLabel>Title</FormLabel>
+                <Input
+                  ref={initialRef}
+                  placeholder="Title"
+                  name="title"
+                  value={income.title}
+                  onChange={handleInputChange}
+                  style={{
+                    borderRadius: "13px", // Adjust the border-radius to your preference
+                  }}
+                />
+              </FormControl>
+              <FormControl mt={4}>
+                <FormLabel>Amount</FormLabel>
+                <Input
+                  placeholder="Balance"
+                  name="balance"
+                  value={income.amount}
+                  onChange={handleInputChange}
+                  style={{
+                    borderRadius: "13px", // Adjust the border-radius to your preference
+                  }}
+                />
+              </FormControl>
+              <FormControl mt={4}>
+                <FormLabel>Description</FormLabel>
+                <Input
+                  placeholder="Description"
+                  name="description"
+                  value={income.description}
+                  onChange={handleInputChange}
+                  style={{
+                    borderRadius: "13px", // Adjust the border-radius to your preference
+                  }}
+                />
+              </FormControl>
+              <FormControl mt={4}>
+                <FormLabel>Date</FormLabel>
+                <Input
+                  name="date"
+                  placeholder="Select Date and Time"
+                  size="md"
+                  type="datetime-local"
+                  value={income.date}
+                  onChange={handleInputChange}
+                  style={{
+                    borderRadius: "13px", // Adjust the border-radius to your preference
+                  }}
+                />
+              </FormControl>
+              <FormControl mt={4}>
+                <FormLabel>Wallet</FormLabel>
+                <Input
+                  placeholder="Wallet"
+                  name="wallet"
+                  value={income.wallet_id}
+                  onChange={handleInputChange}
+                  style={{
+                    borderRadius: "13px", // Adjust the border-radius to your preference
+                  }}
+                />
+              </FormControl>
+            </ModalBody>
+            <ModalFooter>
+              <Button
+                type="submit"
+                colorScheme="blue"
+                mr={3}
+                isLoading={isLoading}
+              >
+                Save
+              </Button>
+              <Button onClick={handleClose} colorScheme="red">
+                Cancel
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </form>
+      </Modal>
+    </>
   );
-};;
+};
 
-export default EditWallet;
+export default EditIncome;
