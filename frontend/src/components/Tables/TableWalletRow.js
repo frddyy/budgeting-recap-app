@@ -23,6 +23,7 @@ const formatBalanceToRp = (balance) => {
 };
 
 function TableWalletRow({ wallet, onEdit, onDelete, index }) {
+  console.log("Wallet data received in TableWalletRow:", wallet);
   const textColor = useColorModeValue("gray.700", "white");
   const bgColor = useColorModeValue("#F8F9FA", "gray.800");
 

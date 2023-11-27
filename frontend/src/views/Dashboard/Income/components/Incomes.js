@@ -31,6 +31,25 @@ const Incomes = ({ title, onTotalAmountChange }) => {
     "linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)",
     "gray.800"
   );
+  // const dummyData = [
+  //   {
+  //     id: 1,
+  //     title: "Gaji",
+  //     amount: 5000000,
+  //     description: "Gaji bulanan",
+  //     date: "2023-01-01",
+  //     wallet: "Dompet Utama",
+  //   },
+  //   {
+  //     id: 2,
+  //     title: "Bonus",
+  //     amount: 1500000,
+  //     description: "Bonus proyek",
+  //     date: "2023-01-15",
+  //     wallet: "Dompet Sampingan",
+  //   },
+  //   // Tambahkan lebih banyak data jika diperlukan
+  // ];
 
   const [incomeData, setIncomeData] = useState([]);
   const [username, setUsername] = useState("");
@@ -52,24 +71,25 @@ const Incomes = ({ title, onTotalAmountChange }) => {
 
   useEffect(() => {
     const fetchData = async () => {
+      if (!username) return;
+
       try {
-        console.log("Fetching data for username:", username);
-        if (username) {
-          const response = await axios.get(
-            `http://localhost:5000/incomes/${username}`
+        const response = await axios.get(
+          `http://localhost:5000/incomes/${username}`
+        );
+        console.log("Full API Response:", response);
+
+        if (response.data && response.data.incomes) {
+          const incomes = response.data.incomes;
+          setIncomeData(incomes);
+
+          const totalAmount = incomes.reduce(
+            (acc, income) => acc + income.amount,
+            0
           );
-          console.log("Response from API:", response.data);
-
-          if (response.data && response.data.data) {
-            const incomes = response.data.data;
-            setIncomeData(incomes);
-
-            const totalAmount = incomes.reduce(
-              (acc, income) => acc + income.amount,
-              0
-            );
-            onTotalAmountChange(totalAmount);
-          }
+          onTotalAmountChange(totalAmount);
+        } else {
+          console.log("No incomes data received from API");
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -77,20 +97,20 @@ const Incomes = ({ title, onTotalAmountChange }) => {
     };
 
     fetchData();
-  }, [username, onTotalAmountChange]);
+  }, [username]);
 
   const handleAddButton = () => {
     console.log("Add button clicked");
     setIsAddIncomeModalOpen(true);
   };
 
-  const handleDelete = async (incomeName) => {
+  const handleDelete = async (incomeTitle) => {
     try {
       const response = await axios.delete(
-        `http://localhost:5000/incomes/${username}/${incomeName}`
+        `http://localhost:5000/incomes/${username}/${incomeTitle}`
       );
       const updatedIncomeData = incomeData.filter(
-        (income) => income.name !== incomeName
+        (income) => income.title !== incomeTitle
       );
       setIncomeData(updatedIncomeData);
     } catch (error) {
@@ -110,9 +130,9 @@ const Incomes = ({ title, onTotalAmountChange }) => {
     }
   };
 
-  const handleEdit = (incomeName) => {
+  const handleEdit = (incomeTitle) => {
     const selectedIncome = incomeData.find(
-      (income) => income.name === incomeName
+      (income) => income.title === incomeTitle
     );
     if (selectedIncome) {
       setCurrentEditIncome(selectedIncome); // Asumsikan Anda menambahkan state baru untuk ini
@@ -168,8 +188,8 @@ const Incomes = ({ title, onTotalAmountChange }) => {
                 key={income.id}
                 index={index + 1}
                 income={income}
-                onDelete={() => handleDelete(income.name)}
-                onEdit={() => handleEdit(income.name)}
+                onDelete={() => handleDelete(income.title)}
+                onEdit={() => handleEdit(income.title)}
               />
             ))}
           </Tbody>

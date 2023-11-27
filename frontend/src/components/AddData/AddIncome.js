@@ -89,17 +89,20 @@ const AddIncome = ({ isOpen, onClose, onSuccess }) => {
   const saveIncome = async (e) => {
     e.preventDefault();
     setLoading(true);
-
+    console.log("Submitting form");
+    console.log("userId on submit:", userId);
     try {
       const incomeData = {
         ...income,
         user_id: userId,
       };
+      console.log("Data to be sent:", incomeData);
 
       const response = await axios.post(
         "http://localhost:5000/incomes",
         incomeData
       );
+      console.log("Response from API:", response);
 
       if (response.status === 200) {
         if (onSuccess) {
@@ -113,7 +116,7 @@ const AddIncome = ({ isOpen, onClose, onSuccess }) => {
         setMsg("Failed to create income. Please try again.");
       }
     } catch (error) {
-      console.error("Error saving income:", error);
+      console.error("Error saving income:", error.response || error);
       setShowErrorMsg(true);
       setMsg("Failed to create income. Please try again.");
     } finally {

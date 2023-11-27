@@ -23,6 +23,7 @@ const formatAmountToRp = (amount) => {
 };
 
 function TableIncomeRow({ income, onEdit, onDelete, index }) {
+  console.log("Income data received in TableIncomeRow:", income);
   const textColor = useColorModeValue("gray.700", "white");
   const bgColor = useColorModeValue("#F8F9FA", "gray.800");
   return (
