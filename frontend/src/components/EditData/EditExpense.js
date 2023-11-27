@@ -19,17 +19,19 @@ import Cookies from "js-cookie";
 import Swal from "sweetalert2";
 import { useHistory } from "react-router-dom";
 
-const EditIncome = ({ isOpen, onClose, onSuccess, incomeData }) => {
-  const [income, setIncome] = useState({
+const EditExpense = ({ isOpen, onClose, onSuccess, expenseData }) => {
+  const [expense, setExpense] = useState({
     id: "",
     title: "",
     amount: 0,
     description: "",
     date: "",
     wallet_id: null,
+    budget_id: null,
   });
   const [username, setUsername] = useState("");
   const [wallets, setWallets] = useState([]);
+  const [budgets, setBudgets] = useState([]);
 
   useEffect(() => {
     const storedUsername = Cookies.get("username");
@@ -47,18 +49,20 @@ const EditIncome = ({ isOpen, onClose, onSuccess, incomeData }) => {
 
   const history = useHistory();
 
+  // Gunakan expenseData untuk mengatur state
   useEffect(() => {
-    if (isOpen && incomeData) {
-      setIncome({
-        id: incomeData.id,
-        title: incomeData.title,
-        amount: incomeData.amount,
-        description: incomeData.description,
-        date: incomeData.date,
-        wallet_id: incomeData.wallet_id,
+    if (isOpen && expenseData) {
+      setExpense({
+        id: expenseData.id,
+        title: expenseData.title,
+        amount: expenseData.amount,
+        description: expenseData.description,
+        date: expenseData.date,
+        wallet_id: expenseData.wallet_id,
+        budget_id: expenseData.budget_id,
       });
     }
-  }, [isOpen, incomeData]);
+  }, [isOpen, expenseData]);
 
   useEffect(() => {
     const fetchWallets = async () => {
@@ -71,7 +75,7 @@ const EditIncome = ({ isOpen, onClose, onSuccess, incomeData }) => {
 
         // Set default wallet_id if wallets are available
         if (fetchedWallets.length > 0) {
-          setIncome((prevState) => ({
+          setExpense((prevState) => ({
             ...prevState,
             wallet_id: fetchedWallets[0].id,
           }));
@@ -81,35 +85,55 @@ const EditIncome = ({ isOpen, onClose, onSuccess, incomeData }) => {
       }
     };
 
+    const fetchBudgets = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:5000/budgets/${username}`
+        );
+        const fetchedBudgets = response.data.budgets || [];
+        setBudgets(fetchedBudgets);
+
+        // Set default budget_id if budgets are available
+        if (fetchedBudgets.length > 0) {
+          setExpense((prevState) => ({
+            ...prevState,
+            budget_id: fetchedBudgets[0].id,
+          }));
+        }
+      } catch (error) {
+        console.error("Error fetching budgets:", error);
+      }
+    };
     if (username) {
       fetchWallets();
+      fetchBudgets();
     }
   }, [username]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setIncome((prevState) => ({ ...prevState, [name]: value }));
+    setExpense((prevState) => ({ ...prevState, [name]: value }));
   };
 
-  const updateIncome = async (e) => {
+  const updateExpense = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
       const response = await axios.patch(
-        `http://localhost:5000/incomes/${username}/${income.id}`,
+        `http://localhost:5000/expenses/${username}/${expense.id}`,
         {
-          ...income,
-          amount: parseFloat(income.amount), // Ensure amount is an integer
+          ...expense,
+          amount: parseFloat(expense.amount), // Ensure amount is an integer
         }
       );
 
       if (response.status === 200) {
         setShowSuccessAlert(true);
-        setMsg("Income successfully updated!");
+        setMsg("Expense successfully updated!");
         Swal.fire({
-          title: "Update Income Success",
-          text: "Your income has been updated successfully!",
+          title: "Update Expense Success",
+          text: "Your expense has been updated successfully!",
           icon: "success",
           confirmButtonText: "OK",
         }).then(() => {
@@ -119,15 +143,15 @@ const EditIncome = ({ isOpen, onClose, onSuccess, incomeData }) => {
         if (onSuccess) {
           onSuccess();
         }
-        history.push("/admin/incomes");
+        history.push("/admin/expenses");
       } else {
         setShowErrorMsg(true);
-        setMsg("Failed to update income. Please try again.");
+        setMsg("Failed to update expense. Please try again.");
       }
     } catch (error) {
-      console.error("Error updating income:", error);
+      console.error("Error updating expense:", error);
       setShowErrorMsg(true);
-      setMsg("Failed to update income. Please try again.");
+      setMsg("Failed to update expense. Please try again.");
     } finally {
       setLoading(false);
       handleClose();
@@ -150,20 +174,20 @@ const EditIncome = ({ isOpen, onClose, onSuccess, incomeData }) => {
       zIndex={10}
     >
       <ModalOverlay />
-      <form onSubmit={updateIncome}>
+      <form onSubmit={updateExpense}>
         <ModalContent>
-          <ModalHeader>Edit your income</ModalHeader>
+          <ModalHeader>Edit your expense</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
             {showSuccessAlert && <Alert status="success">{msg}</Alert>}
             {showErrorMsg && <Alert status="error">{msg}</Alert>}
             <FormControl>
-              <FormLabel>Income Name</FormLabel>
+              <FormLabel>Expense Name</FormLabel>
               <Input
                 ref={initialRef}
-                placeholder="Income Name"
+                placeholder="Expense Name"
                 name="title"
-                value={income.title}
+                value={expense.title}
                 onChange={handleInputChange}
               />
             </FormControl>
@@ -173,7 +197,7 @@ const EditIncome = ({ isOpen, onClose, onSuccess, incomeData }) => {
                 placeholder="Amount"
                 name="amount"
                 type="number"
-                value={income.amount}
+                value={expense.amount}
                 onChange={handleInputChange}
               />
             </FormControl>
@@ -182,7 +206,7 @@ const EditIncome = ({ isOpen, onClose, onSuccess, incomeData }) => {
               <Input
                 placeholder="Description"
                 name="description"
-                value={income.description}
+                value={expense.description}
                 onChange={handleInputChange}
               />
             </FormControl>
@@ -192,7 +216,7 @@ const EditIncome = ({ isOpen, onClose, onSuccess, incomeData }) => {
                 placeholder="Date"
                 name="date"
                 type="date"
-                value={income.date}
+                value={expense.date}
                 onChange={handleInputChange}
               />
             </FormControl>
@@ -202,6 +226,16 @@ const EditIncome = ({ isOpen, onClose, onSuccess, incomeData }) => {
                 {wallets.map((wallet) => (
                   <option key={wallet.id} value={wallet.id}>
                     {wallet.name}
+                  </option>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl mt={4}>
+              <FormLabel>Description</FormLabel>
+              <Select name="budget_id" onChange={handleInputChange}>
+                {budgets.map((budget) => (
+                  <option key={budget.id} value={budget.id}>
+                    {budget.title}
                   </option>
                 ))}
               </Select>
@@ -226,4 +260,4 @@ const EditIncome = ({ isOpen, onClose, onSuccess, incomeData }) => {
   );
 };
 
-export default EditIncome;
+export default EditExpense;

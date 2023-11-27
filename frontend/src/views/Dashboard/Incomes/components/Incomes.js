@@ -31,34 +31,13 @@ const Incomes = ({ title, onTotalAmountChange }) => {
     "linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)",
     "gray.800"
   );
-  // const dummyData = [
-  //   {
-  //     id: 1,
-  //     title: "Gaji",
-  //     amount: 5000000,
-  //     description: "Gaji bulanan",
-  //     date: "2023-01-01",
-  //     wallet: "Dompet Utama",
-  //   },
-  //   {
-  //     id: 2,
-  //     title: "Bonus",
-  //     amount: 1500000,
-  //     description: "Bonus proyek",
-  //     date: "2023-01-15",
-  //     wallet: "Dompet Sampingan",
-  //   },
-  //   // Tambahkan lebih banyak data jika diperlukan
-  // ];
 
   const [incomeData, setIncomeData] = useState([]);
   const [username, setUsername] = useState("");
-  const [isLoading, setLoading] = useState(false);
-  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
-
   const [isAddIncomeModalOpen, setIsAddIncomeModalOpen] = useState(false);
   const [isEditIncomeModalOpen, setIsEditIncomeModalOpen] = useState(false);
-  const [currentEditIncome, setCurrentEditIncome] = useState(null);
+
+  const [selectedIncome, setSelectedIncome] = useState(null);
 
   const history = useHistory();
 
@@ -66,80 +45,49 @@ const Incomes = ({ title, onTotalAmountChange }) => {
     const storedUsername = Cookies.get("username");
     if (storedUsername) {
       setUsername(storedUsername);
+      fetchIncomes(storedUsername);
     }
   }, []);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!username) return;
+  const fetchIncomes = async (username) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5000/incomes/${username}`
+      );
+      console.log("Full response:", response); // Log the full response
 
-      try {
-        const response = await axios.get(
-          `http://localhost:5000/incomes/${username}`
-        );
-        console.log("Full API Response:", response);
-
-        if (response.data && response.data.incomes) {
-          const incomes = response.data.incomes;
-          setIncomeData(incomes);
-
-          const totalAmount = incomes.reduce(
-            (acc, income) => acc + income.amount,
-            0
-          );
-          onTotalAmountChange(totalAmount);
-        } else {
-          console.log("No incomes data received from API");
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
+      if (response && response.data && response.data.incomes) {
+        setIncomeData(response.data.incomes);
       }
-    };
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
-    fetchData();
-  }, [username]);
+  const handleDelete = async (income_id) => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:5000/incomes/${username}/${income_id}`
+      );
+      const updatedIncomeData = incomeData.filter(
+        (income) => income.id !== income_id
+      );
+      setIncomeData(updatedIncomeData);
+    } catch (error) {
+      console.error("Error deleting income:", error);
+      console.error("Detailed error response:", error.response); // Log the detailed error response
+    }
+  };
 
   const handleAddButton = () => {
     console.log("Add button clicked");
     setIsAddIncomeModalOpen(true);
   };
 
-  const handleDelete = async (incomeTitle) => {
-    try {
-      const response = await axios.delete(
-        `http://localhost:5000/incomes/${username}/${incomeTitle}`
-      );
-      const updatedIncomeData = incomeData.filter(
-        (income) => income.title !== incomeTitle
-      );
-      setIncomeData(updatedIncomeData);
-    } catch (error) {
-      console.error("Error deleting income:", error);
-      console.error("Detailed error response:", error.response); // Log the detailed error response
-    } finally {
-      setLoading(false);
-      setShowSuccessAlert(true); // Show the SweetAlert notification after the server request is complete
-      Swal.fire({
-        title: "Delete Income Success",
-        text: "Delete income has been successfully!",
-        icon: "success",
-        confirmButtonText: "OK",
-      }).then(() => {
-        window.location.reload(); // Reload the page after user clicks "OK"
-      });
-    }
+  const handleEdit = (income) => {
+    setSelectedIncome(income);
+    setIsEditIncomeModalOpen(true);
   };
-
-  const handleEdit = (incomeTitle) => {
-    const selectedIncome = incomeData.find(
-      (income) => income.title === incomeTitle
-    );
-    if (selectedIncome) {
-      setCurrentEditIncome(selectedIncome); // Asumsikan Anda menambahkan state baru untuk ini
-      setIsEditIncomeModalOpen(true);
-    }
-  };
-
   return (
     <Card my="20px" overflowX={{ sm: "scroll", xl: "hidden" }}>
       <SimpleGrid columns={{ sm: 1, md: 1, xl: 1 }} spacing="24px">
@@ -188,8 +136,8 @@ const Incomes = ({ title, onTotalAmountChange }) => {
                 key={income.id}
                 index={index + 1}
                 income={income}
-                onDelete={() => handleDelete(income.title)}
-                onEdit={() => handleEdit(income.title)}
+                onDelete={() => handleDelete(income.id)}
+                onEdit={() => handleEdit(income)}
               />
             ))}
           </Tbody>
@@ -203,7 +151,7 @@ const Incomes = ({ title, onTotalAmountChange }) => {
           // Perform any actions needed on successful addition
           setIsEditIncomeModalOpen(false);
         }}
-        incomeData={currentEditIncome}
+        incomeData={selectedIncome}
       />
 
       <AddIncome
