@@ -200,6 +200,42 @@ export const getIncomesByUsernameAndPeriod = async (req, res) => {
   }
 };
 
+export const updateIncomeByUsernameAndIncomeId = async (req, res) => {
+  try {
+    const { username, income_id } = req.params;
+    const updatedIncomeData = req.body;
+
+    const user = await prisma.user.findUnique({
+      where: { username },
+      include: {
+        wallets: {
+          include: {
+            incomes: true,
+          },
+        },
+      },
+    });
+
+    if (!user) {
+      return res.status(404).json({ msg: "User not found" });
+    }
+
+    const updatedIncome = await prisma.income.update({
+      where: {
+        id: parseInt(income_id),
+      },
+      data: updatedIncomeData,
+    });
+
+    res
+      .status(200)
+      .json({ msg: "Income updated successfully", data: updatedIncome });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ msg: "Internal Server Error" });
+  }
+};
+
 export const getTotalIncomeInPeriod = async (req, res) => {
   try {
     const { startDate, endDate, user_id } = req.query;
@@ -268,7 +304,6 @@ export const getTotalIncomeInPeriod = async (req, res) => {
   }
 };
 
-
 // Controller untuk menghapus income dari wallet berdasarkan username dan income_id
 export const deleteIncomeByUsernameAndIncomeId = async (req, res) => {
   try {
@@ -289,7 +324,7 @@ export const deleteIncomeByUsernameAndIncomeId = async (req, res) => {
 
     // Jika user tidak ditemukan atau income tidak ditemukan, kirim respons 404
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
 
     // Hapus income dari wallet yang sesuai
@@ -300,10 +335,10 @@ export const deleteIncomeByUsernameAndIncomeId = async (req, res) => {
     });
 
     // Kirim respons berhasil
-    res.status(200).json({ message: 'Income deleted successfully' });
+    res.status(200).json({ message: "Income deleted successfully" });
   } catch (error) {
     // Tangani kesalahan dan kirim respons 500 jika terjadi kesalahan server
-    console.error('Error:', error);
-    res.status(500).json({ message: 'Internal Server Error' });
+    console.error("Error:", error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };

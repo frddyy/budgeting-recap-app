@@ -14,18 +14,18 @@ import {
 } from "@chakra-ui/react";
 import { FaPencilAlt, FaTrashAlt } from "react-icons/fa";
 
-const formatBalanceToRp = (balance) => {
-  const formattedBalance = new Intl.NumberFormat("id-ID", {
+const formatAmountToRp = (amount) => {
+  const formattedAmount = new Intl.NumberFormat("id-ID", {
     style: "currency",
     currency: "IDR",
-  }).format(balance);
-  return formattedBalance;
+  }).format(amount);
+  return formattedAmount;
 };
 
-function TableWalletRow({ wallet, onEdit, onDelete, index}) {
+function TableIncomeRow({ income, onEdit, onDelete, index }) {
+  console.log("Income data received in TableIncomeRow:", income);
   const textColor = useColorModeValue("gray.700", "white");
   const bgColor = useColorModeValue("#F8F9FA", "gray.800");
-
   return (
     <Tr>
       <Td>
@@ -41,12 +41,27 @@ function TableWalletRow({ wallet, onEdit, onDelete, index}) {
       </Td>
       <Td>
         <Text fontSize="md" color={textColor} fontWeight="bold" pb=".5rem">
-          {wallet.name}
+          {income.title}
         </Text>
       </Td>
       <Td>
         <Text fontSize="md" color={textColor} fontWeight="bold" pb=".5rem">
-          {formatBalanceToRp(wallet.balance)}
+          {formatAmountToRp(income.amount)}
+        </Text>
+      </Td>
+      <Td>
+        <Text fontSize="md" color={textColor} fontWeight="bold" pb=".5rem">
+          {income.description}
+        </Text>
+      </Td>
+      <Td>
+        <Text fontSize="md" color={textColor} fontWeight="bold" pb=".5rem">
+          {income.date}
+        </Text>
+      </Td>
+      <Td>
+        <Text fontSize="md" color={textColor} fontWeight="bold" pb=".5rem">
+          {income.wallet_id}
         </Text>
       </Td>
       <Td>
@@ -61,7 +76,7 @@ function TableWalletRow({ wallet, onEdit, onDelete, index}) {
             bg="transparent"
             mb={{ sm: "10px", md: "0px" }}
             me={{ md: "12px" }}
-            onClick={() => onEdit(wallet.id)}
+            onClick={() => onEdit(income.id)}
           >
             <Flex color={textColor} cursor="pointer" align="center" p="12px">
               <Icon as={FaPencilAlt} me="4px" />
@@ -84,4 +99,4 @@ function TableWalletRow({ wallet, onEdit, onDelete, index}) {
   );
 }
 
-export default TableWalletRow;
+export default TableIncomeRow;

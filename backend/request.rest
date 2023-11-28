@@ -30,14 +30,14 @@ POST http://localhost:5000/login
 Content-Type: application/json
 
 {
-    "username": "ferdy",
+    "username": "rvldfr",
     "password": "12345"
 }
 
 //////////////////////// CRUD WALLET ////////////////////////////
 
 ###
-GET http://localhost:5000/wallets/ferdy
+GET http://localhost:5000/wallets/rvldfr
 
 ###
 POST http://localhost:5000/wallets
@@ -87,7 +87,7 @@ DELETE http://localhost:5000/categories/ferdy/Hiburan
 
 //////////////////////// CRUD INCOMES ////////////////////////////
 ###
-GET  http://localhost:5000/incomes/junet
+GET  http://localhost:5000/incomes/rvldfr
 
 ###
 POST http://localhost:5000/incomes
@@ -95,10 +95,10 @@ Content-Type: application/json
 
 {
     "title": "Bonus",
-    "amount": -20000,
+    "amount": 20000,
     "description": "rezeki nich",
     "date": "2023-11-14T09:30:00Z",
-    "wallet_id": 1
+    "wallet_id": 2
 }
 
 

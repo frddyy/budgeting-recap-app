@@ -34,13 +34,12 @@ const Wallets = ({ title, onTotalBalanceChange }) => {
 
   const [walletData, setWalletData] = useState([]);
   const [username, setUsername] = useState("");
-
-   
+  const [isLoading, setLoading] = useState(false);
+  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
 
   const [isAddWalletModalOpen, setIsAddWalletModalOpen] = useState(false);
   const [isEditWalletModalOpen, setIsEditWalletModalOpen] = useState(false);
   const [currentEditWallet, setCurrentEditWallet] = useState(null);
-
 
   const history = useHistory();
 
@@ -117,11 +116,18 @@ const Wallets = ({ title, onTotalBalanceChange }) => {
       }
     } catch (error) {
       console.error("Error deleting wallet:", error);
-      Swal.fire(
-        'Error',
-        'Failed to delete the wallet.',
-        'error'
-      );
+      console.error("Detailed error response:", error.response); // Log the detailed error response
+    } finally {
+      setLoading(false);
+      setShowSuccessAlert(true); // Show the SweetAlert notification after the server request is complete
+      Swal.fire({
+        title: "Delete Wallet Success",
+        text: "Delete wallet has been successfully!",
+        icon: "success",
+        confirmButtonText: "OK",
+      }).then(() => {
+        window.location.reload(); // Reload the page after user clicks "OK"
+      });
     }
   };
   
@@ -138,7 +144,7 @@ const Wallets = ({ title, onTotalBalanceChange }) => {
 
 
   return (
-    <Card my="22px" overflowX={{ sm: "scroll", xl: "hidden" }}>
+    <Card my="20px" overflowX={{ sm: "scroll", xl: "hidden" }}>
       <SimpleGrid columns={{ sm: 1, md: 1, xl: 1 }} spacing="24px">
         <CardHeader p="6px 30px 30px 22px">
           <Flex
@@ -166,10 +172,14 @@ const Wallets = ({ title, onTotalBalanceChange }) => {
         <Table variant="simple" color={textColor}>
           <Thead>
             <Tr my=".8rem" pl="0px">
-              <Th color="gray.400">No</Th>
+              <Th color="gray.400" textAlign="center">
+                No
+              </Th>
               <Th color="gray.400">Wallet Name</Th>
               <Th color="gray.400">Balance</Th>
-              <Th color="gray.400">Actions</Th>
+              <Th color="gray.400" textAlign="center">
+                Actions
+              </Th>
             </Tr>
           </Thead>
           <Tbody>

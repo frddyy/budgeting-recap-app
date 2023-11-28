@@ -18,7 +18,6 @@ import Cookies from "js-cookie";
 import Swal from 'sweetalert2'; // Import SweetAlert
 import { useHistory } from 'react-router-dom'; // Import useHistory
 
-
 const AddWallet = ({ isOpen, onClose, onSuccess }) => {
   const [username, setUsername] = useState("");
   const [userId, setUserId] = useState("");
@@ -131,8 +130,6 @@ const AddWallet = ({ isOpen, onClose, onSuccess }) => {
       });
     }
   };
-
-
 
   return (
     <>

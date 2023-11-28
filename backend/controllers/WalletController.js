@@ -118,7 +118,7 @@ export const updateWallet = async (req, res) => {
       .status(200)
       .json({ msg: "Wallet updated successfully", wallet: updatedWallet });
   } catch (error) {
-    console.error('Error updating wallet:', error);
+    console.error("Error updating wallet:", error);
     res.status(500).json({ error: `Internal server error: ${error.message}` });
   }
 };
@@ -164,10 +164,7 @@ export const deleteWallet = async (req, res) => {
 
     res.status(200).json({ msg: "Wallet deleted successfully" });
   } catch (error) {
-    console.error('Error deleting wallet:', error);
+    console.error("Error deleting wallet:", error);
     res.status(500).json({ error: `Internal server error: ${error.message}` });
   }
 };
-
-
-

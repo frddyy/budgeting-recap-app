@@ -14,8 +14,18 @@ const formatBalanceToRp = (balance) => {
   return formattedBalance;
 };
 
+// Helper function to format balance
+const formatBalanceToRp = (balance) => {
+  return new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+  }).format(balance);
+};
+
+// Main component
 function Tables() {
   const [totalBalance, setTotalBalance] = useState(0);
+  
   return (
     <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
       <Grid templateColumns={{ sm: "1fr", lg: "1fr 0.2fr" }} templateRows="1fr">

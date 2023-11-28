@@ -22,7 +22,7 @@ import signInImage from "assets/img/signInImage.png";
 
 function SignIn() {
   const history = useHistory(); // Use useHistory
-  
+
   const [formData, setFormData] = useState({
     username: "",
     password: "",

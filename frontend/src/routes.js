@@ -111,4 +111,5 @@ var dashRoutes = [
     hidden: true,
   },
 ];
+
 export default dashRoutes;

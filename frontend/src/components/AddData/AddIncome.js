@@ -10,8 +10,8 @@ import {
   Button,
   FormControl,
   FormLabel,
-  Input,
   Select,
+  Input,
   Alert, // Import Alert untuk menampilkan pesan sukses atau error
 } from "@chakra-ui/react";
 import axios from "axios";
@@ -19,17 +19,16 @@ import Cookies from "js-cookie";
 import Swal from "sweetalert2"; // Import SweetAlert
 import { useHistory } from "react-router-dom"; // Import useHistory
 
-const AddExpense = ({ isOpen, onClose, onSuccess }) => {
+const AddIncome = ({ isOpen, onClose, onSuccess }) => {
   const [username, setUsername] = useState("");
   const [userId, setUserId] = useState("");
-  const [expense, setExpense] = useState({
+  const [income, setIncome] = useState({
     id: "",
     title: "",
     amount: 0,
     description: "",
     date: "",
     wallet_id: null,
-    budget_id: null,
   });
   const initialRef = useRef(null);
   const finalRef = useRef(null);
@@ -42,70 +41,47 @@ const AddExpense = ({ isOpen, onClose, onSuccess }) => {
 
   const history = useHistory(); // Inisialisasi useHistory
 
-  const [expenseCreated, setExpenseCreated] = useState(false); // New state to track expense creation
+  const [incomeCreated, setIncomeCreated] = useState(false);
+  const [wallets, setWallets] = useState([]);
 
-    const [wallets, setWallets] = useState([]);
-    const [budgets, setBudgets] = useState([]);
+  // useEffect existing...
 
-    // useEffect existing...
+  useEffect(() => {
+    const fetchWallets = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:5000/wallets/${username}`
+        );
+        const fetchedWallets = response.data.data || [];
+        setWallets(fetchedWallets);
 
-    useEffect(() => {
-      const fetchWallets = async () => {
-        try {
-          const response = await axios.get(
-            `http://localhost:5000/wallets/${username}`
-          );
-          const fetchedWallets = response.data.data || [];
-          setWallets(fetchedWallets);
-
-          // Set default wallet_id if wallets are available
-          if (fetchedWallets.length > 0) {
-            setExpense((prevState) => ({
-              ...prevState,
-              wallet_id: fetchedWallets[0].id,
-            }));
-          }
-        } catch (error) {
-          console.error("Error fetching wallets:", error);
+        // Set default wallet_id if wallets are available
+        if (fetchedWallets.length > 0) {
+          setIncome((prevState) => ({
+            ...prevState,
+            wallet_id: fetchedWallets[0].id,
+          }));
         }
-      };
-
-      const fetchBudgets = async () => {
-        try {
-          const response = await axios.get(
-            `http://localhost:5000/budgets/${username}`
-          );
-          const fetchedBudgets = response.data.budgets || [];
-          setBudgets(fetchedBudgets);
-
-          // Set default budget_id if budgets are available
-          if (fetchedBudgets.length > 0) {
-            setExpense((prevState) => ({
-              ...prevState,
-              budget_id: fetchedBudgets[0].id,
-            }));
-          }
-        } catch (error) {
-          console.error("Error fetching budgets:", error);
-        }
-      };
-
-      if (username) {
-        fetchWallets();
-        fetchBudgets();
+      } catch (error) {
+        console.error("Error fetching wallets:", error);
       }
-    }, [username]);
+    };
+
+    if (username) {
+      fetchWallets();
+    }
+  }, [username]);
   // New useEffect to show SweetAlert notification
   useEffect(() => {
-    if (expenseCreated) {
+    if (incomeCreated) {
       Swal(
-        "Create Expense Success",
-        "Your expense has been created successfully!",
+        "Create Income Success",
+        "Your income has been created successfully!",
         "success"
       );
-      setExpenseCreated(false); // Reset the state
+      setIncomeCreated(false); // Reset the state
     }
-  }, [expenseCreated]);
+  }, [incomeCreated]);
 
   console.log("username:", username);
   console.log("user_id:", userId);
@@ -144,54 +120,53 @@ const AddExpense = ({ isOpen, onClose, onSuccess }) => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
-    setExpense((prevState) => ({
+    setIncome((prevState) => ({
       ...prevState,
-      [name]: value
+      [name]: value,
     }));
   };
 
-  const saveExpense = async (e) => {
+  const saveIncome = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      const expenseData = {
-        title: expense.title,
-        amount: parseFloat(expense.amount),
-        description: expense.description,
-        date: new Date(expense.date).toISOString(),
-        wallet_id: parseInt(expense.wallet_id),
-        budget_id: parseInt(expense.budget_id),
+      const incomeData = {
+        title: income.title,
+        amount: parseFloat(income.amount),
+        description: income.description,
+        date: new Date(income.date).toISOString(),
+        wallet_id: parseInt(income.wallet_id),
         user_id: userId,
       };
 
       const response = await axios.post(
-        "http://localhost:5000/expenses",
-        expenseData
+        "http://localhost:5000/incomes",
+        incomeData
       );
 
       if (response.status === 200) {
         if (onSuccess) {
           onSuccess();
         }
-        history.push("/admin/expenses");
+        history.push("/admin/incomes");
         setShowSuccessAlert(true);
-        setMsg("Expense successfully created!");
+        setMsg("Income successfully created!");
       } else {
         setShowErrorMsg(true);
-        setMsg("Failed to create expense. Please try again.");
+        setMsg("Failed to create income. Please try again.");
       }
     } catch (error) {
-      console.error("Error saving expense:", error);
+      console.error("Error saving income:", error);
       setShowErrorMsg(true);
-      setMsg("Failed to create expense. Please try again.");
+      setMsg("Failed to create income. Please try again.");
     } finally {
       setLoading(false);
       handleClose();
       setShowSuccessAlert(true); // Show the SweetAlert notification after the server request is complete
       Swal.fire({
-        title: "Create Expense Success",
-        text: "Your expense has been created successfully!",
+        title: "Create Income Success",
+        text: "Your income has been created successfully!",
         icon: "success",
         confirmButtonText: "OK",
       }).then(() => {
@@ -215,24 +190,24 @@ const AddExpense = ({ isOpen, onClose, onSuccess }) => {
           backdropInvert="80%"
           backdropBlur="2px"
         />
-        <form onSubmit={saveExpense}>
+        <form onSubmit={saveIncome}>
           <ModalContent
             style={{
               borderRadius: "20px", // Adjust the border-radius to your preference
             }}
           >
-            <ModalHeader>Create your expense</ModalHeader>
+            <ModalHeader>Create your income</ModalHeader>
             <ModalCloseButton onClick={handleClose} />
             <ModalBody pb={6}>
               {showSuccessAlert && <Alert severity="success">{msg}</Alert>}
               {showErrorMsg && <Alert severity="error">{msg}</Alert>}
               <FormControl>
-                <FormLabel>Expense Name</FormLabel>
+                <FormLabel>Title</FormLabel>
                 <Input
                   ref={initialRef}
-                  placeholder="Expense Name"
+                  placeholder="Title"
                   name="title"
-                  value={expense.title}
+                  value={income.title}
                   onChange={handleInputChange}
                   style={{
                     borderRadius: "13px", // Adjust the border-radius to your preference
@@ -244,8 +219,7 @@ const AddExpense = ({ isOpen, onClose, onSuccess }) => {
                 <Input
                   placeholder="Amount"
                   name="amount"
-                  type="number"
-                  value={expense.amount}
+                  value={income.amount}
                   onChange={handleInputChange}
                   style={{
                     borderRadius: "13px", // Adjust the border-radius to your preference
@@ -257,7 +231,7 @@ const AddExpense = ({ isOpen, onClose, onSuccess }) => {
                 <Input
                   placeholder="Description"
                   name="description"
-                  value={expense.description}
+                  value={income.description}
                   onChange={handleInputChange}
                   style={{
                     borderRadius: "13px", // Adjust the border-radius to your preference
@@ -267,10 +241,11 @@ const AddExpense = ({ isOpen, onClose, onSuccess }) => {
               <FormControl mt={4}>
                 <FormLabel>Date</FormLabel>
                 <Input
-                  placeholder="Date"
                   name="date"
+                  placeholder="Select Date and Time"
+                  size="md"
                   type="date"
-                  value={expense.date}
+                  value={income.date}
                   onChange={handleInputChange}
                   style={{
                     borderRadius: "13px", // Adjust the border-radius to your preference
@@ -283,16 +258,6 @@ const AddExpense = ({ isOpen, onClose, onSuccess }) => {
                   {wallets.map((wallet) => (
                     <option key={wallet.id} value={wallet.id}>
                       {wallet.name}
-                    </option>
-                  ))}
-                </Select>
-              </FormControl>
-              <FormControl mt={4}>
-                <FormLabel>Budget</FormLabel>
-                <Select name="budget_id" onChange={handleInputChange}>
-                  {budgets.map((budget) => (
-                    <option key={budget.id} value={budget.id}>
-                      {budget.title}
                     </option>
                   ))}
                 </Select>
@@ -318,4 +283,4 @@ const AddExpense = ({ isOpen, onClose, onSuccess }) => {
   );
 };
 
-export default AddExpense;
+export default AddIncome;

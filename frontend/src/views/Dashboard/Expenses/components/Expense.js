@@ -35,8 +35,7 @@ const Expenses = ({ title }) => {
   const [isEditExpenseModalOpen, setIsEditExpenseModalOpen] = useState(false);
 
   const [selectedExpense, setSelectedExpense] = useState(null);
-
-
+  
   const history = useHistory();
 
   useEffect(() => {
@@ -46,7 +45,6 @@ const Expenses = ({ title }) => {
       fetchExpenses(storedUsername); // Fetch expenses after setting username
     }
   }, []);
-
 
   const fetchExpenses = async (username) => {
     try {
@@ -63,8 +61,6 @@ const Expenses = ({ title }) => {
       console.error("Error fetching data:", error);
     }
   };
-
-
 
   const handleDelete = async (expense_id) => {
     try {
@@ -92,8 +88,6 @@ const Expenses = ({ title }) => {
     setIsEditExpenseModalOpen(true);
   };
 
-
-
   return (
     <Card my="22px" overflowX={{ sm: "scroll", xl: "hidden" }}>
       <CardHeader p="6px 0px 22px 0px">
@@ -108,7 +102,7 @@ const Expenses = ({ title }) => {
             variant="no-hover"
             onClick={handleAddButton}
           >
-            ADD NEW Expense
+            ADD NEW EXPENSE
           </Button>
         </Flex>
       </CardHeader>
