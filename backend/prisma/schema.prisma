@@ -52,8 +52,7 @@ model Expense {
 
 model Category {
   id          Int      @id @default(autoincrement())
-  title       String
-  description String?
+  name        String
   user_id     Int
   budgets     Budget[]
   user        User     @relation(fields: [user_id], references: [id])
@@ -61,6 +60,7 @@ model Category {
 
 model Budget {
   id          Int       @id @default(autoincrement())
+  title       String
   amount      Int
   amount_now  Int
   date        DateTime? @db.Date

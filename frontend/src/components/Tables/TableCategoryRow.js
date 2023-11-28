@@ -7,66 +7,46 @@ import {
   Td,
   Flex,
   Text,
-  Progress,
   Icon,
   Button,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { FaPencilAlt, FaTrashAlt } from "react-icons/fa";
+import { FaTrashAlt } from "react-icons/fa";
+import { BiSolidShow } from "react-icons/bi";
 
-const formatBalanceToRp = (balance) => {
-  const formattedBalance = new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "IDR",
-  }).format(balance);
-  return formattedBalance;
-};
-
-function TableWalletRow({ wallet, onEdit, onDelete, index}) {
+function TableCategoryRow({ category, onShow, onDelete, index }) {
   const textColor = useColorModeValue("gray.700", "white");
   const bgColor = useColorModeValue("#F8F9FA", "gray.800");
 
   return (
     <Tr>
       <Td>
-        <Text
-          fontSize="md"
-          color={textColor}
-          fontWeight="bold"
-          pb=".5rem"
-          textAlign="center"
-        >
+        <Text fontSize="md" color={textColor} fontWeight="bold" pb=".5rem">
           {index}
         </Text>
       </Td>
       <Td>
         <Text fontSize="md" color={textColor} fontWeight="bold" pb=".5rem">
-          {wallet.name}
-        </Text>
-      </Td>
-      <Td>
-        <Text fontSize="md" color={textColor} fontWeight="bold" pb=".5rem">
-          {formatBalanceToRp(wallet.balance)}
+          {category.name}
         </Text>
       </Td>
       <Td>
         <Flex
           direction={{ sm: "column", md: "row" }}
-          align="center"
+          align="flex-start"
           p={{ md: "24px" }}
-          justify="center"
         >
           <Button
             p="0px"
             bg="transparent"
             mb={{ sm: "10px", md: "0px" }}
             me={{ md: "12px" }}
-            onClick={() => onEdit(wallet.id)}
+            onClick={() => onShow(category.name)}
           >
             <Flex color={textColor} cursor="pointer" align="center" p="12px">
-              <Icon as={FaPencilAlt} me="4px" />
+              <Icon as={BiSolidShow} me="4px" />
               <Text fontSize="sm" fontWeight="semibold">
-                EDIT
+                SHOW
               </Text>
             </Flex>
           </Button>
@@ -84,4 +64,4 @@ function TableWalletRow({ wallet, onEdit, onDelete, index}) {
   );
 }
 
-export default TableWalletRow;
+export default TableCategoryRow;

@@ -5,26 +5,39 @@ const prisma = new PrismaClient();
 // Controller untuk membuat Expense baru
 export const createExpense = async (req, res) => {
   try {
+    // Log request body untuk debugging
+    console.log("Request body:", req.body);
+
+    const { title, amount, description, date, wallet_id, budget_id } = req.body;
+
+    if (!wallet_id || !budget_id) {
+      return res
+        .status(400)
+        .json({ msg: "Wallet ID and Budget ID are required" });
+    }
+
     const response = await prisma.expense.create({
       data: {
-        title: req.body.title,
-        amount: req.body.amount,
-        description: req.body.description,
-        date: req.body.date,
-        wallet_id: req.body.wallet_id,
-        // Optional: Uncomment the line below if you want to associate the expense with a budget
-        budget_id: req.body.budget_id,
+        title,
+        amount,
+        description,
+        date,
+        wallet: { connect: { id: wallet_id } },
+        budget: { connect: { id: budget_id } }, // If your schema has a relation with budget
       },
     });
+
+
 
     res
       .status(201)
       .json({ msg: "Expense created successfully", data: response });
   } catch (error) {
     console.error("Error:", error);
-    res.status(500).json({ msg: "Internal Server Error" });
+    res.status(500).json({ msg: "Internal Server Error", error: error.message });
   }
 };
+
 
 // Controller untuk mendapatkan semua Expenses
 export const getAllExpenses = async (req, res) => {
@@ -97,32 +110,29 @@ export const getExpenseByUsername = async (req, res) => {
   try {
     const { username } = req.params;
 
-    const user = await prisma.user.findUnique({
-      where: { username },
+    const expenses = await prisma.expense.findMany({
+      where: { wallet: { user: { username: username } } }, // Update the query to correctly reference the user
       include: {
-        wallets: {
-          include: {
-            expenses: true,
-          },
-        },
+        wallet: true,
+        budget: true,
       },
     });
 
-    if (!user) {
-      return res.status(404).json({ msg: 'User not found' });
-    }
+    // Optionally, you can reshape the data to include only necessary fields
+    const result = expenses.map((expense) => ({
+      ...expense,
+      wallet_name: expense.wallet.name,
+      budget_title: expense.budget.title,
+    }));
 
-    const allExpenses = user.wallets.reduce((acc, wallet) => {
-      acc.push(...wallet.expenses);
-      return acc;
-    }, []);
-
-    res.status(200).json({ expenses: allExpenses });
+    res.status(200).json({ expenses: result });
   } catch (error) {
-    console.error('Error:', error);
-    res.status(500).json({ msg: 'Internal Server Error' });
+    console.error("Error:", error);
+    res.status(500).json({ msg: "Internal Server Error" });
   }
 };
+
+
 
 // Controller untuk memperbarui Expense berdasarkan nama pengguna dan ID Expense
 export const updateExpenseByUsernameAndExpenseId = async (req, res) => {

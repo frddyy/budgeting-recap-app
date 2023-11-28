@@ -6,10 +6,11 @@ export const createBudget = async (req, res) => {
   try {
     const response = await prisma.Budget.create({
       data: {
+        title: req.body.title,
         amount: req.body.amount,
         amount_now: req.body.amount,
         date: req.body.date,
-        category_id: req.body.category_id
+        category_id: req.body.category_id,
       },
     });
     res
@@ -59,7 +60,8 @@ export const getBudgetByUsername = async (req, res) => {
     }, []);
 
     // Kirim respons dengan data budgets
-    res.status(200).json({ budgets: allBudgets }); res
+    res.status(200).json({ budgets: allBudgets });
+    res;
   } catch (error) {
     // Tangani kesalahan dan kirim respons 500 jika terjadi kesalahan server
     console.error("Error:", error);
@@ -67,53 +69,41 @@ export const getBudgetByUsername = async (req, res) => {
   }
 };
 
-// export const getIncomesByUsernameAndPeriod = async (req, res) => {
-//   try {
-//     // Ambil username dan periode dari parameter request
-//     const { username } = req.params;
-//     const { startDate, endDate } = req.query;
+export const getBudgetByUsernameAndCategory = async (req, res) => {
+  try {
+    // Ambil username dan nama kategori dari parameter request
+    const { username, category } = req.params;
 
-//     // Cari user berdasarkan username
-//     const user = await prisma.user.findUnique({
-//       where: { username },
-//       include: {
-//         wallets: {
-//           include: {
-//             incomes: {
-//               where: {
-//                 date: {
-//                   gte: new Date(startDate),
-//                   lte: new Date(endDate),
-//                 },
-//               },
-//             },
-//           },
-//         },
-//       },
-//     });
+    // Cari user berdasarkan username
+    const user = await prisma.user.findUnique({
+      where: { username },
+      include: {
+        categories: {
+          where: { name: category }, // Filter berdasarkan nama kategori
+          include: {
+            budgets: true,
+          },
+        },
+      },
+    });
 
-//     // Jika user tidak ditemukan, kirim respons 404
-//     if (!user) {
-//       return res.status(404).json({ message: "User not found" });
-//     }
+    // Jika user tidak ditemukan atau kategori tidak ditemukan, kirim respons 404
+    if (!user || !user.categories || user.categories.length === 0) {
+      return res.status(404).json({ message: "User or category not found" });
+    }
 
-//     // Ambil semua incomes dari wallets user sesuai periode
-//     const allIncomes = user.wallets.reduce((acc, wallet) => {
-//       acc.push(...wallet.incomes);
-//       return acc;
-//     }, []);
+    // Ambil semua budgets dari kategori yang sesuai
+    const budgetsInCategory = user.categories[0].budgets;
 
-//     // Kirim respons dengan data incomes sesuai periode
-//     res.status(200).json({ incomes: allIncomes });
-//   } catch (error) {
-//     // Tangani kesalahan dan kirim respons 500 jika terjadi kesalahan server
-//     console.error("Error:", error);
-//     res.status(500).json({ message: "Internal Server Error" });
-//   } finally {
-//     // Jangan lupa untuk selalu menutup koneksi Prisma setelah penggunaan
-//     await prisma.$disconnect();
-//   }
-// };
+    // Kirim respons dengan data budgets
+    res.status(200).json({ budgets: budgetsInCategory });
+  } catch (error) {
+    // Tangani kesalahan dan kirim respons 500 jika terjadi kesalahan server
+    console.error("Error:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
 
 // Controller untuk mengupdate budget dari categories berdasarkan username dan budget_id
 export const updateBudgetByUsernameAndBudgetId = async (req, res) => {
@@ -155,7 +145,6 @@ export const updateBudgetByUsernameAndBudgetId = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
-
 
 // Controller untuk menghapus budget dari categories berdasarkan username dan budget_id
 export const deleteBudgetByUsernameAndBudgetId = async (req, res) => {

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Redirect, Route, Switch } from "react-router-dom";
+import { Redirect, Route, Switch, useRouteMatch } from "react-router-dom";
 import { ChakraProvider, Portal, useDisclosure } from "@chakra-ui/react";
 import Configurator from "components/Configurator/Configurator";
 import Footer from "components/Footer/Footer.js";
@@ -26,22 +26,34 @@ export default function Dashboard(props) {
 
   const getActiveRoute = (routes) => {
     let activeRoute = "Default Brand Text";
-    for (let i = 0; i < routes.length; i++) {
-      if (routes[i].collapse) {
-        let collapseActiveRoute = getActiveRoute(routes[i].views);
-        if (collapseActiveRoute !== activeRoute) {
-          return collapseActiveRoute;
-        }
-      } else if (routes[i].category) {
-        let categoryActiveRoute = getActiveRoute(routes[i].views);
-        if (categoryActiveRoute !== activeRoute) {
-          return categoryActiveRoute;
-        }
-      } else {
-        if (
-          window.location.href.indexOf(routes[i].layout + routes[i].path) !== -1
-        ) {
-          return routes[i].name;
+    let currentPath = window.location.pathname; // Dapatkan path saat ini
+    let match = useRouteMatch("/admin/budgets/:category"); // Ganti dengan path yang sesuai
+
+    if (match) {
+      activeRoute = `Budgets / ${match.params.category}`;
+    } else {
+      for (let i = 0; i < routes.length; i++) {
+        if (routes[i].collapse) {
+          let collapseActiveRoute = getActiveRoute(routes[i].views);
+          if (collapseActiveRoute !== activeRoute) {
+            return collapseActiveRoute;
+          }
+        } else if (routes[i].category) {
+          let categoryActiveRoute = getActiveRoute(routes[i].views);
+          if (categoryActiveRoute !== activeRoute) {
+            return categoryActiveRoute;
+          }
+        } else {
+          let routePath = routes[i].layout + routes[i].path;
+          // Mengganti parameter rute dinamis seperti ':category' dengan regex wildcard
+          let modifiedRoutePath = routePath.replace(/:\w+/g, "[^/]+");
+
+          // Membuat RegExp dari modifiedRoutePath
+          let routePathRegex = new RegExp("^" + modifiedRoutePath + "$");
+
+          if (routePathRegex.test(currentPath)) {
+            return routes[i].name;
+          }
         }
       }
     }
@@ -73,10 +85,8 @@ export default function Dashboard(props) {
   const filteredRoutes = routes.filter((route) => !route.hidden);
 
   const getRoutes = () => {
-    return filteredRoutes.map((prop, key) => {
-      if (prop.collapse) {
-        return getRoutes(prop.views);
-      } else if (prop.layout === "/admin") {
+    return routes.map((prop, key) => {
+      if (prop.layout === "/admin") {
         return (
           <Route
             path={prop.layout + prop.path}

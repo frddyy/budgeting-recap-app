@@ -35,7 +35,7 @@ const Expenses = ({ title }) => {
   const [isEditExpenseModalOpen, setIsEditExpenseModalOpen] = useState(false);
 
   const [selectedExpense, setSelectedExpense] = useState(null);
-
+  
   const history = useHistory();
 
   useEffect(() => {

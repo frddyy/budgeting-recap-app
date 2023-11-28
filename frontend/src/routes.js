@@ -7,8 +7,8 @@ import SignIn from "views/Auth/SignIn.js";
 import SignUp from "views/Auth/SignUp.js";
 import Incomes from "views/Dashboard/Incomes";
 import Expenses from "views/Dashboard/Expenses";
-// import Budgeting from "views/Dashboard/Budgeting";
-// import Budgets from "views/Dashboard/Budgeting/Budgets";
+import Budgeting from "views/Dashboard/Budgeting";
+import Budgets from "views/Dashboard/Budgeting/Budgets";
 
 import {
   HomeIcon,
@@ -58,23 +58,23 @@ var dashRoutes = [
     component: Wallets,
     layout: "/admin",
   },
-  // {
-  //   path: "/budgeting",
-  //   name: "Budgeting",
-  //   rtlName: "لوحة القيادة",
-  //   icon: <BudgetIcon color="inherit" />,
-  //   component: Budgeting,
-  //   layout: "/admin",
-  // },
-  // {
-  //   path: "/budgets/:category",
-  //   name: "Budgets",
-  //   rtlName: "لوحة القيادة",
-  //   icon: <BudgetIcon color="inherit" />,
-  //   component: Budgets,
-  //   layout: "/admin",
-  //   hidden: true,
-  // },
+  {
+    path: "/budgeting",
+    name: "Budgeting",
+    rtlName: "لوحة القيادة",
+    icon: <BudgetIcon color="inherit" />,
+    component: Budgeting,
+    layout: "/admin",
+  },
+  {
+    path: "/budgets/:category",
+    name: "Budgets",
+    rtlName: "لوحة القيادة",
+    icon: <BudgetIcon color="inherit" />,
+    component: Budgets,
+    layout: "/admin",
+    hidden: true
+  },
   {
     path: "/incomes",
     name: "Incomes",
@@ -111,4 +111,5 @@ var dashRoutes = [
     hidden: true,
   },
 ];
+
 export default dashRoutes;

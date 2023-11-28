@@ -18,10 +18,12 @@ import Cookies from "js-cookie";
 import Swal from 'sweetalert2'; // Import SweetAlert
 import { useHistory } from 'react-router-dom'; // Import useHistory
 
-const AddWallet = ({ isOpen, onClose, onSuccess }) => {
+
+const AddCategory = ({ isOpen, onClose, onSuccess }) => {
   const [username, setUsername] = useState("");
   const [userId, setUserId] = useState("");
-  const [wallet, setWallet] = useState({ name: "", balance: "" });
+
+  const [category, setCategory] = useState({ name: "" });
   const initialRef = useRef(null);
   const finalRef = useRef(null);
 
@@ -33,19 +35,19 @@ const AddWallet = ({ isOpen, onClose, onSuccess }) => {
 
   const history = useHistory(); // Inisialisasi useHistory
 
-  const [walletCreated, setWalletCreated] = useState(false); // New state to track wallet creation
+  const [categoryCreated, setCategoryCreated] = useState(false); // New state to track wallet creation
 
   // New useEffect to show SweetAlert notification
   useEffect(() => {
-    if (walletCreated) {
+    if (categoryCreated) {
       Swal(
-        "Create Wallet Success",
-        "Your wallet has been created successfully!",
+        "Create Category Success",
+        "Your category has been created successfully!",
         "success"
       );
-      setWalletCreated(false); // Reset the state
+      setCategoryCreated(false); // Reset the state
     }
-  }, [walletCreated]);
+  }, [categoryCreated]);
 
   console.log("username:", username);
   console.log("user_id:", userId);
@@ -83,46 +85,46 @@ const AddWallet = ({ isOpen, onClose, onSuccess }) => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setWallet((prevState) => ({ ...prevState, [name]: value }));
+    setCategory((prevState) => ({ ...prevState, [name]: value }));
   };
 
-  const saveWallet = async (e) => {
+  const saveCategory = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      const walletData = {
-        ...wallet,
+      const categoryData = {
+        ...category,
         user_id: userId,
       };
 
       const response = await axios.post(
-        "http://localhost:5000/wallets",
-        walletData
+        "http://localhost:5000/categories",
+        categoryData
       );
 
-      if (response.status === 200) {
+      if (response.status === 201) {
         if (onSuccess) {
           onSuccess();
         }
-        history.push("/admin/wallets");
+        history.push("/admin/budgeting");
         setShowSuccessAlert(true);
-        setMsg("Wallet successfully created!");
+        setMsg("Category successfully created!");
       } else {
         setShowErrorMsg(true);
-        setMsg("Failed to create wallet. Please try again.");
+        setMsg("Failed to create category. Please try again.");
       }
     } catch (error) {
-      console.error("Error saving wallet:", error);
+      console.error("Error saving category:", error);
       setShowErrorMsg(true);
-      setMsg("Failed to create wallet. Please try again.");
+      setMsg("Failed to create category. Please try again.");
     } finally {
       setLoading(false);
       handleClose();
       setShowSuccessAlert(true); // Show the SweetAlert notification after the server request is complete
       Swal.fire({
-        title: "Create Wallet Success",
-        text: "Your wallet has been created successfully!",
+        title: "Create Category Success",
+        text: "Your category has been created successfully!",
         icon: "success",
         confirmButtonText: "OK",
       }).then(() => {
@@ -130,6 +132,8 @@ const AddWallet = ({ isOpen, onClose, onSuccess }) => {
       });
     }
   };
+
+
 
   return (
     <>
@@ -146,36 +150,24 @@ const AddWallet = ({ isOpen, onClose, onSuccess }) => {
           backdropInvert="80%"
           backdropBlur="2px"
           />
-          <form onSubmit={saveWallet}>
+          <form onSubmit={saveCategory}>
         <ModalContent
           style={{
             borderRadius: "20px", // Adjust the border-radius to your preference
           }}
         >
-          <ModalHeader>Create your wallet</ModalHeader>
+          <ModalHeader>Create your category</ModalHeader>
           <ModalCloseButton onClick={handleClose} />
           <ModalBody pb={6}>
             {showSuccessAlert && <Alert severity="success">{msg}</Alert>}
             {showErrorMsg && <Alert severity="error">{msg}</Alert>}
               <FormControl>
-                <FormLabel>Wallet Name</FormLabel>
+                <FormLabel>Category Name</FormLabel>
                 <Input
                   ref={initialRef}
-                  placeholder="Wallet Name"
+                  placeholder="Category Name"
                   name="name"
-                  value={wallet.name}
-                  onChange={handleInputChange}
-                  style={{
-                    borderRadius: "13px", // Adjust the border-radius to your preference
-                  }}
-                />
-              </FormControl>
-              <FormControl mt={4}>
-                <FormLabel>Balance</FormLabel>
-                <Input
-                  placeholder="Balance"
-                  name="balance"
-                  value={wallet.balance}
+                  value={category.name}
                   onChange={handleInputChange}
                   style={{
                     borderRadius: "13px", // Adjust the border-radius to your preference
@@ -203,4 +195,4 @@ const AddWallet = ({ isOpen, onClose, onSuccess }) => {
   );
 };;;
 
-export default AddWallet;
+export default AddCategory;
