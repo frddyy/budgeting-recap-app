@@ -25,6 +25,7 @@ import AddIncome from "components/AddData/AddIncome";
 import EditIncome from "components/EditData/EditIncome";
 import Swal from "sweetalert2";
 
+
 const Incomes = ({ title, onTotalAmountChange }) => {
   const textColor = useColorModeValue("gray.700", "white");
   const bgButton = useColorModeValue(

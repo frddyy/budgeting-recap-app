@@ -72,7 +72,11 @@ export const getIncomeByUser = async (req, res) => {
       include: {
         wallets: {
           include: {
-            incomes: true,
+            incomes: {
+              include: {
+                wallet: true, // Menambahkan include untuk wallet di sini
+              },
+            },
           },
         },
       },
@@ -85,7 +89,8 @@ export const getIncomeByUser = async (req, res) => {
 
     // Ambil semua incomes dari wallets user
     const allIncomes = user.wallets.reduce((acc, wallet) => {
-      acc.push(...wallet.incomes);
+      // Setiap income akan memiliki informasi wallet yang terkait
+      acc.push(...wallet.incomes.map(income => ({ ...income, walletName: wallet.name })));
       return acc;
     }, []);
 
@@ -97,6 +102,7 @@ export const getIncomeByUser = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
 
 // export const getIncomeInPeriod = async (req, res) => {
 //   try {

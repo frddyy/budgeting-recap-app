@@ -22,6 +22,11 @@ const formatAmountToRp = (amount) => {
   return formattedAmount;
 };
 
+const formatDate = (dateString) => {
+  const options = { day: "2-digit", month: "2-digit", year: "numeric" };
+  return new Date(dateString).toLocaleDateString("id-ID", options);
+};
+
 function TableIncomeRow({ income, onEdit, onDelete, index }) {
   console.log("Income data received in TableIncomeRow:", income);
   const textColor = useColorModeValue("gray.700", "white");
@@ -56,12 +61,12 @@ function TableIncomeRow({ income, onEdit, onDelete, index }) {
       </Td>
       <Td>
         <Text fontSize="md" color={textColor} fontWeight="bold" pb=".5rem">
-          {income.date}
+          {formatDate(income.date)}
         </Text>
       </Td>
       <Td>
         <Text fontSize="md" color={textColor} fontWeight="bold" pb=".5rem">
-          {income.wallet_id}
+          {income.wallet.name}
         </Text>
       </Td>
       <Td>

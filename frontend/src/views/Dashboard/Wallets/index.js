@@ -6,14 +6,6 @@ import CreditCard from "./components/CreditCard";
 import BackgroundCard1 from "assets/img/BackgroundCard1.png";
 import { RiMastercardFill } from "react-icons/ri";
 
-const formatBalanceToRp = (balance) => {
-  const formattedBalance = new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "IDR",
-  }).format(balance);
-  return formattedBalance;
-};
-
 // Helper function to format balance
 const formatBalanceToRp = (balance) => {
   return new Intl.NumberFormat("id-ID", {
