@@ -61,12 +61,53 @@ export const getAllIncomes = async (req, res) => {
 //   }
 // };
 
+// export const getIncomeByUser = async (req, res) => {
+//   try {
+//     // Ambil username dari parameter request
+//     const { username } = req.params;
+
+//     // Cari user berdasarkan username
+//     const user = await prisma.user.findUnique({
+//       where: { username },
+//       include: {
+//         wallets: {
+//           include: {
+//             incomes: {
+//               include: {
+//                 wallet: true, // Menambahkan include untuk wallet di sini
+//               },
+//             },
+//           },
+//         },
+//       },
+//     });
+
+//     // Jika user tidak ditemukan, kirim respons 404
+//     if (!user) {
+//       return res.status(404).json({ message: "User not found" });
+//     }
+
+//     // Ambil semua incomes dari wallets user
+//     const allIncomes = user.wallets.reduce((acc, wallet) => {
+//       // Setiap income akan memiliki informasi wallet yang terkait
+//       acc.push(...wallet.incomes.map(income => ({ ...income, walletName: wallet.name })));
+//       return acc;
+//     }, []);
+
+//     // Kirim respons dengan data incomes
+//     res.status(200).json({ incomes: allIncomes });
+//   } catch (error) {
+//     // Tangani kesalahan dan kirim respons 500 jika terjadi kesalahan server
+//     console.error("Error:", error);
+//     res.status(500).json({ message: "Internal Server Error" });
+//   }
+// };
+
 export const getIncomeByUser = async (req, res) => {
   try {
-    // Ambil username dari parameter request
     const { username } = req.params;
+    const { startDate, endDate } = req.query;
 
-    // Cari user berdasarkan username
     const user = await prisma.user.findUnique({
       where: { username },
       include: {
@@ -74,34 +115,36 @@ export const getIncomeByUser = async (req, res) => {
           include: {
             incomes: {
               include: {
-                wallet: true, // Menambahkan include untuk wallet di sini
+                wallet: true,
               },
+              where: startDate && endDate ? {
+                date: {
+                  gte: new Date(startDate),
+                  lte: new Date(endDate),
+                }
+              } : {}
             },
           },
         },
       },
     });
 
-    // Jika user tidak ditemukan, kirim respons 404
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Ambil semua incomes dari wallets user
     const allIncomes = user.wallets.reduce((acc, wallet) => {
-      // Setiap income akan memiliki informasi wallet yang terkait
       acc.push(...wallet.incomes.map(income => ({ ...income, walletName: wallet.name })));
       return acc;
     }, []);
 
-    // Kirim respons dengan data incomes
     res.status(200).json({ incomes: allIncomes });
   } catch (error) {
-    // Tangani kesalahan dan kirim respons 500 jika terjadi kesalahan server
     console.error("Error:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
 
 
 // export const getIncomeInPeriod = async (req, res) => {

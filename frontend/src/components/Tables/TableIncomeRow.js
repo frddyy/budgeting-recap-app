@@ -27,7 +27,7 @@ const formatDate = (dateString) => {
   return new Date(dateString).toLocaleDateString("id-ID", options);
 };
 
-function TableIncomeRow({ income, onEdit, onDelete, index }) {
+function TableIncomeRow({ income, onEdit, onDelete, index, showActions }) {
   console.log("Income data received in TableIncomeRow:", income);
   const textColor = useColorModeValue("gray.700", "white");
   const bgColor = useColorModeValue("#F8F9FA", "gray.800");
@@ -69,37 +69,33 @@ function TableIncomeRow({ income, onEdit, onDelete, index }) {
           {income.wallet.name}
         </Text>
       </Td>
-      <Td>
-        <Flex
-          direction={{ sm: "column", md: "row" }}
-          align="center"
-          p={{ md: "24px" }}
-          justify="center"
-        >
-          <Button
-            p="0px"
-            bg="transparent"
-            mb={{ sm: "10px", md: "0px" }}
-            me={{ md: "12px" }}
-            onClick={() => onEdit(income.id)}
+      {showActions && (
+        <Td>
+          <Flex
+            direction={{ sm: "column", md: "row" }}
+            align="center"
+            p={{ md: "24px" }}
+            justify="center"
           >
-            <Flex color={textColor} cursor="pointer" align="center" p="12px">
-              <Icon as={FaPencilAlt} me="4px" />
-              <Text fontSize="sm" fontWeight="semibold">
-                EDIT
-              </Text>
-            </Flex>
-          </Button>
-          <Button p="0px" bg="transparent" onClick={onDelete}>
-            <Flex color="red.500" cursor="pointer" align="center" p="12px">
-              <Icon as={FaTrashAlt} me="4px" />
-              <Text fontSize="sm" fontWeight="semibold">
-                DELETE
-              </Text>
-            </Flex>
-          </Button>
-        </Flex>
-      </Td>
+            <Button
+              p="0px"
+              bg="transparent"
+              mb={{ sm: "10px", md: "0px" }}
+              me={{ md: "12px" }}
+              onClick={() => onEdit(income.id)}
+            >
+              <Flex color={textColor} cursor="pointer" align="center" p="12px">
+                <Icon as={FaPencilAlt} me="4px" />
+              </Flex>
+            </Button>
+            <Button p="0px" bg="transparent" onClick={onDelete}>
+              <Flex color="red.500" cursor="pointer" align="center" p="12px">
+                <Icon as={FaTrashAlt} me="4px" />
+              </Flex>
+            </Button>
+          </Flex>
+        </Td>
+      )}
     </Tr>
   );
 }

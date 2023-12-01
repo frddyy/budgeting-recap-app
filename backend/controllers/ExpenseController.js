@@ -105,20 +105,59 @@ export const deleteExpenseById = async (req, res) => {
   }
 };
 
-// Controller untuk mendapatkan Expenses berdasarkan nama pengguna
+// // Controller untuk mendapatkan Expenses berdasarkan nama pengguna
+// export const getExpenseByUsername = async (req, res) => {
+//   try {
+//     const { username } = req.params;
+
+//     const expenses = await prisma.expense.findMany({
+//       where: { wallet: { user: { username: username } } }, // Update the query to correctly reference the user
+//       include: {
+//         wallet: true,
+//         budget: true,
+//       },
+//     });
+
+//     // Optionally, you can reshape the data to include only necessary fields
+//     const result = expenses.map((expense) => ({
+//       ...expense,
+//       wallet_name: expense.wallet.name,
+//       budget_title: expense.budget.title,
+//     }));
+
+//     res.status(200).json({ expenses: result });
+//   } catch (error) {
+//     console.error("Error:", error);
+//     res.status(500).json({ msg: "Internal Server Error" });
+//   }
+// };
+
 export const getExpenseByUsername = async (req, res) => {
   try {
     const { username } = req.params;
+    const { startDate, endDate } = req.query;
+
+    const whereClause = {
+      wallet: { user: { username } },
+    };
+
+    if (startDate && endDate) {
+      whereClause.date = {
+        gte: new Date(startDate),
+        lte: new Date(endDate),
+      };
+    }
 
     const expenses = await prisma.expense.findMany({
-      where: { wallet: { user: { username: username } } }, // Update the query to correctly reference the user
+      where: whereClause,
       include: {
         wallet: true,
         budget: true,
       },
     });
 
-    // Optionally, you can reshape the data to include only necessary fields
+  //   Sisanya sama...
+  //  Optionally, you can reshape the data to include only necessary fields
     const result = expenses.map((expense) => ({
       ...expense,
       wallet_name: expense.wallet.name,
@@ -126,12 +165,12 @@ export const getExpenseByUsername = async (req, res) => {
     }));
 
     res.status(200).json({ expenses: result });
+
   } catch (error) {
     console.error("Error:", error);
     res.status(500).json({ msg: "Internal Server Error" });
   }
 };
-
 
 
 // Controller untuk memperbarui Expense berdasarkan nama pengguna dan ID Expense

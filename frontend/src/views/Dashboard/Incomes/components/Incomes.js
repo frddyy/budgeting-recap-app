@@ -139,6 +139,7 @@ const Incomes = ({ title, onTotalAmountChange }) => {
                 income={income}
                 onDelete={() => handleDelete(income.id)}
                 onEdit={() => handleEdit(income)}
+                showActions={true}
               />
             ))}
           </Tbody>

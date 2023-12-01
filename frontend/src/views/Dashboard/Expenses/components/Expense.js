@@ -128,6 +128,7 @@ const Expenses = ({ title }) => {
                 expense={expense}
                 onDelete={() => handleDelete(expense.id)}
                 onEdit={() => handleEdit(expense)}
+                showActions={true}
               />
             ))}
           </Tbody>

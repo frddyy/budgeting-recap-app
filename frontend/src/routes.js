@@ -9,6 +9,7 @@ import Incomes from "views/Dashboard/Incomes";
 import Expenses from "views/Dashboard/Expenses";
 import Budgeting from "views/Dashboard/Budgeting";
 import Budgets from "views/Dashboard/Budgeting/Budgets";
+import TransactionLog from "views/Dashboard/TransactionLog";
 
 import {
   HomeIcon,
@@ -24,6 +25,7 @@ import { FaWallet as WalletIcon } from "react-icons/fa6";
 import { FaSackDollar as BudgetIcon } from "react-icons/fa6";
 import { GiPayMoney as ExpenseIcon } from "react-icons/gi";
 import { GiReceiveMoney as IncomeIcon } from "react-icons/gi";
+import { BiSolidReport as LogIcon } from "react-icons/bi";
 
 var dashRoutes = [
   {
@@ -41,6 +43,7 @@ var dashRoutes = [
     icon: <StatsIcon color="inherit" />,
     component: Tables,
     layout: "/admin",
+    hidden: true,
   },
   {
     path: "/billing",
@@ -49,6 +52,7 @@ var dashRoutes = [
     icon: <CreditIcon color="inherit" />,
     component: Billing,
     layout: "/admin",
+    hidden: true,
   },
   {
     path: "/wallets",
@@ -73,7 +77,7 @@ var dashRoutes = [
     icon: <BudgetIcon color="inherit" />,
     component: Budgets,
     layout: "/admin",
-    hidden: true
+    hidden: true,
   },
   {
     path: "/incomes",
@@ -89,6 +93,14 @@ var dashRoutes = [
     rtlName: "لوحة القيادة",
     icon: <ExpenseIcon color="inherit" />,
     component: Expenses,
+    layout: "/admin",
+  },
+  {
+    path: "/log",
+    name: "Transaction Log",
+    rtlName: "لوحة القيادة",
+    icon: <LogIcon color="inherit" />,
+    component: TransactionLog,
     layout: "/admin",
   },
   {

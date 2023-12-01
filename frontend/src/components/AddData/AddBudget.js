@@ -251,11 +251,11 @@ const AddBudget = ({ isOpen, onClose, onSuccess, categoryName }) => {
               <FormControl mt={4}>
                 <FormLabel>Date Created</FormLabel>
                 <Input
-                  placeholder="Select Date and Time"
+                  placeholder="Select Date"
                   size="md"
                   name="date"
                   value={budget.date}
-                  type="datetime-local"
+                  type="date"
                   onChange={handleInputChange}
                   style={{
                     borderRadius: "13px", // Adjust the border-radius to your preference
