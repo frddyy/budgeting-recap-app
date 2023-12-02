@@ -1,12 +1,9 @@
-// Chakra imports
 import {
   Box,
   Button,
   Flex,
   FormControl,
   FormLabel,
-  Grid,
-  Input,
   Select,
   Table,
   Tbody,
@@ -16,19 +13,84 @@ import {
   Tr,
   useColorModeValue,
 } from "@chakra-ui/react";
-// Custom components
 import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
 import CardHeader from "components/Card/CardHeader.js";
 import TableExpenseRow from "components/Tables/TableExpenseRow";
+import TableIncomeRow from "components/Tables/TableIncomeRow"; // Import ini jika dibutuhkan
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import axios from "axios";
 import Cookies from "js-cookie";
-import ActiveUsers from "./components/ActiveUsers";
-import SalesOverview from "./components/SalesOverview";
-import BarChart from "components/Charts/BarChart";
+import TransactionsOverview from "./components/TransactionsOverview";
 import LineChart from "components/Charts/LineChart";
+
+// Opsi untuk konfigurasi grafik (dapat disesuaikan)
+export const lineChartOptions = {
+  chart: {
+    toolbar: {
+      show: false,
+    },
+  },
+  tooltip: {
+    theme: "dark",
+  },
+  dataLabels: {
+    enabled: false,
+  },
+  stroke: {
+    curve: "smooth",
+  },
+  xaxis: {
+    type: "datetime",
+    categories: [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ],
+    labels: {
+      style: {
+        colors: "#c8cfca",
+        fontSize: "12px",
+      },
+    },
+  },
+  yaxis: {
+    labels: {
+      style: {
+        colors: "#c8cfca",
+        fontSize: "12px",
+      },
+    },
+  },
+  legend: {
+    show: true,
+  },
+  grid: {
+    strokeDashArray: 5,
+  },
+  fill: {
+    type: "gradient",
+    gradient: {
+      shade: "light",
+      type: "vertical",
+      shadeIntensity: 0.5,
+      inverseColors: true,
+      opacityFrom: 0.8,
+      opacityTo: 0,
+    },
+  },
+  colors: ["#4FD1C5", "#2D3748"],
+};
+
 
 const Report = ({ title }) => {
   const textColor = useColorModeValue("gray.700", "white");
@@ -38,21 +100,20 @@ const Report = ({ title }) => {
   );
 
   const [selectedMonth, setSelectedMonth] = useState("");
-
-  const [expenseData, setExpenseData] = useState([]); // Sudah benar, asalkan response API sesuai
-  const [incomeData, setIncomeData] = useState([]); // Pastikan inisialisasi sebagai array kosong
+  const [expenseData, setExpenseData] = useState([]);
+  const [incomeData, setIncomeData] = useState([]);
+  const [chartData, setChartData] = useState([]);
+  const [isGenerated, setIsGenerated] = useState(false);
 
   useEffect(() => {
     const storedUsername = Cookies.get("username");
-    if (storedUsername) {
-      fetchReport(storedUsername);
+    if (storedUsername && selectedMonth) {
+      fetchReport(storedUsername, selectedMonth);
     }
-  }, []);
+  }, [selectedMonth]);
 
-  // Function to calculate start and end dates of the selected month
   const calculateMonthDates = (month) => {
-    const year = new Date().getFullYear(); // Assuming current year
-    // Ensure the month is a number and within the valid range
+    const year = new Date().getFullYear();
     const monthInt = parseInt(month, 10);
     if (isNaN(monthInt) || monthInt < 1 || monthInt > 12) {
       console.error("Invalid month value:", month);
@@ -61,61 +122,70 @@ const Report = ({ title }) => {
 
     const startDate = new Date(year, monthInt - 1, 1);
     const endDate = new Date(year, monthInt, 0);
-
-    // Convert dates to ISO format
     return {
       startDate: startDate.toISOString().split("T")[0],
       endDate: endDate.toISOString().split("T")[0],
     };
   };
 
-  // Update the rest of the code as previously suggested
-
   const fetchReport = async (username, month) => {
     const { startDate, endDate } = calculateMonthDates(month);
 
     try {
-      // Panggilan API untuk data Expense dengan rentang tanggal
       const expenseResponse = await axios.get(
         `http://localhost:5000/expenses/${username}`,
-        {
-          params: { startDate, endDate },
-        }
+        { params: { startDate, endDate } }
       );
       if (expenseResponse && expenseResponse.data) {
-        setExpenseData(expenseResponse.data.expense);
+        setExpenseData(expenseResponse.data.expenses);
       }
 
-      // Panggilan API untuk data Income dengan rentang tanggal
       const incomeResponse = await axios.get(
         `http://localhost:5000/incomes/${username}`,
-        {
-          params: { startDate, endDate },
-        }
+        { params: { startDate, endDate } }
       );
       if (incomeResponse && incomeResponse.data) {
-        setIncomeData(incomeResponse.data.income);
+        setIncomeData(incomeResponse.data.incomes);
       }
-
-      console.log("Expense data received:", expenseResponse.data);
-      console.log("Income data received:", incomeResponse.data);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
 
   useEffect(() => {
-    console.log("Updated expenses:", expenseData);
-  }, [expenseData]);
-
-  useEffect(() => {
-    console.log("Updated incomes:", incomeData);
-  }, [incomeData]);
+    const defaultChartData = [{ x: new Date().getTime(), y: 0 }];
+  
+    const incomeChartData = incomeData.length > 0
+      ? incomeData.map((item) => ({
+          x: new Date(item.date).getTime(),
+          y: parseFloat(item.amount),
+        }))
+      : defaultChartData;
+  
+    const expenseChartData = expenseData.length > 0
+      ? expenseData.map((item) => ({
+          x: new Date(item.date).getTime(),
+          y: parseFloat(item.amount),
+        }))
+      : defaultChartData;
+  
+    setChartData([
+      { name: "Income", data: incomeChartData, color: "#3EBD93" },
+      { name: "Expense", data: expenseChartData, color: "#F5587B" }
+    ]);
+  }, [expenseData, incomeData]);
+  
+  
 
   const handleGenerateClick = () => {
     const username = Cookies.get("username");
-    console.log(`Generating report for ${username} from ${selectedMonth}`);
-    fetchReport(username, selectedMonth);
+    if (username && selectedMonth) {
+      setIsGenerated(true);
+      fetchReport(username, selectedMonth);
+    } else {
+      console.warn("Username or month is not selected");
+      setIsGenerated(false);
+    }
   };
 
   return (
@@ -141,12 +211,10 @@ const Report = ({ title }) => {
                   value={selectedMonth}
                   onChange={(e) => setSelectedMonth(e.target.value)}
                   style={{
-                    borderRadius: "13px", // Adjust the border-radius to your preference
+                    borderRadius: "13px",
                   }}
-                  placeholder="Select a month" // Add this line for placeholder
+                  placeholder="Select a month"
                 >
-                  <option value="">Select a month</option>{" "}
-                  {/* Add this line for default option */}
                   <option value="1">January</option>
                   <option value="2">February</option>
                   <option value="3">March</option>
@@ -177,83 +245,77 @@ const Report = ({ title }) => {
           </Flex>
         </Flex>
       </CardHeader>
-      <CardBody>
-        <Box w="100%">
-          {/* Expense Log Table */}
-          <Text fontSize="lg" color={textColor} fontWeight="bold" mb="4">
-            Expense Log
-          </Text>
-          <Table variant="simple" color={textColor}>
-            <Thead>
-              <Tr>
-                <Th color="gray.400">No</Th>
-                <Th color="gray.400">Title</Th>
-                <Th color="gray.400">Amount</Th>
-                <Th color="gray.400">Description</Th>
-                <Th color="gray.400">Date</Th>
-                <Th color="gray.400">Wallet</Th>
-                <Th color="gray.400">Budget</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {expenseData &&
-                expenseData.map((expense, index) => (
-                  <TableExpenseRow
-                    key={expense.id}
-                    index={index + 1}
-                    expense={expense}
-                    showActions={false}
-                  />
-                ))}
-            </Tbody>
-          </Table>
-
-          {/* Income Log Table */}
-          <Text fontSize="lg" color={textColor} fontWeight="bold" mt="6" mb="4">
-            Income Log
-          </Text>
-          <Table variant="simple" color={textColor}>
-            <Thead>
-              <Tr>
-                <Th color="gray.400">No</Th>
-                <Th color="gray.400">Title</Th>
-                <Th color="gray.400">Amount</Th>
-                <Th color="gray.400">Description</Th>
-                <Th color="gray.400">Date</Th>
-                <Th color="gray.400">Wallet</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {incomeData &&
-                incomeData.map((income, index) => (
-                  <TableIncomeRow // Ganti dengan TableIncomeRow atau row yang sesuai
-                    key={income.id}
-                    index={index + 1}
-                    income={income}
-                    showActions={false}
-                  />
-                ))}
-            </Tbody>
-          </Table>
-
-          {/* Grafik untuk Expense dan Income */}
-          <Box mt="6">
+      {isGenerated && (
+        <CardBody>
+          <Box w="100%">
+            <TransactionsOverview
+              title={"Transactions Overview"}
+              percentage={5}
+              chart={<LineChart data={chartData} />}
+            />
             <Text fontSize="lg" color={textColor} fontWeight="bold" mb="4">
-              Expense Chart
+              Expense Log
             </Text>
-            {/* Render BarChart disini dengan data expenseData */}
-            <BarChart data={expenseData} />
-          </Box>
+            <Table variant="simple" color={textColor}>
+              <Thead>
+                <Tr>
+                  <Th color="gray.400">No</Th>
+                  <Th color="gray.400">Title</Th>
+                  <Th color="gray.400">Amount</Th>
+                  <Th color="gray.400">Description</Th>
+                  <Th color="gray.400">Date</Th>
+                  <Th color="gray.400">Wallet</Th>
+                  <Th color="gray.400">Budget</Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                {expenseData &&
+                  expenseData.map((expense, index) => (
+                    <TableExpenseRow
+                      key={expense.id}
+                      index={index + 1}
+                      expense={expense}
+                      showActions={false}
+                    />
+                  ))}
+              </Tbody>
+            </Table>
 
-          <Box mt="6">
-            <Text fontSize="lg" color={textColor} fontWeight="bold" mb="4">
-              Income Chart
+            <Text
+              fontSize="lg"
+              color={textColor}
+              fontWeight="bold"
+              mt="6"
+              mb="4"
+            >
+              Income Log
             </Text>
-            {/* Render LineChart disini dengan data incomeData */}
-            <LineChart data={incomeData} />
+            <Table variant="simple" color={textColor}>
+              <Thead>
+                <Tr>
+                  <Th color="gray.400">No</Th>
+                  <Th color="gray.400">Title</Th>
+                  <Th color="gray.400">Amount</Th>
+                  <Th color="gray.400">Description</Th>
+                  <Th color="gray.400">Date</Th>
+                  <Th color="gray.400">Wallet</Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                {incomeData &&
+                  incomeData.map((income, index) => (
+                    <TableIncomeRow
+                      key={income.id}
+                      index={index + 1}
+                      income={income}
+                      showActions={false}
+                    />
+                  ))}
+              </Tbody>
+            </Table>
           </Box>
-        </Box>
-      </CardBody>
+        </CardBody>
+      )}
     </Card>
   );
 };

@@ -25,31 +25,99 @@ import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import axios from "axios";
 import Cookies from "js-cookie";
-import ActiveUsers from "./components/ActiveUsers";
 import TransactionsOverview from "./components/TransactionsOverview";
-import BarChart from "components/Charts/BarChart";
 import LineChart from "components/Charts/LineChart";
 
-// Fungsi untuk mengonversi amount ke format "30K" atau "10M" dengan "Rp" dan "B"
 const formatAmount = (amount) => {
   let formattedAmount = "";
-  
+
   if (amount >= 1000000000) {
-    // Jika amount >= 1.000.000.000, konversi ke format "1B"
-    formattedAmount = (amount / 1000000000).toFixed(1) + "B";
+    // Untuk "B"
+    const result = amount / 1000000000;
+    formattedAmount = `${result % 1 === 0 ? result.toFixed(0) : result.toFixed(1)}B`;
   } else if (amount >= 1000000) {
-    // Jika amount >= 1.000.000, konversi ke format "1M"
-    formattedAmount = (amount / 1000000).toFixed(1) + "M";
+    // Untuk "M"
+    const result = amount / 1000000;
+    formattedAmount = `${result % 1 === 0 ? result.toFixed(0) : result.toFixed(1)}M`;
   } else if (amount >= 1000) {
-    // Jika amount >= 1.000, konversi ke format "1K"
-    formattedAmount = (amount / 1000).toFixed(1) + "K";
+    // Untuk "K"
+    const result = amount / 1000;
+    formattedAmount = `${result % 1 === 0 ? result.toFixed(0) : result.toFixed(1)}K`;
   } else {
-    formattedAmount = amount.toFixed(0); // Jika amount < 1.000, tidak ada perubahan format
+    // Tanpa konversi
+    formattedAmount = amount.toFixed(0);
   }
 
   return `Rp ${formattedAmount}`;
 };
 
+
+// Opsi untuk konfigurasi grafik (dapat disesuaikan)
+export const lineChartOptions = {
+  chart: {
+    toolbar: {
+      show: false,
+    },
+  },
+  tooltip: {
+    theme: "dark",
+  },
+  dataLabels: {
+    enabled: false,
+  },
+  stroke: {
+    curve: "smooth",
+  },
+  xaxis: {
+    type: "datetime",
+    categories: [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ],
+    labels: {
+      style: {
+        colors: "#c8cfca",
+        fontSize: "12px",
+      },
+    },
+  },
+  yaxis: {
+    labels: {
+      style: {
+        colors: "#c8cfca",
+        fontSize: "12px",
+      },
+    },
+  },
+  legend: {
+    show: true,
+  },
+  grid: {
+    strokeDashArray: 5,
+  },
+  fill: {
+    type: "gradient",
+    gradient: {
+      shade: "light",
+      type: "vertical",
+      shadeIntensity: 0.5,
+      inverseColors: true,
+      opacityFrom: 0.8,
+      opacityTo: 0,
+    },
+  },
+  colors: ["#4FD1C5", "#2D3748"],
+};
 
 const Recap = ({ title }) => {
   const textColor = useColorModeValue("gray.700", "white");
@@ -63,7 +131,10 @@ const Recap = ({ title }) => {
 
   const [expenseData, setExpenseData] = useState([]); // Sudah benar, asalkan response API sesuai
   const [incomeData, setIncomeData] = useState([]); // Pastikan inisialisasi sebagai array kosong
+
   const [chartData, setChartData] = useState([]);
+
+  const [isGenerated, setIsGenerated] = useState(false);
 
   useEffect(() => {
     const storedUsername = Cookies.get("username");
@@ -105,29 +176,41 @@ const Recap = ({ title }) => {
   };
 
   useEffect(() => {
-    // Prepare data for the chart
-    const chartData = [
+    // Siapkan data untuk grafik dengan struktur baru
+    const incomeDataPoints = incomeData.map((item) =>
+      parseFloat(formatAmount(item.amount).replace(/[^\d.-]/g, ""))
+    );
+    const expenseDataPoints = expenseData.map((item) =>
+      parseFloat(formatAmount(item.amount).replace(/[^\d.-]/g, ""))
+    );
+
+    const modifiedChartData = [
       {
         name: "Income",
-        data: incomeData.map((item) => ({
-          x: new Date(item.date).getTime(),
-          y:  formatAmount(item.amount),,
-        })),
-        color: "#3EBD93", // Warna untuk data Income
+        data: incomeData.map((item) => {
+          return {
+            x: new Date(item.date).getTime(), // Konversi ke timestamp
+            // y: parseFloat(formatAmount(item.amount).replace(/[^\d.-]/g, "")),
+            y: parseFloat(item.amount)
+          };
+        }),
+        color: "#3EBD93",
       },
       {
         name: "Expense",
-        data: expenseData.map((item) => ({
-          x: new Date(item.date).getTime(),
-          y:  formatAmount(item.amount),,
-        })),
-        color: "#F5587B", // Warna untuk data Expense
+        data: expenseData.map((item) => {
+          return {
+            x: new Date(item.date).getTime(), // Konversi ke timestamp
+            // y: parseFloat(formatAmount(item.amount).replace(/[^\d.-]/g, "")),
+            y: parseFloat(item.amount)
+          };
+        }),
+        color: "#F5587B",
       },
     ];
 
-    setChartData(chartData);
-    console.log("Updated expenses:", expenseData);
-    console.log("Updated incomes:", incomeData);
+    setChartData(modifiedChartData);
+    console.log("Updated chart data:", modifiedChartData);
   }, [expenseData, incomeData]);
 
   const handleGenerateClick = () => {
@@ -136,6 +219,7 @@ const Recap = ({ title }) => {
       `Generating report for ${username} from ${startDate} to ${endDate}`
     );
     fetchRecap(username, startDate, endDate);
+    setIsGenerated(true); // Tambahkan baris ini
   };
 
   return (
@@ -196,71 +280,79 @@ const Recap = ({ title }) => {
           </Flex>
         </Flex>
       </CardHeader>
-      <CardBody>
-        <Box w="100%">
-          <TransactionsOverview
-            title={"Transactions Overview"}
-            percentage={5} // You can calculate or update this percentage as needed
-            chart={<LineChart data={chartData} />}
-          />
-          {/* Expense Log Table */}
-          <Text fontSize="lg" color={textColor} fontWeight="bold" mb="4">
-            Expense Log
-          </Text>
-          <Table variant="simple" color={textColor}>
-            <Thead>
-              <Tr>
-                <Th color="gray.400">No</Th>
-                <Th color="gray.400">Title</Th>
-                <Th color="gray.400">Amount</Th>
-                <Th color="gray.400">Description</Th>
-                <Th color="gray.400">Date</Th>
-                <Th color="gray.400">Wallet</Th>
-                <Th color="gray.400">Budget</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {expenseData &&
-                expenseData.map((expense, index) => (
-                  <TableExpenseRow
-                    key={expense.id}
-                    index={index + 1}
-                    expense={expense}
-                    showActions={false}
-                  />
-                ))}
-            </Tbody>
-          </Table>
+      {isGenerated && (
+        <CardBody>
+          <Box w="100%">
+            <TransactionsOverview
+              title={"Transactions Overview"}
+              percentage={5} // You can calculate or update this percentage as needed
+              chart={<LineChart data={chartData} />}
+            />
+            {/* Expense Log Table */}
+            <Text fontSize="lg" color={textColor} fontWeight="bold" mb="4">
+              Expense Log
+            </Text>
+            <Table variant="simple" color={textColor}>
+              <Thead>
+                <Tr>
+                  <Th color="gray.400">No</Th>
+                  <Th color="gray.400">Title</Th>
+                  <Th color="gray.400">Amount</Th>
+                  <Th color="gray.400">Description</Th>
+                  <Th color="gray.400">Date</Th>
+                  <Th color="gray.400">Wallet</Th>
+                  <Th color="gray.400">Budget</Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                {expenseData &&
+                  expenseData.map((expense, index) => (
+                    <TableExpenseRow
+                      key={expense.id}
+                      index={index + 1}
+                      expense={expense}
+                      showActions={false}
+                    />
+                  ))}
+              </Tbody>
+            </Table>
 
-          {/* Income Log Table */}
-          <Text fontSize="lg" color={textColor} fontWeight="bold" mt="6" mb="4">
-            Income Log
-          </Text>
-          <Table variant="simple" color={textColor}>
-            <Thead>
-              <Tr>
-                <Th color="gray.400">No</Th>
-                <Th color="gray.400">Title</Th>
-                <Th color="gray.400">Amount</Th>
-                <Th color="gray.400">Description</Th>
-                <Th color="gray.400">Date</Th>
-                <Th color="gray.400">Wallet</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {incomeData &&
-                incomeData.map((income, index) => (
-                  <TableIncomeRow // Ganti dengan TableIncomeRow atau row yang sesuai
-                    key={income.id}
-                    index={index + 1}
-                    income={income}
-                    showActions={false}
-                  />
-                ))}
-            </Tbody>
-          </Table>
-        </Box>
-      </CardBody>
+            {/* Income Log Table */}
+            <Text
+              fontSize="lg"
+              color={textColor}
+              fontWeight="bold"
+              mt="6"
+              mb="4"
+            >
+              Income Log
+            </Text>
+            <Table variant="simple" color={textColor}>
+              <Thead>
+                <Tr>
+                  <Th color="gray.400">No</Th>
+                  <Th color="gray.400">Title</Th>
+                  <Th color="gray.400">Amount</Th>
+                  <Th color="gray.400">Description</Th>
+                  <Th color="gray.400">Date</Th>
+                  <Th color="gray.400">Wallet</Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                {incomeData &&
+                  incomeData.map((income, index) => (
+                    <TableIncomeRow // Ganti dengan TableIncomeRow atau row yang sesuai
+                      key={income.id}
+                      index={index + 1}
+                      income={income}
+                      showActions={false}
+                    />
+                  ))}
+              </Tbody>
+            </Table>
+          </Box>
+        </CardBody>
+      )}
     </Card>
   );
 };
