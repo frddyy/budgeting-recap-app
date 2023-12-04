@@ -10,7 +10,7 @@ import {
   Tr,
   useColorModeValue,
   SimpleGrid,
-  Grid,
+  Grid
 } from "@chakra-ui/react";
 // Custom components
 import Card from "components/Card/Card.js";
@@ -21,9 +21,9 @@ import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import axios from "axios";
 import Cookies from "js-cookie";
+import Swal from "sweetalert2";
 import AddWallet from "components/AddData/AddWallet";
 import EditWallet from "components/EditData/EditWallet";
-import Swal from "sweetalert2";
 
 const Wallets = ({ title, onTotalBalanceChange }) => {
   const textColor = useColorModeValue("gray.700", "white");
@@ -79,15 +79,41 @@ const Wallets = ({ title, onTotalBalanceChange }) => {
     setIsAddWalletModalOpen(true);
   };
 
-  const handleDelete = async (walletName) => {
+  const handleDelete = (walletName) => {
+    // Tampilkan dialog konfirmasi dengan SweetAlert
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "Do you really want to delete this wallet?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Jika pengguna mengklik 'Yes'
+        deleteWallet(walletName);
+      }
+    });
+  };
+  
+  const deleteWallet = async (walletName) => {
     try {
       const response = await axios.delete(
         `http://localhost:5000/wallets/${username}/${walletName}`
       );
-      const updatedWalletData = walletData.filter(
-        (wallet) => wallet.name !== walletName
-      );
-      setWalletData(updatedWalletData);
+  
+      if (response.status === 200) {
+        const updatedWalletData = walletData.filter(
+          (wallet) => wallet.name !== walletName
+        );
+        setWalletData(updatedWalletData);
+        Swal.fire(
+          'Deleted!',
+          'Your wallet has been deleted.',
+          'success'
+        );
+      }
     } catch (error) {
       console.error("Error deleting wallet:", error);
       console.error("Detailed error response:", error.response); // Log the detailed error response
@@ -104,6 +130,7 @@ const Wallets = ({ title, onTotalBalanceChange }) => {
       });
     }
   };
+  
 
   const handleEdit = (walletName) => {
     const selectedWallet = walletData.find(
@@ -114,6 +141,7 @@ const Wallets = ({ title, onTotalBalanceChange }) => {
       setIsEditWalletModalOpen(true);
     }
   };
+
 
   return (
     <Card my="20px" overflowX={{ sm: "scroll", xl: "hidden" }}>
@@ -188,6 +216,6 @@ const Wallets = ({ title, onTotalBalanceChange }) => {
       />
     </Card>
   );
-};
+};;
 
 export default Wallets;

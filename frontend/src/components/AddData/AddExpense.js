@@ -43,57 +43,58 @@ const AddExpense = ({ isOpen, onClose, onSuccess }) => {
   const history = useHistory(); // Inisialisasi useHistory
 
   const [expenseCreated, setExpenseCreated] = useState(false); // New state to track expense creation
-  const [wallets, setWallets] = useState([]);
-  const [budgets, setBudgets] = useState([]);
 
-  // useEffect existing...
+    const [wallets, setWallets] = useState([]);
+    const [budgets, setBudgets] = useState([]);
 
-  useEffect(() => {
-    const fetchWallets = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:5000/wallets/${username}`
-        );
-        const fetchedWallets = response.data.data || [];
-        setWallets(fetchedWallets);
+    // useEffect existing...
 
-        // Set default wallet_id if wallets are available
-        if (fetchedWallets.length > 0) {
-          setExpense((prevState) => ({
-            ...prevState,
-            wallet_id: fetchedWallets[0].id,
-          }));
+    useEffect(() => {
+      const fetchWallets = async () => {
+        try {
+          const response = await axios.get(
+            `http://localhost:5000/wallets/${username}`
+          );
+          const fetchedWallets = response.data.data || [];
+          setWallets(fetchedWallets);
+
+          // Set default wallet_id if wallets are available
+          if (fetchedWallets.length > 0) {
+            setExpense((prevState) => ({
+              ...prevState,
+              wallet_id: fetchedWallets[0].id,
+            }));
+          }
+        } catch (error) {
+          console.error("Error fetching wallets:", error);
         }
-      } catch (error) {
-        console.error("Error fetching wallets:", error);
-      }
-    };
+      };
 
-    const fetchBudgets = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:5000/budgets/${username}`
-        );
-        const fetchedBudgets = response.data.budgets || [];
-        setBudgets(fetchedBudgets);
+      const fetchBudgets = async () => {
+        try {
+          const response = await axios.get(
+            `http://localhost:5000/budgets/${username}`
+          );
+          const fetchedBudgets = response.data.budgets || [];
+          setBudgets(fetchedBudgets);
 
-        // Set default budget_id if budgets are available
-        if (fetchedBudgets.length > 0) {
-          setExpense((prevState) => ({
-            ...prevState,
-            budget_id: fetchedBudgets[0].id,
-          }));
+          // Set default budget_id if budgets are available
+          if (fetchedBudgets.length > 0) {
+            setExpense((prevState) => ({
+              ...prevState,
+              budget_id: fetchedBudgets[0].id,
+            }));
+          }
+        } catch (error) {
+          console.error("Error fetching budgets:", error);
         }
-      } catch (error) {
-        console.error("Error fetching budgets:", error);
-      }
-    };
+      };
 
-    if (username) {
-      fetchWallets();
-      fetchBudgets();
-    }
-  }, [username]);
+      if (username) {
+        fetchWallets();
+        fetchBudgets();
+      }
+    }, [username]);
   // New useEffect to show SweetAlert notification
   useEffect(() => {
     if (expenseCreated) {
@@ -145,7 +146,7 @@ const AddExpense = ({ isOpen, onClose, onSuccess }) => {
 
     setExpense((prevState) => ({
       ...prevState,
-      [name]: value,
+      [name]: value
     }));
   };
 

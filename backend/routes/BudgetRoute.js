@@ -3,6 +3,7 @@ import {
   createBudget,
   getAllBudgets, 
   getBudgetByUsername,
+  getBudgetByUsernameAndCategory,
   updateBudgetByUsernameAndBudgetId,
   deleteBudgetByUsernameAndBudgetId,
 } from "../controllers/BudgetController.js";
@@ -14,6 +15,8 @@ router.post('/budgets', createBudget);
 router.get('/budgets', getAllBudgets); 
 
 router.get('/budgets/:username', getBudgetByUsername);
+
+router.get('/budgets/:username/:category', getBudgetByUsernameAndCategory);
 
 router.patch('/budgets/:username/:budget_id', updateBudgetByUsernameAndBudgetId);
 

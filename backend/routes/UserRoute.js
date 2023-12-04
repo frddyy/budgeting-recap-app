@@ -6,6 +6,7 @@ import {
   getUserByUsername,
   deleteUserByUsername,
   updatePasswordByUsername,
+  updateUserDetails, // Pastikan ini diimpor
   login,
 } from "../controllers/UserController.js";
 
@@ -17,6 +18,10 @@ router.get("/users", getAllUsers);
 router.get("/users/:username", getUserByUsername);
 router.delete("/users/:username", deleteUserByUsername);
 router.patch("/users/:username", updatePasswordByUsername);
+
+// Add the new route for updating user details
+router.patch("/users/update/:username", updateUserDetails);
+
 router.post("/login", login);
 
 export default router;

@@ -52,63 +52,63 @@ const EditExpense = ({ isOpen, onClose, onSuccess, expenseData }) => {
   // Gunakan expenseData untuk mengatur state
   useEffect(() => {
     if (isOpen && expenseData) {
-      setExpense({
-        id: expenseData.id,
-        title: expenseData.title,
-        amount: expenseData.amount,
-        description: expenseData.description,
-        date: expenseData.date,
-        wallet_id: expenseData.wallet_id,
-        budget_id: expenseData.budget_id,
-      });
+       setExpense({
+         id: expenseData.id,
+         title: expenseData.title,
+         amount: expenseData.amount,
+         description: expenseData.description,
+         date: expenseData.date,
+         wallet_id: expenseData.wallet_id,
+         budget_id: expenseData.budget_id,
+       });
     }
   }, [isOpen, expenseData]);
 
-  useEffect(() => {
-    const fetchWallets = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:5000/wallets/${username}`
-        );
-        const fetchedWallets = response.data.data || [];
-        setWallets(fetchedWallets);
+    useEffect(() => {
+      const fetchWallets = async () => {
+        try {
+          const response = await axios.get(
+            `http://localhost:5000/wallets/${username}`
+          );
+          const fetchedWallets = response.data.data || [];
+          setWallets(fetchedWallets);
 
-        // Set default wallet_id if wallets are available
-        if (fetchedWallets.length > 0) {
-          setExpense((prevState) => ({
-            ...prevState,
-            wallet_id: fetchedWallets[0].id,
-          }));
+          // Set default wallet_id if wallets are available
+          if (fetchedWallets.length > 0) {
+            setExpense((prevState) => ({
+              ...prevState,
+              wallet_id: fetchedWallets[0].id,
+            }));
+          }
+        } catch (error) {
+          console.error("Error fetching wallets:", error);
         }
-      } catch (error) {
-        console.error("Error fetching wallets:", error);
-      }
-    };
+      };
 
-    const fetchBudgets = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:5000/budgets/${username}`
-        );
-        const fetchedBudgets = response.data.budgets || [];
-        setBudgets(fetchedBudgets);
+      const fetchBudgets = async () => {
+        try {
+          const response = await axios.get(
+            `http://localhost:5000/budgets/${username}`
+          );
+          const fetchedBudgets = response.data.budgets || [];
+          setBudgets(fetchedBudgets);
 
-        // Set default budget_id if budgets are available
-        if (fetchedBudgets.length > 0) {
-          setExpense((prevState) => ({
-            ...prevState,
-            budget_id: fetchedBudgets[0].id,
-          }));
+          // Set default budget_id if budgets are available
+          if (fetchedBudgets.length > 0) {
+            setExpense((prevState) => ({
+              ...prevState,
+              budget_id: fetchedBudgets[0].id,
+            }));
+          }
+        } catch (error) {
+          console.error("Error fetching budgets:", error);
         }
-      } catch (error) {
-        console.error("Error fetching budgets:", error);
+      };
+      if (username) {
+        fetchWallets();
+        fetchBudgets();
       }
-    };
-    if (username) {
-      fetchWallets();
-      fetchBudgets();
-    }
-  }, [username]);
+    }, [username]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;

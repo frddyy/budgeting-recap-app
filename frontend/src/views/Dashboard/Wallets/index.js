@@ -1,5 +1,5 @@
 // Chakra imports
-import { Flex, Grid, Icon, Box, useMediaQuery } from "@chakra-ui/react";
+import { Flex, Grid, Icon, Box} from "@chakra-ui/react";
 import React, { useState } from "react";
 import Wallets from "./components/Wallets";
 import CreditCard from "./components/CreditCard";
@@ -17,19 +17,23 @@ const formatBalanceToRp = (balance) => {
 // Main component
 function Tables() {
   const [totalBalance, setTotalBalance] = useState(0);
-  const [isLargerThanLG] = useMediaQuery("(min-width: 62em)");
-
+  
   return (
     <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
-      <Grid templateColumns={{ sm: "1fr", lg: "1fr" }} gap="26px">
+      <Grid templateColumns={{ sm: "1fr", lg: "1fr 0.2fr" }} templateRows="1fr">
         <Box>
           <Grid
-            templateColumns={{ sm: "1fr", lg: "1fr", xl: "repeat(4, 1fr)" }}
+            templateColumns={{
+              sm: "1fr",
+              md: "1fr 1fr",
+              xl: "1fr 1fr 1fr 1fr",
+            }}
+            templateRows={{ sm: "auto", md: "auto", xl: "auto" }}
             gap="26px"
           >
             <CreditCard
               backgroundImage={BackgroundCard1}
-              title="Total Balance"
+              title={"Total Balance"}
               number={formatBalanceToRp(totalBalance)}
               icon={
                 <Icon
@@ -41,14 +45,12 @@ function Tables() {
               }
             />
           </Grid>
-          {isLargerThanLG && (
-            <Grid templateColumns="1fr" gap="26px">
-              <Wallets
-                title="Wallets Table"
-                onTotalBalanceChange={setTotalBalance}
-              />
-            </Grid>
-          )}
+          <Grid templateColumns={{ sm: "1fr", lg: "1fr" }} templateRows="1fr">
+            <Wallets
+              title={"Wallets Table"}
+              onTotalBalanceChange={setTotalBalance}
+            />
+          </Grid>
         </Box>
       </Grid>
     </Flex>

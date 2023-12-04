@@ -7,8 +7,10 @@ import SignIn from "views/Auth/SignIn.js";
 import SignUp from "views/Auth/SignUp.js";
 import Incomes from "views/Dashboard/Incomes";
 import Expenses from "views/Dashboard/Expenses";
-// import Budgeting from "views/Dashboard/Budgeting";
-// import Budgets from "views/Dashboard/Budgeting/Budgets";
+import Budgeting from "views/Dashboard/Budgeting";
+import Budgets from "views/Dashboard/Budgeting/Budgets";
+import TransactionLog from "views/Dashboard/TransactionLog";
+import Profile from "views/Dashboard/Profile";
 
 import {
   HomeIcon,
@@ -24,6 +26,8 @@ import { FaWallet as WalletIcon } from "react-icons/fa6";
 import { FaSackDollar as BudgetIcon } from "react-icons/fa6";
 import { GiPayMoney as ExpenseIcon } from "react-icons/gi";
 import { GiReceiveMoney as IncomeIcon } from "react-icons/gi";
+import { BiSolidReport as LogIcon } from "react-icons/bi";
+
 
 var dashRoutes = [
   {
@@ -41,6 +45,7 @@ var dashRoutes = [
     icon: <StatsIcon color="inherit" />,
     component: Tables,
     layout: "/admin",
+    hidden: true,
   },
   {
     path: "/billing",
@@ -49,6 +54,7 @@ var dashRoutes = [
     icon: <CreditIcon color="inherit" />,
     component: Billing,
     layout: "/admin",
+    hidden: true,
   },
   {
     path: "/wallets",
@@ -58,23 +64,23 @@ var dashRoutes = [
     component: Wallets,
     layout: "/admin",
   },
-  // {
-  //   path: "/budgeting",
-  //   name: "Budgeting",
-  //   rtlName: "لوحة القيادة",
-  //   icon: <BudgetIcon color="inherit" />,
-  //   component: Budgeting,
-  //   layout: "/admin",
-  // },
-  // {
-  //   path: "/budgets/:category",
-  //   name: "Budgets",
-  //   rtlName: "لوحة القيادة",
-  //   icon: <BudgetIcon color="inherit" />,
-  //   component: Budgets,
-  //   layout: "/admin",
-  //   hidden: true,
-  // },
+  {
+    path: "/budgeting",
+    name: "Budgeting",
+    rtlName: "لوحة القيادة",
+    icon: <BudgetIcon color="inherit" />,
+    component: Budgeting,
+    layout: "/admin",
+  },
+  {
+    path: "/budgets/:category",
+    name: "Budgets",
+    rtlName: "لوحة القيادة",
+    icon: <BudgetIcon color="inherit" />,
+    component: Budgets,
+    layout: "/admin",
+    hidden: true,
+  },
   {
     path: "/incomes",
     name: "Incomes",
@@ -90,6 +96,23 @@ var dashRoutes = [
     icon: <ExpenseIcon color="inherit" />,
     component: Expenses,
     layout: "/admin",
+  },
+  {
+    path: "/log",
+    name: "Transaction Log",
+    rtlName: "لوحة القيادة",
+    icon: <LogIcon color="inherit" />,
+    component: TransactionLog,
+    layout: "/admin",
+  },
+    {
+    path: "/profile",
+    name: "Profile",
+    rtlName: "لوحة القيادة",
+    icon: <LogIcon color="inherit" />,
+    component: Profile,
+    layout: "/admin",
+    hidden: true,
   },
   {
     path: "/signin",
@@ -111,4 +134,5 @@ var dashRoutes = [
     hidden: true,
   },
 ];
+
 export default dashRoutes;

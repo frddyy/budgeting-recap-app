@@ -5,15 +5,25 @@ const prisma = new PrismaClient();
 // Controller untuk membuat Expense baru
 export const createExpense = async (req, res) => {
   try {
+    // Log request body untuk debugging
+    console.log("Request body:", req.body);
+
+    const { title, amount, description, date, wallet_id, budget_id } = req.body;
+
+    if (!wallet_id || !budget_id) {
+      return res
+        .status(400)
+        .json({ msg: "Wallet ID and Budget ID are required" });
+    }
+
     const response = await prisma.expense.create({
       data: {
-        title: req.body.title,
-        amount: req.body.amount,
-        description: req.body.description,
-        date: req.body.date,
-        wallet_id: req.body.wallet_id,
-        // Optional: Uncomment the line below if you want to associate the expense with a budget
-        budget_id: req.body.budget_id,
+        title,
+        amount,
+        description,
+        date,
+        wallet: { connect: { id: wallet_id } },
+        budget: { connect: { id: budget_id } }, // If your schema has a relation with budget
       },
     });
 
@@ -22,7 +32,9 @@ export const createExpense = async (req, res) => {
       .json({ msg: "Expense created successfully", data: response });
   } catch (error) {
     console.error("Error:", error);
-    res.status(500).json({ msg: "Internal Server Error" });
+    res
+      .status(500)
+      .json({ msg: "Internal Server Error", error: error.message });
   }
 };
 
@@ -92,35 +104,69 @@ export const deleteExpenseById = async (req, res) => {
   }
 };
 
-// Controller untuk mendapatkan Expenses berdasarkan nama pengguna
+// // Controller untuk mendapatkan Expenses berdasarkan nama pengguna
+// export const getExpenseByUsername = async (req, res) => {
+//   try {
+//     const { username } = req.params;
+
+//     const expenses = await prisma.expense.findMany({
+//       where: { wallet: { user: { username: username } } }, // Update the query to correctly reference the user
+//       include: {
+//         wallet: true,
+//         budget: true,
+//       },
+//     });
+
+//     // Optionally, you can reshape the data to include only necessary fields
+//     const result = expenses.map((expense) => ({
+//       ...expense,
+//       wallet_name: expense.wallet.name,
+//       budget_title: expense.budget.title,
+//     }));
+
+//     res.status(200).json({ expenses: result });
+//   } catch (error) {
+//     console.error("Error:", error);
+//     res.status(500).json({ msg: "Internal Server Error" });
+//   }
+// };
+
 export const getExpenseByUsername = async (req, res) => {
   try {
     const { username } = req.params;
+    const { startDate, endDate } = req.query;
 
-    const user = await prisma.user.findUnique({
-      where: { username },
+    const whereClause = {
+      wallet: { user: { username } },
+    };
+
+    if (startDate && endDate) {
+      whereClause.date = {
+        gte: new Date(startDate),
+        lte: new Date(endDate),
+      };
+    }
+
+    const expenses = await prisma.expense.findMany({
+      where: whereClause,
       include: {
-        wallets: {
-          include: {
-            expenses: true,
-          },
-        },
+        wallet: true,
+        budget: true,
       },
     });
 
-    if (!user) {
-      return res.status(404).json({ msg: 'User not found' });
-    }
+    //   Sisanya sama...
+    //  Optionally, you can reshape the data to include only necessary fields
+    const result = expenses.map((expense) => ({
+      ...expense,
+      wallet_name: expense.wallet ? expense.wallet.name : "No Wallet",
+      budget_title: expense.budget ? expense.budget.title : "No Budget",
+    }));
 
-    const allExpenses = user.wallets.reduce((acc, wallet) => {
-      acc.push(...wallet.expenses);
-      return acc;
-    }, []);
-
-    res.status(200).json({ expenses: allExpenses });
+    res.status(200).json({ expenses: result });
   } catch (error) {
-    console.error('Error:', error);
-    res.status(500).json({ msg: 'Internal Server Error' });
+    console.error("Error:", error);
+    res.status(500).json({ msg: "Internal Server Error" });
   }
 };
 
@@ -142,7 +188,7 @@ export const updateExpenseByUsernameAndExpenseId = async (req, res) => {
     });
 
     if (!user) {
-      return res.status(404).json({ msg: 'User not found' });
+      return res.status(404).json({ msg: "User not found" });
     }
 
     const updatedExpense = await prisma.expense.update({
@@ -152,10 +198,12 @@ export const updateExpenseByUsernameAndExpenseId = async (req, res) => {
       data: updatedExpenseData,
     });
 
-    res.status(200).json({ msg: 'Expense updated successfully', data: updatedExpense });
+    res
+      .status(200)
+      .json({ msg: "Expense updated successfully", data: updatedExpense });
   } catch (error) {
-    console.error('Error:', error);
-    res.status(500).json({ msg: 'Internal Server Error' });
+    console.error("Error:", error);
+    res.status(500).json({ msg: "Internal Server Error" });
   }
 };
 
@@ -176,7 +224,7 @@ export const deleteExpenseByUsernameAndExpenseId = async (req, res) => {
     });
 
     if (!user) {
-      return res.status(404).json({ msg: 'User not found' });
+      return res.status(404).json({ msg: "User not found" });
     }
 
     await prisma.expense.delete({
@@ -185,9 +233,9 @@ export const deleteExpenseByUsernameAndExpenseId = async (req, res) => {
       },
     });
 
-    res.status(200).json({ msg: 'Expense deleted successfully' });
+    res.status(200).json({ msg: "Expense deleted successfully" });
   } catch (error) {
-    console.error('Error:', error);
-    res.status(500).json({ msg: 'Internal Server Error' });
+    console.error("Error:", error);
+    res.status(500).json({ msg: "Internal Server Error" });
   }
 };

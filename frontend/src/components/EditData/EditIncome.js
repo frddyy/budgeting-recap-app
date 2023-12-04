@@ -100,7 +100,8 @@ const EditIncome = ({ isOpen, onClose, onSuccess, incomeData }) => {
         `http://localhost:5000/incomes/${username}/${income.id}`,
         {
           ...income,
-          amount: parseFloat(income.amount), // Ensure amount is an integer
+          date: new Date(income.date).toISOString(),
+          amount: parseFloat(income.amount),
         }
       );
 

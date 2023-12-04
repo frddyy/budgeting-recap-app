@@ -22,7 +22,12 @@ const formatAmountToRp = (amount) => {
   return formattedAmount;
 };
 
-function TableIncomeRow({ income, onEdit, onDelete, index }) {
+const formatDate = (dateString) => {
+  const options = { day: "2-digit", month: "2-digit", year: "numeric" };
+  return new Date(dateString).toLocaleDateString("id-ID", options);
+};
+
+function TableIncomeRow({ income, onEdit, onDelete, index, showActions }) {
   console.log("Income data received in TableIncomeRow:", income);
   const textColor = useColorModeValue("gray.700", "white");
   const bgColor = useColorModeValue("#F8F9FA", "gray.800");
@@ -56,45 +61,41 @@ function TableIncomeRow({ income, onEdit, onDelete, index }) {
       </Td>
       <Td>
         <Text fontSize="md" color={textColor} fontWeight="bold" pb=".5rem">
-          {income.date}
+          {formatDate(income.date)}
         </Text>
       </Td>
       <Td>
         <Text fontSize="md" color={textColor} fontWeight="bold" pb=".5rem">
-          {income.wallet_id}
+          {income.wallet.name}
         </Text>
       </Td>
-      <Td>
-        <Flex
-          direction={{ sm: "column", md: "row" }}
-          align="center"
-          p={{ md: "24px" }}
-          justify="center"
-        >
-          <Button
-            p="0px"
-            bg="transparent"
-            mb={{ sm: "10px", md: "0px" }}
-            me={{ md: "12px" }}
-            onClick={() => onEdit(income.id)}
+      {showActions && (
+        <Td>
+          <Flex
+            direction={{ sm: "column", md: "row" }}
+            align="center"
+            p={{ md: "24px" }}
+            justify="center"
           >
-            <Flex color={textColor} cursor="pointer" align="center" p="12px">
-              <Icon as={FaPencilAlt} me="4px" />
-              <Text fontSize="sm" fontWeight="semibold">
-                EDIT
-              </Text>
-            </Flex>
-          </Button>
-          <Button p="0px" bg="transparent" onClick={onDelete}>
-            <Flex color="red.500" cursor="pointer" align="center" p="12px">
-              <Icon as={FaTrashAlt} me="4px" />
-              <Text fontSize="sm" fontWeight="semibold">
-                DELETE
-              </Text>
-            </Flex>
-          </Button>
-        </Flex>
-      </Td>
+            <Button
+              p="0px"
+              bg="transparent"
+              mb={{ sm: "10px", md: "0px" }}
+              me={{ md: "12px" }}
+              onClick={() => onEdit(income.id)}
+            >
+              <Flex color={textColor} cursor="pointer" align="center" p="12px">
+                <Icon as={FaPencilAlt} me="4px" />
+              </Flex>
+            </Button>
+            <Button p="0px" bg="transparent" onClick={onDelete}>
+              <Flex color="red.500" cursor="pointer" align="center" p="12px">
+                <Icon as={FaTrashAlt} me="4px" />
+              </Flex>
+            </Button>
+          </Flex>
+        </Td>
+      )}
     </Tr>
   );
 }

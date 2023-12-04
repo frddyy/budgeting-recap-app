@@ -1,12 +1,14 @@
 // Chakra imports
 import { Flex } from "@chakra-ui/react";
 import React from "react";
-import Budgeting from "./components/Budgeting";
+import Categories from "./components/Categories";
+import Budgets from "./Budgets/components/Budgets";
 
 function Tables() {
   return (
-    <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
-      <Budgeting title={"Budgeting Table"} />
+    <Flex flexDirection='column' pt={{ base: "120px", md: "75px" }}>
+      {/* <Budgets title={"Budget"}/> */}
+      <Categories title={"Budget's Categories"}/>
     </Flex>
   );
 }

@@ -22,8 +22,7 @@ const formatBalanceToRp = (balance) => {
   return formattedBalance;
 };
 
-function TableWalletRow({ wallet, onEdit, onDelete, index }) {
-  console.log("Wallet data received in TableWalletRow:", wallet);
+function TableWalletRow({ wallet, onEdit, onDelete, index}) {
   const textColor = useColorModeValue("gray.700", "white");
   const bgColor = useColorModeValue("#F8F9FA", "gray.800");
 
@@ -66,17 +65,11 @@ function TableWalletRow({ wallet, onEdit, onDelete, index }) {
           >
             <Flex color={textColor} cursor="pointer" align="center" p="12px">
               <Icon as={FaPencilAlt} me="4px" />
-              <Text fontSize="sm" fontWeight="semibold">
-                EDIT
-              </Text>
             </Flex>
           </Button>
           <Button p="0px" bg="transparent" onClick={onDelete}>
             <Flex color="red.500" cursor="pointer" align="center" p="12px">
               <Icon as={FaTrashAlt} me="4px" />
-              <Text fontSize="sm" fontWeight="semibold">
-                DELETE
-              </Text>
             </Flex>
           </Button>
         </Flex>
