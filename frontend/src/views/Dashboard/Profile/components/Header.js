@@ -108,42 +108,43 @@ const Header = ({
             <Flex
             direction={{ sm: "column", lg: "row" }}
             w={{ sm: "100%", md: "50%", lg: "auto" }}>
-            <Button p='0px' bg='transparent' onclick={edituser} _hover={{ bg: "desiredBackgroundColor", color: "desiredTextColor" }}>
-              <Flex
-                align='center'
-                w={{ lg: "135px" }}
-                borderRadius='15px'
-                justifyContent='center'
-                py='10px'
-                cursor='pointer'>
-                {tabs[0].icon}
-                <Text
-                  fontSize='xs'
-                  color={textColor}
-                  fontWeight='bold'
-                  ms='6px'>
-                  {tabs[0].name}
-                </Text>
-              </Flex>
-            </Button>
-              <Button p='0px' bg='transparent' onclick={deleteuser} _hover={{ bg: "desiredBackgroundColor", color: "desiredTextColor"}}>
-              <Flex
-                align='center'
-                w={{ lg: "135px" }}
-                borderRadius='15px'
-                justifyContent='center'
-                py='10px'
-                cursor='pointer'>
-                {tabs[1].icon}
-                <Text
-                  fontSize='xs'
-                  color={textColor}
-                  fontWeight='bold'
-                  ms='6px'>
-                  {tabs[1].name}
-                </Text>
-              </Flex>
-            </Button>
+<Button p='0px' bg='transparent' onClick={edituser} _hover={{ bg: "desiredBackgroundColor", color: "desiredTextColor" }}>
+  <Flex
+    align='center'
+    w={{ lg: "135px" }}
+    borderRadius='15px'
+    justifyContent='center'
+    py='10px'
+    cursor='pointer'>
+    {tabs[0].icon}
+    <Text
+      fontSize='xs'
+      color={textColor}
+      fontWeight='bold'
+      ms='6px'>
+      {tabs[0].name}
+    </Text>
+  </Flex>
+</Button>
+<Button p='0px' bg='transparent' onClick={deleteuser} _hover={{ bg: "desiredBackgroundColor", color: "desiredTextColor"}}>
+  <Flex
+    align='center'
+    w={{ lg: "135px" }}
+    borderRadius='15px'
+    justifyContent='center'
+    py='10px'
+    cursor='pointer'>
+    {tabs[1].icon}
+    <Text
+      fontSize='xs'
+      color={textColor}
+      fontWeight='bold'
+      ms='6px'>
+      {tabs[1].name}
+    </Text>
+  </Flex>
+</Button>
+
             </Flex>
         </Flex>
       </Box>
