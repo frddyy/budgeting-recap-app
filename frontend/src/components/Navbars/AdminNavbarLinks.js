@@ -1,141 +1,115 @@
-// Chakra Icons
-import { BellIcon, SearchIcon } from "@chakra-ui/icons";
-// Chakra Imports
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import PropTypes from "prop-types";
+import { useHistory } from "react-router-dom";
+import Cookies from "js-cookie";
 import {
-  Button,
   Flex,
   IconButton,
-  Input,
-  InputGroup,
-  InputLeftElement,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
-  Text,
-  Spacer,
   useColorModeValue,
+  Spacer,
+  Image,
 } from "@chakra-ui/react";
-// Assets
-import avatar1 from "assets/img/avatars/avatar1.png";
-import avatar2 from "assets/img/avatars/avatar2.png";
-import avatar3 from "assets/img/avatars/avatar3.png";
-// Custom Icons
 import { ProfileIcon, SettingsIcon } from "components/Icons/Icons";
 import { FaSignOutAlt } from "react-icons/fa";
-// Custom Components
-import { ItemContent } from "components/Menu/ItemContent";
 import SidebarResponsive from "components/Sidebar/SidebarResponsive";
-import PropTypes from "prop-types";
-import React from "react";
-import { useHistory } from "react-router-dom";
-import Cookies from "js-cookie";
 import routes from "routes.js";
 
 export default function HeaderLinks(props) {
-  const { variant, children, fixed, secondary, onOpen, ...rest } = props;
+  const { variant, children, fixed, secondary, onOpen, ...rest } = props; 
 
   const history = useHistory();
+  const [user, setUser] = useState(null);
+  const [username, setUsername] = useState("");
+
+  const profile = () => {
+    history.push("/admin/profile");
+  };
 
   const signOut = () => {
     Cookies.remove("username");
     history.push("/auth/signin");
   };
 
-  // Chakra Color Mode
-  let mainTeal = useColorModeValue("teal.300", "teal.300");
-  let inputBg = useColorModeValue("white", "gray.800");
-  let mainText = useColorModeValue("gray.700", "gray.200");
   let navbarIcon = useColorModeValue("gray.500", "gray.200");
-  let searchIcon = useColorModeValue("gray.700", "gray.200");
 
-  if (secondary) {
+  if (props.secondary) {
     navbarIcon = "white";
-    mainText = "white";
   }
-  const settingsRef = React.useRef();
+
+    useEffect(() => {
+    const storedUsername = Cookies.get("username");
+    if (storedUsername) {
+      setUsername(storedUsername);
+      fetchUsers(storedUsername); // Fetch expenses after setting username
+    }
+  }, []);
+
+const fetchUsers = async (username) => {
+  try {
+    const response = await axios.get(`http://localhost:5000/users/${username}`);
+    console.log("Full response:", response);
+    console.log("User data:", response.data);
+    setUser(response.data.data); // Update this line
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
+};
+
+const userImageUrl = user && user.image ? `http://localhost:5000/user/image/${user.image}` : null;  
+console.log("User Image URL:", userImageUrl);
+
+const renderProfileIcon = () => {
+  if (userImageUrl) {
+    return <Image src={userImageUrl} borderRadius="full" boxSize="35px" alt="User profile" />;
+  } else {
+    return <ProfileIcon color={navbarIcon} w="35px" h="35px" />;
+  }
+};
+
   return (
     <Flex
-      pe={{ sm: "0px", md: "16px" }}
+      pe={{ sm: "0px", md: "0px" }}
       w={{ sm: "100%", md: "auto" }}
       alignItems="center"
       flexDirection="row"
     >
-      {/* <InputGroup
-        cursor="pointer"
-        bg={inputBg}
-        borderRadius="15px"
-        w={{
-          sm: "128px",
-          md: "200px",
-        }}
-        me={{ sm: "auto", md: "20px" }}
-        _focus={{
-          borderColor: { mainTeal },
-        }}
-        _active={{
-          borderColor: { mainTeal },
-        }}
-      >
-        <InputLeftElement
-          children={
-            <IconButton
-              bg="inherit"
-              borderRadius="inherit"
-              _hover="none"
-              _active={{
-                bg: "inherit",
-                transform: "none",
-                borderColor: "transparent",
-              }}
-              _focus={{
-                boxShadow: "none",
-              }}
-              icon={<SearchIcon color={searchIcon} w="15px" h="15px" />}
-            ></IconButton>
-          }
-        />
-        <Input
-          fontSize="xs"
-          py="11px"
-          color={mainText}
-          placeholder="Type here..."
-          borderRadius="inherit"
-        />
-      </InputGroup> */}
       <Spacer />
       <SidebarResponsive
         logoText={props.logoText}
         secondary={props.secondary}
         routes={routes}
-        // logo={logo}
         {...rest}
       />
-      <SettingsIcon
+      {/* <SettingsIcon
         cursor="pointer"
         ms={{ base: "16px", xl: "0px" }}
         me="16px"
-        ref={settingsRef}
         onClick={props.onOpen}
         color={navbarIcon}
-        w="18px"
-        h="18px"
-      />
+        w="25px"
+        h="25px"
+      /> */}
       <Menu>
         <MenuButton
           as={IconButton}
-          ms="0px"
+          ms="20px"
           px="0px"
-          me={{ sm: "2px", md: "16px" }}
+          me={{ sm: "2px", md: "0px" }}
           color={navbarIcon}
           variant="transparent-with-icon"
           aria-label="Options"
-          icon={<ProfileIcon color={navbarIcon} w="22px" h="22px" me="0px" />}
+          icon={renderProfileIcon()}
         />
         <MenuList>
-          <MenuItem icon={<ProfileIcon w="15px" h="15px" me="0px" />}>
-            Profile
+          <MenuItem icon={renderProfileIcon()} onClick={profile}>
+            {user ? (user.full_name ? user.full_name : 'Profile') : 'Loading...'}
           </MenuItem>
+
           <MenuItem icon={<FaSignOutAlt />} onClick={signOut}>
             Sign Out
           </MenuItem>

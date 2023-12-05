@@ -1,9 +1,77 @@
 import bcrypt from "bcrypt";
 import { PrismaClient } from "@prisma/client";
+import multer from "multer";
+import fs from "fs";
+import path from "path";
 
 const prisma = new PrismaClient();
 
+// Middleware untuk menyiapkan upload dengan multer
+const upload = multer({
+  storage: multer.diskStorage({
+    destination: "public/user/image",
+    filename: function (req, file, cb) {
+      const extensionName = path.extname(file.originalname);
+      // Tambahkan timestamp pada nama file
+      const filename = `${req.params.username}-${Date.now()}${extensionName}`;
+      cb(null, filename);
+    },
+  }),
+});
+
+// Function to update email, full_name, and image
+// Function to update email, full_name, and image
+export const updateUserDetails = async (req, res) => {
+  // Gunakan multer middleware
+  upload.single("image")(req, res, async (err) => {
+    if (err) {
+      return res.status(500).json({ msg: "Error uploading file", error: err });
+    }
+
+    const { username } = req.params;
+    const { email, full_name } = req.body;
+    const imageFileName = req.file ? path.basename(req.file.path) : null;
+
+    try {
+      const user = await prisma.User.findUnique({
+        where: { username: username },
+      });
+
+      if (!user) {
+        return res.status(404).json({ msg: "User not found" });
+      }
+
+      // Jika ada gambar baru, hapus gambar lama jika berbeda dari gambar baru
+      if (imageFileName && user.image && user.image !== imageFileName) {
+        fs.unlink(path.join("public/user/image", user.image), (err) => {
+          if (err) console.error("Error deleting old image:", err);
+        });
+      }
+
+      const updatedUser = await prisma.User.update({
+        where: { username: username },
+        data: {
+          email: email || user.email,
+          full_name: full_name || user.full_name,
+          image: imageFileName || user.image,
+        },
+      });
+
+      res.json({ msg: "User updated successfully", data: updatedUser });
+    } catch (error) {
+      console.error("Error updating user:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  });
+};
+
 export const createUser = async (req, res) => {
+  const { username, full_name, password, confirmPassword } = req.body;
+
+  if (!username || !password || !confirmPassword) {
+    return res.status(400).json({ msg: "All fields are required" });
+  }
+
   // Check if username already exists
   const existingUser = await prisma.User.findUnique({
     where: {
@@ -12,25 +80,24 @@ export const createUser = async (req, res) => {
   });
 
   if (existingUser) {
-    // Username already exists; return an error response
     return res.status(400).json({ msg: "Username already taken" });
   }
 
-  // Check if password and confirmPassword match
   if (password !== confirmPassword) {
     return res
       .status(400)
       .json({ msg: "Password and confirmPassword do not match" });
   }
 
-  // If username does not exist and passwords match, hash the password
+  // Hash the password
   const salt = await bcrypt.genSalt();
-  const hashedPassword = await bcrypt.hash(req.body.password, salt);
+  const hashedPassword = await bcrypt.hash(password, salt);
+
   try {
-    const newUser = req.body;
-    const user = await prisma.User.create({
-      data:{
-        username: newUser.username,
+    await prisma.User.create({
+      data: {
+        username: username,
+        full_name: full_name,
         password: hashedPassword,
       },
     });
@@ -69,6 +136,7 @@ export const getUserByUsername = async (req, res) => {
   }
 };
 
+// Function to delete a user by username
 export const deleteUserByUsername = async (req, res) => {
   try {
     const user = await prisma.User.findUnique({
@@ -76,17 +144,33 @@ export const deleteUserByUsername = async (req, res) => {
         username: req.params.username,
       },
     });
+
     if (!user) {
       res.status(404).json({ msg: "User not found" });
     } else {
+      // Jika pengguna memiliki gambar, hapus gambar tersebut dari sistem file
+      if (user.image) {
+        const imagePath = path.join("public/user/image", user.image);
+        fs.unlink(imagePath, (err) => {
+          if (err) {
+            console.error("Error deleting user image:", err);
+            // Anda bisa memilih untuk mengirimkan respon error atau melanjutkan penghapusan pengguna
+            // Bergantung pada bagaimana Anda ingin menangani error tersebut
+          }
+        });
+      }
+
+      // Lanjutkan menghapus pengguna dari database
       await prisma.User.delete({
         where: {
           username: req.params.username,
         },
       });
+
       res.status(200).json({ msg: "User deleted successfully" });
     }
   } catch (error) {
+    console.error("Error deleting user:", error);
     res.status(500).json({ msg: error.message });
   }
 };

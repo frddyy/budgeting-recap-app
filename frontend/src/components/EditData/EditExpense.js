@@ -52,63 +52,63 @@ const EditExpense = ({ isOpen, onClose, onSuccess, expenseData }) => {
   // Gunakan expenseData untuk mengatur state
   useEffect(() => {
     if (isOpen && expenseData) {
-       setExpense({
-         id: expenseData.id,
-         title: expenseData.title,
-         amount: expenseData.amount,
-         description: expenseData.description,
-         date: expenseData.date,
-         wallet_id: expenseData.wallet_id,
-         budget_id: expenseData.budget_id,
-       });
+      setExpense({
+        id: expenseData.id,
+        title: expenseData.title,
+        amount: expenseData.amount,
+        description: expenseData.description,
+        date: expenseData.date,
+        wallet_id: expenseData.wallet_id,
+        budget_id: expenseData.budget_id,
+      });
     }
   }, [isOpen, expenseData]);
 
-    useEffect(() => {
-      const fetchWallets = async () => {
-        try {
-          const response = await axios.get(
-            `http://localhost:5000/wallets/${username}`
-          );
-          const fetchedWallets = response.data.data || [];
-          setWallets(fetchedWallets);
+  useEffect(() => {
+    const fetchWallets = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:5000/wallets/${username}`
+        );
+        const fetchedWallets = response.data.data || [];
+        setWallets(fetchedWallets);
 
-          // Set default wallet_id if wallets are available
-          if (fetchedWallets.length > 0) {
-            setExpense((prevState) => ({
-              ...prevState,
-              wallet_id: fetchedWallets[0].id,
-            }));
-          }
-        } catch (error) {
-          console.error("Error fetching wallets:", error);
+        // Set default wallet_id if wallets are available
+        if (fetchedWallets.length > 0) {
+          setExpense((prevState) => ({
+            ...prevState,
+            wallet_id: fetchedWallets[0].id,
+          }));
         }
-      };
-
-      const fetchBudgets = async () => {
-        try {
-          const response = await axios.get(
-            `http://localhost:5000/budgets/${username}`
-          );
-          const fetchedBudgets = response.data.budgets || [];
-          setBudgets(fetchedBudgets);
-
-          // Set default budget_id if budgets are available
-          if (fetchedBudgets.length > 0) {
-            setExpense((prevState) => ({
-              ...prevState,
-              budget_id: fetchedBudgets[0].id,
-            }));
-          }
-        } catch (error) {
-          console.error("Error fetching budgets:", error);
-        }
-      };
-      if (username) {
-        fetchWallets();
-        fetchBudgets();
+      } catch (error) {
+        console.error("Error fetching wallets:", error);
       }
-    }, [username]);
+    };
+
+    const fetchBudgets = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:5000/budgets/${username}`
+        );
+        const fetchedBudgets = response.data.budgets || [];
+        setBudgets(fetchedBudgets);
+
+        // Set default budget_id if budgets are available
+        if (fetchedBudgets.length > 0) {
+          setExpense((prevState) => ({
+            ...prevState,
+            budget_id: fetchedBudgets[0].id,
+          }));
+        }
+      } catch (error) {
+        console.error("Error fetching budgets:", error);
+      }
+    };
+    if (username) {
+      fetchWallets();
+      fetchBudgets();
+    }
+  }, [username]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -173,9 +173,13 @@ const EditExpense = ({ isOpen, onClose, onSuccess, expenseData }) => {
       onClose={handleClose}
       zIndex={10}
     >
-      <ModalOverlay />
+      <ModalOverlay bg="none" backdropFilter="auto" backdropBlur="2px" />
       <form onSubmit={updateExpense}>
-        <ModalContent>
+        <ModalContent
+          style={{
+            borderRadius: "20px", // Adjust the border-radius to your preference
+          }}
+        >
           <ModalHeader>Edit your expense</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>

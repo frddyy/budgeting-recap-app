@@ -25,7 +25,7 @@ export default function Dashboard(props) {
   };
 
   const getActiveRoute = (routes) => {
-    let activeRoute = "Default Brand Text";
+    let activeRoute = "Profile";
     let currentPath = window.location.pathname; // Dapatkan path saat ini
     let match = useRouteMatch("/admin/budgets/:category"); // Ganti dengan path yang sesuai
 

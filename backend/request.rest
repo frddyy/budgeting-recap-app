@@ -22,7 +22,7 @@ Content-Type: application/json
 }
 
 ###
-DELETE http://localhost:5000/users/junet
+DELETE http://localhost:5000/users/gian
 
 
 ### Login
@@ -139,7 +139,7 @@ Content-Type: application/json
 DELETE http://localhost:5000/budgets/ferdy/11
 
 //////////////////////// CRUD EXPENSE ////////////////////////////
-###
+
 GET  http://localhost:5000/expenses/ferdy
 
 ###
