@@ -139,8 +139,8 @@ Content-Type: application/json
 DELETE http://localhost:5000/budgets/ferdy/11
 
 //////////////////////// CRUD EXPENSE ////////////////////////////
-###
-GET  http://localhost:5000/expenses/rvldfr
+
+GET  http://localhost:5000/expenses/ferdy
 
 ###
 POST http://localhost:5000/expenses

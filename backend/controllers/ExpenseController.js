@@ -155,8 +155,6 @@ export const getExpenseByUsername = async (req, res) => {
       },
     });
 
-    //   Sisanya sama...
-    //  Optionally, you can reshape the data to include only necessary fields
     const result = expenses.map((expense) => ({
       ...expense,
       wallet_name: expense.wallet ? expense.wallet.name : "No Wallet",
@@ -164,6 +162,7 @@ export const getExpenseByUsername = async (req, res) => {
     }));
 
     res.status(200).json({ expenses: result });
+
   } catch (error) {
     console.error("Error:", error);
     res.status(500).json({ msg: "Internal Server Error" });

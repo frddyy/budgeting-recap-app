@@ -12,6 +12,7 @@ import Budgets from "views/Dashboard/Budgeting/Budgets";
 import TransactionLog from "views/Dashboard/TransactionLog";
 import Profile from "views/Dashboard/Profile";
 
+
 import {
   HomeIcon,
   StatsIcon,
@@ -91,6 +92,7 @@ var dashRoutes = [
   {
     path: "/log",
     name: "Transaction Log",
+    rtlName: "لوحة القيادة",
     icon: <LogIcon color="inherit" />,
     component: TransactionLog,
     layout: "/admin",

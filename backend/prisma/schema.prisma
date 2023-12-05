@@ -43,7 +43,7 @@ model Expense {
   title       String
   amount      Int
   description String?
-  date        DateTime? @db.Date
+  date          
   wallet_id   Int
   budget_id   Int?
   budget      Budget?   @relation(fields: [budget_id], references: [id])
