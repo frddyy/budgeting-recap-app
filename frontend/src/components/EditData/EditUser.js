@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useCallback } from "react";
 import {
   Modal,
   ModalOverlay,
@@ -11,13 +11,18 @@ import {
   FormControl,
   FormLabel,
   Input,
-  Select,
   Alert,
+  Box,
+  Icon,
+  Text,
+  Image,
 } from "@chakra-ui/react";
+import { useDropzone } from "react-dropzone";
 import axios from "axios";
 import Cookies from "js-cookie";
 import Swal from "sweetalert2";
 import { useHistory } from "react-router-dom";
+import { MdUpload } from "react-icons/md";
 
 const EditUser = ({ isOpen, onClose, onSuccess, userData }) => {
   const [user, setUser] = useState({
@@ -26,6 +31,7 @@ const EditUser = ({ isOpen, onClose, onSuccess, userData }) => {
     full_name: "",
     image: null,
   });
+
   const [username, setUsername] = useState("");
 
   useEffect(() => {
@@ -41,37 +47,43 @@ const EditUser = ({ isOpen, onClose, onSuccess, userData }) => {
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorMsg, setShowErrorMsg] = useState(false);
   const [msg, setMsg] = useState("");
+  const [imagePreview, setImagePreview] = useState(null);
 
   const history = useHistory();
 
-useEffect(() => {
-  console.log("isOpen:", isOpen, "userData:", userData);
-  if (isOpen && userData) {
-    setUser({
-      id: userData.id,
-      email: userData.email,
-      full_name: userData.full_name,
-      image: userData.image,
-    });
-  }
-}, [isOpen, userData]);
+  useEffect(() => {
+    console.log("isOpen:", isOpen, "userData:", userData);
+    if (isOpen && userData) {
+      setUser({
+        id: userData.id,
+        email: userData.email,
+        full_name: userData.full_name,
+        image: userData.image,
+      });
+    }
+  }, [isOpen, userData]);
 
+  const onDrop = useCallback((acceptedFiles) => {
+    const file = acceptedFiles[0];
 
-const handleInputChange = (e) => {
-  const { name, value, files } = e.target;
-
-  if (name === "image" && files.length > 0) {
-    // If the input name is "image" and files are selected
     setUser((prevState) => ({
       ...prevState,
-      [name]: files[0], // Set the image property to the selected file
+      image: file,
     }));
-  } else {
-    // For other input fields, update as usual
-    setUser((prevState) => ({ ...prevState, [name]: value }));
-  }
-};
 
+    const previewUrl = URL.createObjectURL(file);
+    setImagePreview(previewUrl);
+  }, []);
+
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop,
+    accept: "image/jpeg, image/png, image/jpg",
+  });
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setUser((prevState) => ({ ...prevState, [name]: value }));
+  };
 
   const updateUser = async (e) => {
     e.preventDefault();
@@ -79,15 +91,11 @@ const handleInputChange = (e) => {
 
     try {
       const formData = new FormData();
-
-      if (user.full_name.trim() !== "") {
-        formData.append("full_name", user.full_name);
+      formData.append("full_name", user.full_name || "");
+      formData.append("email", user.email || "");
+      if (user.image) {
+        formData.append("image", user.image);
       }
-
-      if (user.email.trim() !== "") {
-        formData.append("email", user.email);
-      }
-      formData.append("image", user.image);
 
       const response = await axios.patch(
         `http://localhost:5000/users/update/${username}`,
@@ -129,7 +137,6 @@ const handleInputChange = (e) => {
     }
   };
 
-
   const handleClose = () => {
     setShowSuccessAlert(false);
     setShowErrorMsg(false);
@@ -138,8 +145,28 @@ const handleInputChange = (e) => {
     }
   };
 
-  console.log("Current user state:", user);
-
+  // Image preview section with modifications
+  const imagePreviewSection = (
+    <Box mt={4} textAlign="center">
+      <Text fontSize="lg" fontWeight="bold">
+        Image Preview
+      </Text>
+      <Box
+        border="1px solid gray"
+        borderRadius="md"
+        overflow="hidden"
+        display="inline-block" // To center the box
+      >
+        <Image
+          src={imagePreview}
+          maxW="330px"
+          maxH="330px"
+          display="block" // Ensures image takes the full width of the box
+          mx="auto" // Centers image horizontally
+        />
+      </Box>
+    </Box>
+  );
 
   return (
     <Modal
@@ -148,9 +175,13 @@ const handleInputChange = (e) => {
       onClose={handleClose}
       zIndex={10}
     >
-      <ModalOverlay />
+      <ModalOverlay bg="none" backdropFilter="auto" backdropBlur="2px" />
       <form onSubmit={updateUser}>
-        <ModalContent>
+        <ModalContent
+          style={{
+            borderRadius: "20px", // Adjust the border-radius to your preference
+          }}
+        >
           <ModalHeader>Edit your profile</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
@@ -177,12 +208,16 @@ const handleInputChange = (e) => {
             </FormControl>
             <FormControl mt={4}>
               <FormLabel>Image Profile</FormLabel>
-              <Input
-                placeholder="Image"
-                name="image"
-                type="file"
-                onChange={handleInputChange}
-              />
+              <div {...getRootProps()}>
+                <input {...getInputProps()} />
+                <Box p={5} border="2px dashed gray" textAlign="center">
+                  <Icon as={MdUpload} w="24px" h="24px" />
+                  <Text>
+                    Drag 'n' drop some files here, or click to select files
+                  </Text>
+                </Box>
+                {imagePreview && imagePreviewSection}
+              </div>
             </FormControl>
           </ModalBody>
           <ModalFooter>

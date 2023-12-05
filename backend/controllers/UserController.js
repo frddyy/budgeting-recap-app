@@ -12,13 +12,14 @@ const upload = multer({
     destination: "public/user/image",
     filename: function (req, file, cb) {
       const extensionName = path.extname(file.originalname);
-      // Gunakan username dari req object untuk memberi nama file
-      const filename = `${req.params.username}${extensionName}`;
+      // Tambahkan timestamp pada nama file
+      const filename = `${req.params.username}-${Date.now()}${extensionName}`;
       cb(null, filename);
     },
   }),
 });
 
+// Function to update email, full_name, and image
 // Function to update email, full_name, and image
 export const updateUserDetails = async (req, res) => {
   // Gunakan multer middleware
@@ -29,7 +30,6 @@ export const updateUserDetails = async (req, res) => {
 
     const { username } = req.params;
     const { email, full_name } = req.body;
-    // Dapatkan hanya nama file dari path
     const imageFileName = req.file ? path.basename(req.file.path) : null;
 
     try {
@@ -41,8 +41,8 @@ export const updateUserDetails = async (req, res) => {
         return res.status(404).json({ msg: "User not found" });
       }
 
-      // Jika ada gambar baru, hapus gambar lama
-      if (imageFileName && user.image) {
+      // Jika ada gambar baru, hapus gambar lama jika berbeda dari gambar baru
+      if (imageFileName && user.image && user.image !== imageFileName) {
         fs.unlink(path.join("public/user/image", user.image), (err) => {
           if (err) console.error("Error deleting old image:", err);
         });

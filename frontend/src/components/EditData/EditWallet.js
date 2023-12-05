@@ -126,9 +126,13 @@ const EditWallet = ({ isOpen, onClose, onSuccess, walletData }) => {
       onClose={handleClose}
       zIndex={10}
     >
-      <ModalOverlay />
+      <ModalOverlay bg="none" backdropFilter="auto" backdropBlur="2px" />
       <form onSubmit={updateWallet}>
-        <ModalContent>
+        <ModalContent
+          style={{
+            borderRadius: "20px", // Adjust the border-radius to your preference
+          }}
+        >
           <ModalHeader>Edit your wallet</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
@@ -172,6 +176,6 @@ const EditWallet = ({ isOpen, onClose, onSuccess, walletData }) => {
       </form>
     </Modal>
   );
-};;
+};
 
 export default EditWallet;

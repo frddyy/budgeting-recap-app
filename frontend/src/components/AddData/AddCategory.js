@@ -15,9 +15,8 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import Cookies from "js-cookie";
-import Swal from 'sweetalert2'; // Import SweetAlert
-import { useHistory } from 'react-router-dom'; // Import useHistory
-
+import Swal from "sweetalert2"; // Import SweetAlert
+import { useHistory } from "react-router-dom"; // Import useHistory
 
 const AddCategory = ({ isOpen, onClose, onSuccess }) => {
   const [username, setUsername] = useState("");
@@ -133,8 +132,6 @@ const AddCategory = ({ isOpen, onClose, onSuccess }) => {
     }
   };
 
-
-
   return (
     <>
       <Modal
@@ -144,23 +141,18 @@ const AddCategory = ({ isOpen, onClose, onSuccess }) => {
         onClose={handleClose}
         zIndex={10}
       >
-        <ModalOverlay
-          bg="none"
-          backdropFilter="auto"
-          backdropInvert="80%"
-          backdropBlur="2px"
-          />
-          <form onSubmit={saveCategory}>
-        <ModalContent
-          style={{
-            borderRadius: "20px", // Adjust the border-radius to your preference
-          }}
-        >
-          <ModalHeader>Create your category</ModalHeader>
-          <ModalCloseButton onClick={handleClose} />
-          <ModalBody pb={6}>
-            {showSuccessAlert && <Alert severity="success">{msg}</Alert>}
-            {showErrorMsg && <Alert severity="error">{msg}</Alert>}
+        <ModalOverlay bg="none" backdropFilter="auto" backdropBlur="2px" />
+        <form onSubmit={saveCategory}>
+          <ModalContent
+            style={{
+              borderRadius: "20px", // Adjust the border-radius to your preference
+            }}
+          >
+            <ModalHeader>Create your category</ModalHeader>
+            <ModalCloseButton onClick={handleClose} />
+            <ModalBody pb={6}>
+              {showSuccessAlert && <Alert severity="success">{msg}</Alert>}
+              {showErrorMsg && <Alert severity="error">{msg}</Alert>}
               <FormControl>
                 <FormLabel>Category Name</FormLabel>
                 <Input
@@ -174,25 +166,25 @@ const AddCategory = ({ isOpen, onClose, onSuccess }) => {
                   }}
                 />
               </FormControl>
-              </ModalBody>
-              <ModalFooter>
+            </ModalBody>
+            <ModalFooter>
               <Button
-              type="submit"
-              colorScheme="blue"
-              mr={3}
-              isLoading={isLoading}
+                type="submit"
+                colorScheme="blue"
+                mr={3}
+                isLoading={isLoading}
               >
-              Save
+                Save
               </Button>
               <Button onClick={handleClose} colorScheme="red">
-              Cancel
+                Cancel
               </Button>
-              </ModalFooter>
-              </ModalContent>
-              </form>
+            </ModalFooter>
+          </ModalContent>
+        </form>
       </Modal>
     </>
   );
-};;;
+};
 
 export default AddCategory;
