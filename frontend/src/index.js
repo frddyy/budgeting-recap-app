@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
-
+import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import AuthLayout from "layouts/Auth.js";
 import AdminLayout from "layouts/Admin.js";
 
@@ -15,3 +15,5 @@ ReactDOM.render(
   </BrowserRouter>,
   document.getElementById("root")
 );
+
+serviceWorkerRegistration.register()
