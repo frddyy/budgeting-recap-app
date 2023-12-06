@@ -44,10 +44,10 @@ const AddExpense = ({ isOpen, onClose, onSuccess }) => {
 
   const [expenseCreated, setExpenseCreated] = useState(false); // New state to track expense creation
 
-    const [wallets, setWallets] = useState([]);
-    const [budgets, setBudgets] = useState([]);
+  const [wallets, setWallets] = useState([]);
+  const [budgets, setBudgets] = useState([]);
 
-    // useEffect existing...
+  // useEffect existing...
 
     useEffect(() => {
       const fetchWallets = async () => {
@@ -58,17 +58,17 @@ const AddExpense = ({ isOpen, onClose, onSuccess }) => {
           const fetchedWallets = response.data.data || [];
           setWallets(fetchedWallets);
 
-          // Set default wallet_id if wallets are available
-          if (fetchedWallets.length > 0) {
-            setExpense((prevState) => ({
-              ...prevState,
-              wallet_id: fetchedWallets[0].id,
-            }));
-          }
-        } catch (error) {
-          console.error("Error fetching wallets:", error);
+        // Set default wallet_id if wallets are available
+        if (fetchedWallets.length > 0) {
+          setExpense((prevState) => ({
+            ...prevState,
+            wallet_id: fetchedWallets[0].id,
+          }));
         }
-      };
+      } catch (error) {
+        console.error("Error fetching wallets:", error);
+      }
+    };
 
       const fetchBudgets = async () => {
         try {
@@ -78,23 +78,23 @@ const AddExpense = ({ isOpen, onClose, onSuccess }) => {
           const fetchedBudgets = response.data.budgets || [];
           setBudgets(fetchedBudgets);
 
-          // Set default budget_id if budgets are available
-          if (fetchedBudgets.length > 0) {
-            setExpense((prevState) => ({
-              ...prevState,
-              budget_id: fetchedBudgets[0].id,
-            }));
-          }
-        } catch (error) {
-          console.error("Error fetching budgets:", error);
+        // Set default budget_id if budgets are available
+        if (fetchedBudgets.length > 0) {
+          setExpense((prevState) => ({
+            ...prevState,
+            budget_id: fetchedBudgets[0].id,
+          }));
         }
-      };
-
-      if (username) {
-        fetchWallets();
-        fetchBudgets();
+      } catch (error) {
+        console.error("Error fetching budgets:", error);
       }
-    }, [username]);
+    };
+
+    if (username) {
+      fetchWallets();
+      fetchBudgets();
+    }
+  }, [username]);
   // New useEffect to show SweetAlert notification
   useEffect(() => {
     if (expenseCreated) {
@@ -146,7 +146,7 @@ const AddExpense = ({ isOpen, onClose, onSuccess }) => {
 
     setExpense((prevState) => ({
       ...prevState,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -209,12 +209,7 @@ const AddExpense = ({ isOpen, onClose, onSuccess }) => {
         onClose={handleClose}
         zIndex={10}
       >
-        <ModalOverlay
-          bg="none"
-          backdropFilter="auto"
-          backdropInvert="80%"
-          backdropBlur="2px"
-        />
+        <ModalOverlay bg="none" backdropFilter="auto" backdropBlur="2px" />
         <form onSubmit={saveExpense}>
           <ModalContent
             style={{

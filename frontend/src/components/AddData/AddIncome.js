@@ -184,12 +184,7 @@ const AddIncome = ({ isOpen, onClose, onSuccess }) => {
         onClose={handleClose}
         zIndex={10}
       >
-        <ModalOverlay
-          bg="none"
-          backdropFilter="auto"
-          backdropInvert="80%"
-          backdropBlur="2px"
-        />
+        <ModalOverlay bg="none" backdropFilter="auto" backdropBlur="2px" />
         <form onSubmit={saveIncome}>
           <ModalContent
             style={{

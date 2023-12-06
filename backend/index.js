@@ -24,7 +24,7 @@ app.use(CategoryRoute);
 app.use(IncomeRoute);
 app.use(BudgetRoute);
 app.use(ExpenseRoute);
-// app.use(express.static('public'));
+app.use(express.static("public"));
 
 // (async () => {
 //   await db.sequelize.sync();

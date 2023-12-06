@@ -52,15 +52,15 @@ const EditExpense = ({ isOpen, onClose, onSuccess, expenseData }) => {
   // Gunakan expenseData untuk mengatur state
   useEffect(() => {
     if (isOpen && expenseData) {
-       setExpense({
-         id: expenseData.id,
-         title: expenseData.title,
-         amount: expenseData.amount,
-         description: expenseData.description,
-         date: expenseData.date,
-         wallet_id: expenseData.wallet_id,
-         budget_id: expenseData.budget_id,
-       });
+      setExpense({
+        id: expenseData.id,
+        title: expenseData.title,
+        amount: expenseData.amount,
+        description: expenseData.description,
+        date: expenseData.date,
+        wallet_id: expenseData.wallet_id,
+        budget_id: expenseData.budget_id,
+      });
     }
   }, [isOpen, expenseData]);
 
@@ -73,17 +73,17 @@ const EditExpense = ({ isOpen, onClose, onSuccess, expenseData }) => {
           const fetchedWallets = response.data.data || [];
           setWallets(fetchedWallets);
 
-          // Set default wallet_id if wallets are available
-          if (fetchedWallets.length > 0) {
-            setExpense((prevState) => ({
-              ...prevState,
-              wallet_id: fetchedWallets[0].id,
-            }));
-          }
-        } catch (error) {
-          console.error("Error fetching wallets:", error);
+        // Set default wallet_id if wallets are available
+        if (fetchedWallets.length > 0) {
+          setExpense((prevState) => ({
+            ...prevState,
+            wallet_id: fetchedWallets[0].id,
+          }));
         }
-      };
+      } catch (error) {
+        console.error("Error fetching wallets:", error);
+      }
+    };
 
       const fetchBudgets = async () => {
         try {
@@ -93,22 +93,22 @@ const EditExpense = ({ isOpen, onClose, onSuccess, expenseData }) => {
           const fetchedBudgets = response.data.budgets || [];
           setBudgets(fetchedBudgets);
 
-          // Set default budget_id if budgets are available
-          if (fetchedBudgets.length > 0) {
-            setExpense((prevState) => ({
-              ...prevState,
-              budget_id: fetchedBudgets[0].id,
-            }));
-          }
-        } catch (error) {
-          console.error("Error fetching budgets:", error);
+        // Set default budget_id if budgets are available
+        if (fetchedBudgets.length > 0) {
+          setExpense((prevState) => ({
+            ...prevState,
+            budget_id: fetchedBudgets[0].id,
+          }));
         }
-      };
-      if (username) {
-        fetchWallets();
-        fetchBudgets();
+      } catch (error) {
+        console.error("Error fetching budgets:", error);
       }
-    }, [username]);
+    };
+    if (username) {
+      fetchWallets();
+      fetchBudgets();
+    }
+  }, [username]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -125,6 +125,8 @@ const EditExpense = ({ isOpen, onClose, onSuccess, expenseData }) => {
         {
           ...expense,
           amount: parseFloat(expense.amount), // Ensure amount is an integer
+          wallet_id: parseInt(expense.wallet_id), // Ensure amount is an integer
+          budget_id: parseInt(expense.budget_id), // Ensure amount is an integer
         }
       );
 
@@ -173,9 +175,13 @@ const EditExpense = ({ isOpen, onClose, onSuccess, expenseData }) => {
       onClose={handleClose}
       zIndex={10}
     >
-      <ModalOverlay />
+      <ModalOverlay bg="none" backdropFilter="auto" backdropBlur="2px" />
       <form onSubmit={updateExpense}>
-        <ModalContent>
+        <ModalContent
+          style={{
+            borderRadius: "20px", // Adjust the border-radius to your preference
+          }}
+        >
           <ModalHeader>Edit your expense</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
@@ -231,7 +237,7 @@ const EditExpense = ({ isOpen, onClose, onSuccess, expenseData }) => {
               </Select>
             </FormControl>
             <FormControl mt={4}>
-              <FormLabel>Description</FormLabel>
+              <FormLabel>Budget</FormLabel>
               <Select name="budget_id" onChange={handleInputChange}>
                 {budgets.map((budget) => (
                   <option key={budget.id} value={budget.id}>

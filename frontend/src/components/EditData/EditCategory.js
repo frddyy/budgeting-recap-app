@@ -19,7 +19,7 @@ import Swal from "sweetalert2";
 import { useHistory } from "react-router-dom";
 
 const EditCategory = ({ isOpen, onClose, onSuccess, categoryData }) => {
-  const [category, setCategory] = useState({ name: ""});
+  const [category, setCategory] = useState({ name: "" });
   const [username, setUsername] = useState("");
 
   useEffect(() => {
@@ -124,9 +124,13 @@ const EditCategory = ({ isOpen, onClose, onSuccess, categoryData }) => {
       onClose={handleClose}
       zIndex={10}
     >
-      <ModalOverlay />
+      <ModalOverlay bg="none" backdropFilter="auto" backdropBlur="2px" />
       <form onSubmit={updateCategory}>
-        <ModalContent>
+        <ModalContent
+          style={{
+            borderRadius: "20px", // Adjust the border-radius to your preference
+          }}
+        >
           <ModalHeader>Edit your category</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
@@ -160,6 +164,6 @@ const EditCategory = ({ isOpen, onClose, onSuccess, categoryData }) => {
       </form>
     </Modal>
   );
-};;
+};
 
 export default EditCategory;

@@ -125,8 +125,7 @@ function SignUp() {
           mb="26px"
           w={{ base: "90%", sm: "60%", lg: "40%", xl: "30%" }}
         >
-          Use these awesome forms to login or create new account in your project
-          for free.
+          Use these awesome forms to login or create new account to save your finance
         </Text>
       </Flex>
       <Flex alignItems="center" justifyContent="center" mb="60px" mt="20px">
@@ -147,78 +146,7 @@ function SignUp() {
             textAlign="center"
             mb="22px"
           >
-            Register With
-          </Text>
-          <HStack spacing="15px" justify="center" mb="22px">
-            <Flex
-              justify="center"
-              align="center"
-              w="75px"
-              h="75px"
-              borderRadius="15px"
-              border="1px solid lightgray"
-              cursor="pointer"
-              transition="all .25s ease"
-              _hover={{ filter: "brightness(120%)", bg: bgIcons }}
-            >
-              <Link href="#">
-                <Icon
-                  as={FaFacebook}
-                  w="30px"
-                  h="30px"
-                  _hover={{ filter: "brightness(120%)" }}
-                />
-              </Link>
-            </Flex>
-            <Flex
-              justify="center"
-              align="center"
-              w="75px"
-              h="75px"
-              borderRadius="15px"
-              border="1px solid lightgray"
-              cursor="pointer"
-              transition="all .25s ease"
-              _hover={{ filter: "brightness(120%)", bg: bgIcons }}
-            >
-              <Link href="#">
-                <Icon
-                  as={FaApple}
-                  w="30px"
-                  h="30px"
-                  _hover={{ filter: "brightness(120%)" }}
-                />
-              </Link>
-            </Flex>
-            <Flex
-              justify="center"
-              align="center"
-              w="75px"
-              h="75px"
-              borderRadius="15px"
-              border="1px solid lightgray"
-              cursor="pointer"
-              transition="all .25s ease"
-              _hover={{ filter: "brightness(120%)", bg: bgIcons }}
-            >
-              <Link href="#">
-                <Icon
-                  as={FaGoogle}
-                  w="30px"
-                  h="30px"
-                  _hover={{ filter: "brightness(120%)" }}
-                />
-              </Link>
-            </Flex>
-          </HStack>
-          <Text
-            fontSize="lg"
-            color="gray.400"
-            fontWeight="bold"
-            textAlign="center"
-            mb="22px"
-          >
-            or
+            Register
           </Text>
           <form onSubmit={handleSubmit}>
             <FormControl>

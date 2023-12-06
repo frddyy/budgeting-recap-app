@@ -58,12 +58,12 @@ function TableExpenseRow({ expense, onEdit, onDelete, index, showActions }) {
       </Td>
       <Td>
         <Text fontSize="md" color={textColor} fontWeight="bold" pb=".5rem">
-          {expense.wallet.name}
+           {expense.wallet && expense.wallet.name ? expense.wallet.name : "No Wallet"}
         </Text>
       </Td>
       <Td>
         <Text fontSize="md" color={textColor} fontWeight="bold" pb=".5rem">
-          {expense.budget.title}
+          {expense.budget && expense.budget.title ? expense.budget.title : "No Budget"}
         </Text>
       </Td>
       {showActions && (

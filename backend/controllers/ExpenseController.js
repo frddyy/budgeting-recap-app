@@ -27,17 +27,16 @@ export const createExpense = async (req, res) => {
       },
     });
 
-
-
     res
       .status(201)
       .json({ msg: "Expense created successfully", data: response });
   } catch (error) {
     console.error("Error:", error);
-    res.status(500).json({ msg: "Internal Server Error", error: error.message });
+    res
+      .status(500)
+      .json({ msg: "Internal Server Error", error: error.message });
   }
 };
-
 
 // Controller untuk mendapatkan semua Expenses
 export const getAllExpenses = async (req, res) => {
@@ -156,12 +155,10 @@ export const getExpenseByUsername = async (req, res) => {
       },
     });
 
-  //   Sisanya sama...
-  //  Optionally, you can reshape the data to include only necessary fields
     const result = expenses.map((expense) => ({
       ...expense,
-      wallet_name: expense.wallet.name,
-      budget_title: expense.budget.title,
+      wallet_name: expense.wallet ? expense.wallet.name : "No Wallet",
+      budget_title: expense.budget ? expense.budget.title : "No Budget",
     }));
 
     res.status(200).json({ expenses: result });
@@ -171,7 +168,6 @@ export const getExpenseByUsername = async (req, res) => {
     res.status(500).json({ msg: "Internal Server Error" });
   }
 };
-
 
 // Controller untuk memperbarui Expense berdasarkan nama pengguna dan ID Expense
 export const updateExpenseByUsernameAndExpenseId = async (req, res) => {
@@ -191,7 +187,7 @@ export const updateExpenseByUsernameAndExpenseId = async (req, res) => {
     });
 
     if (!user) {
-      return res.status(404).json({ msg: 'User not found' });
+      return res.status(404).json({ msg: "User not found" });
     }
 
     const updatedExpense = await prisma.expense.update({
@@ -201,10 +197,12 @@ export const updateExpenseByUsernameAndExpenseId = async (req, res) => {
       data: updatedExpenseData,
     });
 
-    res.status(200).json({ msg: 'Expense updated successfully', data: updatedExpense });
+    res
+      .status(200)
+      .json({ msg: "Expense updated successfully", data: updatedExpense });
   } catch (error) {
-    console.error('Error:', error);
-    res.status(500).json({ msg: 'Internal Server Error' });
+    console.error("Error:", error);
+    res.status(500).json({ msg: "Internal Server Error" });
   }
 };
 
@@ -225,7 +223,7 @@ export const deleteExpenseByUsernameAndExpenseId = async (req, res) => {
     });
 
     if (!user) {
-      return res.status(404).json({ msg: 'User not found' });
+      return res.status(404).json({ msg: "User not found" });
     }
 
     await prisma.expense.delete({
@@ -234,9 +232,9 @@ export const deleteExpenseByUsernameAndExpenseId = async (req, res) => {
       },
     });
 
-    res.status(200).json({ msg: 'Expense deleted successfully' });
+    res.status(200).json({ msg: "Expense deleted successfully" });
   } catch (error) {
-    console.error('Error:', error);
-    res.status(500).json({ msg: 'Internal Server Error' });
+    console.error("Error:", error);
+    res.status(500).json({ msg: "Internal Server Error" });
   }
 };

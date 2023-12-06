@@ -150,9 +150,13 @@ const EditIncome = ({ isOpen, onClose, onSuccess, incomeData }) => {
       onClose={handleClose}
       zIndex={10}
     >
-      <ModalOverlay />
+      <ModalOverlay bg="none" backdropFilter="auto" backdropBlur="2px" />
       <form onSubmit={updateIncome}>
-        <ModalContent>
+        <ModalContent
+          style={{
+            borderRadius: "20px", // Adjust the border-radius to your preference
+          }}
+        >
           <ModalHeader>Edit your income</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>

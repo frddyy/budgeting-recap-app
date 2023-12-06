@@ -10,6 +10,8 @@ import Expenses from "views/Dashboard/Expenses";
 import Budgeting from "views/Dashboard/Budgeting";
 import Budgets from "views/Dashboard/Budgeting/Budgets";
 import TransactionLog from "views/Dashboard/TransactionLog";
+import Profile from "views/Dashboard/Profile";
+
 
 import {
   HomeIcon,
@@ -31,7 +33,6 @@ var dashRoutes = [
   {
     path: "/dashboard",
     name: "Dashboard",
-    rtlName: "لوحة القيادة",
     icon: <HomeIcon color="inherit" />,
     component: Dashboard,
     layout: "/admin",
@@ -39,7 +40,6 @@ var dashRoutes = [
   {
     path: "/tables",
     name: "Tables",
-    rtlName: "لوحة القيادة",
     icon: <StatsIcon color="inherit" />,
     component: Tables,
     layout: "/admin",
@@ -48,7 +48,6 @@ var dashRoutes = [
   {
     path: "/billing",
     name: "Billing",
-    rtlName: "لوحة القيادة",
     icon: <CreditIcon color="inherit" />,
     component: Billing,
     layout: "/admin",
@@ -57,7 +56,6 @@ var dashRoutes = [
   {
     path: "/wallets",
     name: "Wallets",
-    rtlName: "لوحة القيادة",
     icon: <WalletIcon color="inherit" />,
     component: Wallets,
     layout: "/admin",
@@ -65,7 +63,6 @@ var dashRoutes = [
   {
     path: "/budgeting",
     name: "Budgeting",
-    rtlName: "لوحة القيادة",
     icon: <BudgetIcon color="inherit" />,
     component: Budgeting,
     layout: "/admin",
@@ -73,7 +70,6 @@ var dashRoutes = [
   {
     path: "/budgets/:category",
     name: "Budgets",
-    rtlName: "لوحة القيادة",
     icon: <BudgetIcon color="inherit" />,
     component: Budgets,
     layout: "/admin",
@@ -82,7 +78,6 @@ var dashRoutes = [
   {
     path: "/incomes",
     name: "Incomes",
-    rtlName: "لوحة القيادة",
     icon: <IncomeIcon color="inherit" />,
     component: Incomes,
     layout: "/admin",
@@ -90,7 +85,6 @@ var dashRoutes = [
   {
     path: "/expenses",
     name: "Expenses",
-    rtlName: "لوحة القيادة",
     icon: <ExpenseIcon color="inherit" />,
     component: Expenses,
     layout: "/admin",
@@ -104,9 +98,16 @@ var dashRoutes = [
     layout: "/admin",
   },
   {
+    path: "/profile",
+    name: "Profile",
+    icon: <LogIcon color="inherit" />,
+    component: Profile,
+    layout: "/admin",
+    hidden: true,
+  },
+  {
     path: "/signin",
     name: "Sign In",
-    rtlName: "لوحة القيادة",
     icon: <DocumentIcon color="inherit" />,
     component: SignIn,
     layout: "/auth",
@@ -115,7 +116,6 @@ var dashRoutes = [
   {
     path: "/signup",
     name: "Sign Up",
-    rtlName: "لوحة القيادة",
     icon: <RocketIcon color="inherit" />,
     secondaryNavbar: true,
     component: SignUp,

@@ -9,6 +9,7 @@ import {
   Thead,
   Tr,
   useColorModeValue,
+  SimpleGrid,
 } from "@chakra-ui/react";
 // Custom components
 import Card from "components/Card/Card.js";
@@ -21,6 +22,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import AddExpense from "components/AddData/AddExpense";
 import EditExpense from "components/EditData/EditExpense";
+import Swal from "sweetalert2";
 
 const Expenses = ({ title }) => {
   const textColor = useColorModeValue("gray.700", "white");
@@ -35,7 +37,7 @@ const Expenses = ({ title }) => {
   const [isEditExpenseModalOpen, setIsEditExpenseModalOpen] = useState(false);
 
   const [selectedExpense, setSelectedExpense] = useState(null);
-  
+
   const history = useHistory();
 
   useEffect(() => {
@@ -62,7 +64,7 @@ const Expenses = ({ title }) => {
     }
   };
 
-  const handleDelete = async (expense_id) => {
+  const deleteExpense = async (expense_id) => {
     try {
       const response = await axios.delete(
         `http://194.233.93.124:7171/expenses/${username}/${expense_id}`
@@ -77,6 +79,25 @@ const Expenses = ({ title }) => {
     }
   };
 
+  const handleDelete = (expense_id) => {
+    // Tampilkan dialog konfirmasi dengan SweetAlert
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Do you really want to delete this expense?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Jika pengguna mengklik 'Yes'
+        deleteExpense(expense_id);
+      }
+    });
+  };
+  
+
   const handleAddButton = () => {
     console.log("Add button clicked");
     setIsAddExpenseModalOpen(true);
@@ -89,23 +110,30 @@ const Expenses = ({ title }) => {
   };
 
   return (
-    <Card my="22px" overflowX={{ sm: "scroll", xl: "hidden" }}>
-      <CardHeader p="6px 0px 22px 0px">
-        <Flex justify="space-between" align="center" minHeight="60px" w="100%">
-          <Text fontSize="lg" color={textColor} fontWeight="bold">
-            {title}
-          </Text>
-          <Button
-            bg={bgButton}
-            color="white"
-            fontSize="xs"
-            variant="no-hover"
-            onClick={handleAddButton}
+    <Card my="20px" overflowX={{ sm: "scroll", xl: "hidden" }}>
+      <SimpleGrid columns={{ sm: 1, md: 1, xl: 1 }} spacing="24px">
+        <CardHeader p="6px 30px 30px 22px">
+          <Flex
+            justify="space-between"
+            align="center"
+            minHeight="60px"
+            w="100%"
           >
-            ADD NEW EXPENSE
-          </Button>
-        </Flex>
-      </CardHeader>
+            <Text fontSize="lg" color={textColor} fontWeight="bold">
+              {title}
+            </Text>
+            <Button
+              bg={bgButton}
+              color="white"
+              fontSize="xs"
+              variant="no-hover"
+              onClick={handleAddButton}
+            >
+              ADD NEW EXPENSE
+            </Button>
+          </Flex>
+        </CardHeader>
+      </SimpleGrid>
       <CardBody>
         <Table variant="simple" color={textColor}>
           <Thead>
