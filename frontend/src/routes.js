@@ -30,13 +30,13 @@ import { GiReceiveMoney as IncomeIcon } from "react-icons/gi";
 import { BiSolidReport as LogIcon } from "react-icons/bi";
 
 var dashRoutes = [
-  {
-    path: "/dashboard",
-    name: "Dashboard",
-    icon: <HomeIcon color="inherit" />,
-    component: Dashboard,
-    layout: "/admin",
-  },
+  // {
+  //   path: "/dashboard",
+  //   name: "Dashboard",
+  //   icon: <HomeIcon color="inherit" />,
+  //   component: Dashboard,
+  //   layout: "/admin",
+  // },
   {
     path: "/tables",
     name: "Tables",
