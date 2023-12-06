@@ -18,7 +18,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 // Assets
-import signInImage from "assets/img/signInImage.png";
+import signInImage from "assets/img/BgLogin.jpg";
 
 function SignIn() {
   const history = useHistory(); // Use useHistory

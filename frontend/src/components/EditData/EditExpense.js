@@ -125,6 +125,8 @@ const EditExpense = ({ isOpen, onClose, onSuccess, expenseData }) => {
         {
           ...expense,
           amount: parseFloat(expense.amount), // Ensure amount is an integer
+          wallet_id: parseInt(expense.wallet_id), // Ensure amount is an integer
+          budget_id: parseInt(expense.budget_id), // Ensure amount is an integer
         }
       );
 
@@ -235,7 +237,7 @@ const EditExpense = ({ isOpen, onClose, onSuccess, expenseData }) => {
               </Select>
             </FormControl>
             <FormControl mt={4}>
-              <FormLabel>Description</FormLabel>
+              <FormLabel>Budget</FormLabel>
               <Select name="budget_id" onChange={handleInputChange}>
                 {budgets.map((budget) => (
                   <option key={budget.id} value={budget.id}>

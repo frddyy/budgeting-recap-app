@@ -22,6 +22,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import AddExpense from "components/AddData/AddExpense";
 import EditExpense from "components/EditData/EditExpense";
+import Swal from "sweetalert2";
 
 const Expenses = ({ title }) => {
   const textColor = useColorModeValue("gray.700", "white");
@@ -63,7 +64,7 @@ const Expenses = ({ title }) => {
     }
   };
 
-  const handleDelete = async (expense_id) => {
+  const deleteExpense = async (expense_id) => {
     try {
       const response = await axios.delete(
         `http://localhost:5000/expenses/${username}/${expense_id}`
@@ -77,6 +78,25 @@ const Expenses = ({ title }) => {
       console.error("Detailed error response:", error.response); // Log the detailed error response
     }
   };
+
+  const handleDelete = (expense_id) => {
+    // Tampilkan dialog konfirmasi dengan SweetAlert
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Do you really want to delete this expense?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Jika pengguna mengklik 'Yes'
+        deleteExpense(expense_id);
+      }
+    });
+  };
+  
 
   const handleAddButton = () => {
     console.log("Add button clicked");

@@ -65,7 +65,7 @@ const Incomes = ({ title, onTotalAmountChange }) => {
     }
   };
 
-  const handleDelete = async (income_id) => {
+  const deleteIncome = async (income_id) => {
     try {
       const response = await axios.delete(
         `http://localhost:5000/incomes/${username}/${income_id}`
@@ -78,6 +78,24 @@ const Incomes = ({ title, onTotalAmountChange }) => {
       console.error("Error deleting income:", error);
       console.error("Detailed error response:", error.response); // Log the detailed error response
     }
+  };
+
+  const handleDelete = (income_id) => {
+    // Tampilkan dialog konfirmasi dengan SweetAlert
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Do you really want to delete this income?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Jika pengguna mengklik 'Yes'
+        deleteIncome(income_id);
+      }
+    });
   };
 
   const handleAddButton = () => {

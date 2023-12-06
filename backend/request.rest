@@ -87,7 +87,7 @@ DELETE http://localhost:5000/categories/ferdy/Hiburan
 
 //////////////////////// CRUD INCOMES ////////////////////////////
 ###
-GET  http://localhost:5000/incomes/rvldfr
+GET  http://localhost:5000/incomes/ferdyfauzan
 
 ###
 POST http://localhost:5000/incomes
@@ -95,10 +95,10 @@ Content-Type: application/json
 
 {
     "title": "Bonus",
-    "amount": 20000,
+    "amount": 50000,
     "description": "rezeki nich",
-    "date": "2023-11-14T09:30:00Z",
-    "wallet_id": 2
+    "date": "2023-12-06T00:00:00Z",
+    "wallet_id": 1
 }
 
 

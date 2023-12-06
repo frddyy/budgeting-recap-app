@@ -107,7 +107,7 @@ export default function Dashboard(props) {
     <ChakraProvider theme={theme} resetCss={false}>
       <Sidebar
         routes={filteredRoutes} // Use the filtered routes
-        logoText={"PURITY UI DASHBOARD"}
+        logoText={"SPEND WISE"}
         display="none"
         sidebarVariant={sidebarVariant}
         {...rest}
@@ -121,7 +121,7 @@ export default function Dashboard(props) {
         <Portal>
           <AdminNavbar
             onOpen={onOpen}
-            logoText={"PURITY UI DASHBOARD"}
+            logoText={"SPEND WISE"}
             brandText={getActiveRoute(filteredRoutes)} // Use the filtered routes
             secondary={getActiveNavbar(filteredRoutes)} // Use the filtered routes
             fixed={fixed}

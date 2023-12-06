@@ -54,7 +54,7 @@ export default function Configurator(props) {
           <DrawerHeader pt="24px" px="24px">
             <DrawerCloseButton />
             <Text fontSize="xl" fontWeight="bold" mt="16px" mb="32px">
-              Budgeting UI Configurator
+              Spend Wise UI Configurator
             </Text>
             <Separator />
           </DrawerHeader>
