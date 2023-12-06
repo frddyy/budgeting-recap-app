@@ -51,7 +51,7 @@ const EditCategory = ({ isOpen, onClose, onSuccess, categoryData }) => {
     if (!username) return;
     try {
       const response = await axios.get(
-        `http://localhost:5000/categories/${username}/${categoryName}`
+        `http://194.233.93.124:7171/categories/${username}/${categoryName}`
       );
       if (response.status === 200) {
         // Setelah mendapatkan data dari API, update state 'category'
@@ -75,7 +75,7 @@ const EditCategory = ({ isOpen, onClose, onSuccess, categoryData }) => {
 
     try {
       const response = await axios.patch(
-        `http://localhost:5000/categorys/${username}/${category.name}`, // Gunakan category.name
+        `http://194.233.93.124:7171/categorys/${username}/${category.name}`, // Gunakan category.name
         category
       );
 

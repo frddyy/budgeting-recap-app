@@ -49,7 +49,7 @@ const Expenses = ({ title }) => {
   const fetchExpenses = async (username) => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/expenses/${username}`
+        `http://194.233.93.124:7171/expenses/${username}`
       );
       console.log("Full response:", response); // Log the full response
 
@@ -65,7 +65,7 @@ const Expenses = ({ title }) => {
   const handleDelete = async (expense_id) => {
     try {
       const response = await axios.delete(
-        `http://localhost:5000/expenses/${username}/${expense_id}`
+        `http://194.233.93.124:7171/expenses/${username}/${expense_id}`
       );
       const updatedExpenseData = expenseData.filter(
         (expense) => expense.id !== expense_id

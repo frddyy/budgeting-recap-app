@@ -147,7 +147,7 @@ const Recap = ({ title }) => {
     try {
       // Panggilan API untuk data Expense dengan rentang tanggal
       const expenseResponse = await axios.get(
-        `http://localhost:5000/expenses/${username}`,
+        `http://194.233.93.124:7171/expenses/${username}`,
         {
           params: { startDate, endDate },
         }
@@ -158,7 +158,7 @@ const Recap = ({ title }) => {
 
       // Panggilan API untuk data Income dengan rentang tanggal
       const incomeResponse = await axios.get(
-        `http://localhost:5000/incomes/${username}`,
+        `http://194.233.93.124:7171/incomes/${username}`,
         {
           params: { startDate, endDate },
         }

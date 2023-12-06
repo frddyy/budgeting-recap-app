@@ -4,6 +4,9 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export const createUser = async (req, res) => {
+  // Extract username, password, and confirmPassword from req.body
+  const { username, password, confirmPassword } = req.body;
+
   // Check if username already exists
   const existingUser = await prisma.User.findUnique({
     where: {
@@ -25,11 +28,12 @@ export const createUser = async (req, res) => {
 
   // If username does not exist and passwords match, hash the password
   const salt = await bcrypt.genSalt();
-  const hashedPassword = await bcrypt.hash(req.body.password, salt);
+  const hashedPassword = await bcrypt.hash(password, salt);
+
   try {
     const newUser = req.body;
     const user = await prisma.User.create({
-      data:{
+      data: {
         username: newUser.username,
         password: hashedPassword,
       },
@@ -40,6 +44,7 @@ export const createUser = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
 
 // Function to fetch all users
 export const getAllUsers = async (req, res) => {

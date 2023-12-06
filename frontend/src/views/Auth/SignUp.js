@@ -51,7 +51,7 @@ function SignUp() {
 
     try {
       const response = await axios.post(
-        `http://localhost:5000/users`,
+        `http://194.233.93.124:7171/users`,
         formData,
         { validateStatus: false }
       );

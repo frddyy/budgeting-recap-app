@@ -53,7 +53,7 @@ const Incomes = ({ title, onTotalAmountChange }) => {
   const fetchIncomes = async (username) => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/incomes/${username}`
+        `http://194.233.93.124:7171/incomes/${username}`
       );
       console.log("Full response:", response); // Log the full response
 
@@ -68,7 +68,7 @@ const Incomes = ({ title, onTotalAmountChange }) => {
   const handleDelete = async (income_id) => {
     try {
       const response = await axios.delete(
-        `http://localhost:5000/incomes/${username}/${income_id}`
+        `http://194.233.93.124:7171/incomes/${username}/${income_id}`
       );
       const updatedIncomeData = incomeData.filter(
         (income) => income.id !== income_id

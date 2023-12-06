@@ -1,9 +1,9 @@
 //////////////////////// CRUD USER ////////////////////////////
 ###
-GET http://localhost:5000/users
+GET http://194.233.93.124:7171/users
 
 ###
-POST http://localhost:5000/users
+POST http://194.233.93.124:7171/users
 Content-Type: application/json
 
 {   
@@ -14,7 +14,7 @@ Content-Type: application/json
 }
 
 ###
-PATCH http://localhost:5000/users/junet
+PATCH http://194.233.93.124:7171/users/junet
 Content-Type: application/json
 
 {
@@ -22,11 +22,11 @@ Content-Type: application/json
 }
 
 ###
-DELETE http://localhost:5000/users/junet
+DELETE http://194.233.93.124:7171/users/junet
 
 
 ### Login
-POST http://localhost:5000/login
+POST http://194.233.93.124:7171/login
 Content-Type: application/json
 
 {
@@ -37,10 +37,10 @@ Content-Type: application/json
 //////////////////////// CRUD WALLET ////////////////////////////
 
 ###
-GET http://localhost:5000/wallets/rvldfr
+GET http://194.233.93.124:7171/wallets/rvldfr
 
 ###
-POST http://localhost:5000/wallets
+POST http://194.233.93.124:7171/wallets
 Content-Type: application/json
 
 {
@@ -50,11 +50,11 @@ Content-Type: application/json
 }
 
 ###
-DELETE http://localhost:5000/wallets/ferdy/BRI
+DELETE http://194.233.93.124:7171/wallets/ferdy/BRI
 
 
 ###
-PATCH http://localhost:5000/wallets/junet/GOPAY
+PATCH http://194.233.93.124:7171/wallets/junet/GOPAY
 Content-Type: application/json
 
 {
@@ -63,10 +63,10 @@ Content-Type: application/json
 
 //////////////////////// CRUD CATEGORY ////////////////////////////
 ###
-GET http://localhost:5000/categories/ferdy
+GET http://194.233.93.124:7171/categories/ferdy
 
 ###
-POST http://localhost:5000/categories
+POST http://194.233.93.124:7171/categories
 Content-Type: application/json
 
 {
@@ -75,7 +75,7 @@ Content-Type: application/json
 }
 
 ###
-PATCH http://localhost:5000/categories/ferdy/Hiburan
+PATCH http://194.233.93.124:7171/categories/ferdy/Hiburan
 Content-Type: application/json
 
 {
@@ -83,14 +83,14 @@ Content-Type: application/json
 }
 
 ###
-DELETE http://localhost:5000/categories/ferdy/Hiburan
+DELETE http://194.233.93.124:7171/categories/ferdy/Hiburan
 
 //////////////////////// CRUD INCOMES ////////////////////////////
 ###
-GET  http://localhost:5000/incomes/rvldfr
+GET  http://194.233.93.124:7171/incomes/rvldfr
 
 ###
-POST http://localhost:5000/incomes
+POST http://194.233.93.124:7171/incomes
 Content-Type: application/json
 
 {
@@ -103,21 +103,21 @@ Content-Type: application/json
 
 
 ###
-GET  http://localhost:5000/incomes-period/junet?startDate=2023-11-14&endDate=2023-11-15
+GET  http://194.233.93.124:7171/incomes-period/junet?startDate=2023-11-14&endDate=2023-11-15
 
 
 ###
-DELETE http://localhost:5000/incomes/junet/2
+DELETE http://194.233.93.124:7171/incomes/junet/2
 
 //////////////////////// CRUD BUDGET ////////////////////////////
 ###
-GET  http://localhost:5000/budgets/rezaanta
+GET  http://194.233.93.124:7171/budgets/rezaanta
 
 ###
-GET  http://localhost:5000/budgets/ferdy/Transport
+GET  http://194.233.93.124:7171/budgets/ferdy/Transport
 
 ###
-POST http://localhost:5000/budgets
+POST http://194.233.93.124:7171/budgets
 Content-Type: application/json
 
 {
@@ -128,7 +128,7 @@ Content-Type: application/json
 }
 
 ###
-PATCH  http://localhost:5000/budgets/ferdy/1
+PATCH  http://194.233.93.124:7171/budgets/ferdy/1
 Content-Type: application/json
 
 {
@@ -136,14 +136,14 @@ Content-Type: application/json
 }
 
 ###
-DELETE http://localhost:5000/budgets/ferdy/11
+DELETE http://194.233.93.124:7171/budgets/ferdy/11
 
 //////////////////////// CRUD EXPENSE ////////////////////////////
 ###
-GET  http://localhost:5000/expenses/ferdy
+GET  http://194.233.93.124:7171/expenses/ferdy
 
 ###
-POST http://localhost:5000/expenses
+POST http://194.233.93.124:7171/expenses
 Content-Type: application/json
 
 {
@@ -156,7 +156,7 @@ Content-Type: application/json
 }
 
 ###
-PATCH http://localhost:5000/expenses/junet/3
+PATCH http://194.233.93.124:7171/expenses/junet/3
 Content-Type: application/json
 
 {
@@ -164,4 +164,4 @@ Content-Type: application/json
 }
 
 ###
-DELETE  http://localhost:5000/expenses/junet/4
+DELETE  http://194.233.93.124:7171/expenses/junet/4

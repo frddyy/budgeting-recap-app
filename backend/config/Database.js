@@ -3,8 +3,8 @@ import { Sequelize } from "sequelize";
 const env = {
   database: "budgeting_recap_db",
   username: "postgres",
-  password: "ferdy1234567",
-  host: "localhost",
+  password: "123",
+  host: "db",
   dialect: "postgres",
   pool: {
     max: 5,

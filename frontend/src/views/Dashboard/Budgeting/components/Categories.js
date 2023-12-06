@@ -50,7 +50,7 @@ const Categories = ({ title }) => {
       try {
         if (username) {
           const response = await axios.get(
-            `http://localhost:5000/categories/${username}`
+            `http://194.233.93.124:7171/categories/${username}`
           );
           const categories = response.data.data || [];
           setCategoryData(categories);
@@ -89,7 +89,7 @@ const Categories = ({ title }) => {
   const deleteCategory = async (categoryName) => {
     try {
       const response = await axios.delete(
-        `http://localhost:5000/categories/${username}/${categoryName}`
+        `http://194.233.93.124:7171/categories/${username}/${categoryName}`
       );
 
       if (response.status === 200) {

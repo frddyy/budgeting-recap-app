@@ -11,10 +11,10 @@ import BudgetRoute from "./routes/BudgetRoute.js";
 import ExpenseRoute from "./routes/ExpenseRoute.js";
 
 // dotenv.config();
-const port = 5000;
+const port = 7171;
 const app = express();
 
-// app.use(cors({ credentials: true, origin: 'http://localhost:5000' }));
+// app.use(cors({ credentials: true, origin: 'http://194.233.93.124:7171' }));
 app.use(cors());
 app.use(express.json());
 
@@ -34,4 +34,4 @@ app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
 
-// app.listen(5000, () => console.log('Server Running Up ....'));
+// app.listen(7171, () => console.log('Server Running Up ....'));

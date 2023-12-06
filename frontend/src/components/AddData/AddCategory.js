@@ -65,7 +65,7 @@ const AddCategory = ({ isOpen, onClose, onSuccess }) => {
       try {
         if (username) {
           const response = await axios.get(
-            `http://localhost:5000/users/${username}`
+            `http://194.233.93.124:7171/users/${username}`
           );
           setUserId(response.data.data.id);
         }
@@ -99,7 +99,7 @@ const AddCategory = ({ isOpen, onClose, onSuccess }) => {
       };
 
       const response = await axios.post(
-        "http://localhost:5000/categories",
+        "http://194.233.93.124:7171/categories",
         categoryData
       );
 

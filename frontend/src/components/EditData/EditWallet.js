@@ -52,7 +52,7 @@ const EditWallet = ({ isOpen, onClose, onSuccess, walletData }) => {
     if (!username) return;
     try {
       const response = await axios.get(
-        `http://localhost:5000/wallets/${username}/${walletName}`
+        `http://194.233.93.124:7171/wallets/${username}/${walletName}`
       );
       if (response.status === 200) {
         // Setelah mendapatkan data dari API, update state 'wallet'
@@ -77,7 +77,7 @@ const EditWallet = ({ isOpen, onClose, onSuccess, walletData }) => {
 
     try {
       const response = await axios.patch(
-        `http://localhost:5000/wallets/${username}/${wallet.name}`, // Gunakan wallet.name
+        `http://194.233.93.124:7171/wallets/${username}/${wallet.name}`, // Gunakan wallet.name
         wallet
       );
 

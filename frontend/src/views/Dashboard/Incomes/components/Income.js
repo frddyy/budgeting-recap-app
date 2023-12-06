@@ -45,7 +45,7 @@ const Wallets = ({ title }) => {
       try {
         if (username) {
           const response = await axios.get(
-            `http://localhost:5000/wallets/${username}`
+            `http://194.233.93.124:7171/wallets/${username}`
           );
           setWalletData(response.data.data || []);
         }
@@ -60,7 +60,7 @@ const Wallets = ({ title }) => {
   const handleDelete = async (walletName) => {
     try {
       const response = await axios.delete(
-        `http://localhost:5000/wallets/${username}/${walletName}`
+        `http://194.233.93.124:7171/wallets/${username}/${walletName}`
       );
       const updatedWalletData = walletData.filter(
         (wallet) => wallet.name !== walletName
