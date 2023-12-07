@@ -44,7 +44,7 @@ function Profile() {
 
   const fetchUsers = async (username) => {
     try {
-      const response = await axios.get(`http://localhost:5000/users/${username}`);
+      const response = await axios.get(`https://api-spendwise.agilearn.id/users/${username}`);
       console.log("Full response:", response);
       console.log("User data:", response.data);
       setUser(response.data.data); // Update this line
@@ -57,7 +57,7 @@ function Profile() {
     try {
       if (userData && userData.username) {
         const response = await axios.delete(
-          `http://localhost:5000/users/${userData.username}`
+          `https://api-spendwise.agilearn.id/users/${userData.username}`
         );
         Cookies.remove("username");
         history.push("/auth/signin");
@@ -78,7 +78,7 @@ function Profile() {
     setIsDeleteConfirmationOpen(true);
   };
 
-  const userImageUrl = userData && userData.image ? `http://localhost:5000/user/image/${userData.image}` : null;
+  const userImageUrl = userData && userData.image ? `https://api-spendwise.agilearn.id/user/image/${userData.image}` : null;
 
   const renderProfileIcon = () => {
     if (userImageUrl) {

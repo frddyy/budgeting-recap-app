@@ -66,7 +66,7 @@ const Budgets = ({ title }) => {
       try {
         if (username && category) {
           const response = await axios.get(
-            `http://194.233.93.124:7171/budgets/${username}/${category}`
+            `https://api-spendwise.agilearn.id/budgets/${username}/${category}`
           );
           // Pastikan respons memiliki properti 'budgets' dan merupakan array
           if (response.data && Array.isArray(response.data.budgets)) {
@@ -117,7 +117,7 @@ const Budgets = ({ title }) => {
       }
   
       const response = await axios.delete(
-        `http://194.233.93.124:7171/budgets/${username}/${budgetId}`
+        `https://api-spendwise.agilearn.id/budgets/${username}/${budgetId}`
       );
   
       if (response.status === 200) {

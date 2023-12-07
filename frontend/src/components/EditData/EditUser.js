@@ -98,7 +98,7 @@ const EditUser = ({ isOpen, onClose, onSuccess, userData }) => {
       }
 
       const response = await axios.patch(
-        `http://localhost:5000/users/update/${username}`,
+        `https://api-spendwise.agilearn.id/users/update/${username}`,
         formData,
         {
           headers: {

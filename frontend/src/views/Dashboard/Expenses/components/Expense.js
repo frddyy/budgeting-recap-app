@@ -51,7 +51,7 @@ const Expenses = ({ title }) => {
   const fetchExpenses = async (username) => {
     try {
       const response = await axios.get(
-        `http://194.233.93.124:7171/expenses/${username}`
+        `https://api-spendwise.agilearn.id/expenses/${username}`
       );
       console.log("Full response:", response); // Log the full response
 
@@ -67,7 +67,7 @@ const Expenses = ({ title }) => {
   const deleteExpense = async (expense_id) => {
     try {
       const response = await axios.delete(
-        `http://194.233.93.124:7171/expenses/${username}/${expense_id}`
+        `https://api-spendwise.agilearn.id/expenses/${username}/${expense_id}`
       );
       const updatedExpenseData = expenseData.filter(
         (expense) => expense.id !== expense_id

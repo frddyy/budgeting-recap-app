@@ -51,7 +51,7 @@ function SignUp() {
 
     try {
       const response = await axios.post(
-        `http://194.233.93.124:7171/users`,
+        `https://api-spendwise.agilearn.id/users`,
         formData,
         { validateStatus: false }
       );

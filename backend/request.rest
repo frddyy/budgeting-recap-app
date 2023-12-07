@@ -1,9 +1,9 @@
 //////////////////////// CRUD USER ////////////////////////////
 ###
-GET http://194.233.93.124:7171/users
+GET https://api-spendwise.agilearn.id/users
 
 ###
-POST http://194.233.93.124:7171/users
+POST https://api-spendwise.agilearn.id/users
 Content-Type: application/json
 
 {   
@@ -14,7 +14,7 @@ Content-Type: application/json
 }
 
 ###
-PATCH http://194.233.93.124:7171/users/junet
+PATCH https://api-spendwise.agilearn.id/users/junet
 Content-Type: application/json
 
 {
@@ -22,11 +22,11 @@ Content-Type: application/json
 }
 
 ###
-DELETE http://194.233.93.124:7171/users/junet
+DELETE https://api-spendwise.agilearn.id/users/junet
 
 
 ### Login
-POST http://194.233.93.124:7171/login
+POST https://api-spendwise.agilearn.id/login
 Content-Type: application/json
 
 {
@@ -37,10 +37,10 @@ Content-Type: application/json
 //////////////////////// CRUD WALLET ////////////////////////////
 
 ###
-GET http://194.233.93.124:7171/wallets/rvldfr
+GET https://api-spendwise.agilearn.id/wallets/rvldfr
 
 ###
-POST http://194.233.93.124:7171/wallets
+POST https://api-spendwise.agilearn.id/wallets
 Content-Type: application/json
 
 {
@@ -50,11 +50,11 @@ Content-Type: application/json
 }
 
 ###
-DELETE http://194.233.93.124:7171/wallets/ferdy/BRI
+DELETE https://api-spendwise.agilearn.id/wallets/ferdy/BRI
 
 
 ###
-PATCH http://194.233.93.124:7171/wallets/junet/GOPAY
+PATCH https://api-spendwise.agilearn.id/wallets/junet/GOPAY
 Content-Type: application/json
 
 {
@@ -63,10 +63,10 @@ Content-Type: application/json
 
 //////////////////////// CRUD CATEGORY ////////////////////////////
 ###
-GET http://194.233.93.124:7171/categories/ferdy
+GET https://api-spendwise.agilearn.id/categories/ferdy
 
 ###
-POST http://194.233.93.124:7171/categories
+POST https://api-spendwise.agilearn.id/categories
 Content-Type: application/json
 
 {
@@ -75,7 +75,7 @@ Content-Type: application/json
 }
 
 ###
-PATCH http://194.233.93.124:7171/categories/ferdy/Hiburan
+PATCH https://api-spendwise.agilearn.id/categories/ferdy/Hiburan
 Content-Type: application/json
 
 {
@@ -83,14 +83,14 @@ Content-Type: application/json
 }
 
 ###
-DELETE http://194.233.93.124:7171/categories/ferdy/Hiburan
+DELETE https://api-spendwise.agilearn.id/categories/ferdy/Hiburan
 
 //////////////////////// CRUD INCOMES ////////////////////////////
 ###
-GET  http://194.233.93.124:7171/incomes/rvldfr
+GET  https://api-spendwise.agilearn.id/incomes/rvldfr
 
 ###
-POST http://194.233.93.124:7171/incomes
+POST https://api-spendwise.agilearn.id/incomes
 Content-Type: application/json
 
 {
@@ -103,21 +103,21 @@ Content-Type: application/json
 
 
 ###
-GET  http://194.233.93.124:7171/incomes-period/junet?startDate=2023-11-14&endDate=2023-11-15
+GET  https://api-spendwise.agilearn.id/incomes-period/junet?startDate=2023-11-14&endDate=2023-11-15
 
 
 ###
-DELETE http://194.233.93.124:7171/incomes/junet/2
+DELETE https://api-spendwise.agilearn.id/incomes/junet/2
 
 //////////////////////// CRUD BUDGET ////////////////////////////
 ###
-GET  http://194.233.93.124:7171/budgets/rezaanta
+GET  https://api-spendwise.agilearn.id/budgets/rezaanta
 
 ###
-GET  http://194.233.93.124:7171/budgets/ferdy/Transport
+GET  https://api-spendwise.agilearn.id/budgets/ferdy/Transport
 
 ###
-POST http://194.233.93.124:7171/budgets
+POST https://api-spendwise.agilearn.id/budgets
 Content-Type: application/json
 
 {
@@ -128,7 +128,7 @@ Content-Type: application/json
 }
 
 ###
-PATCH  http://194.233.93.124:7171/budgets/ferdy/1
+PATCH  https://api-spendwise.agilearn.id/budgets/ferdy/1
 Content-Type: application/json
 
 {
@@ -136,14 +136,14 @@ Content-Type: application/json
 }
 
 ###
-DELETE http://194.233.93.124:7171/budgets/ferdy/11
+DELETE https://api-spendwise.agilearn.id/budgets/ferdy/11
 
 //////////////////////// CRUD EXPENSE ////////////////////////////
 ###
-GET  http://194.233.93.124:7171/expenses/ferdy
+GET  https://api-spendwise.agilearn.id/expenses/ferdy
 
 ###
-POST http://194.233.93.124:7171/expenses
+POST https://api-spendwise.agilearn.id/expenses
 Content-Type: application/json
 
 {
@@ -156,7 +156,7 @@ Content-Type: application/json
 }
 
 ###
-PATCH http://194.233.93.124:7171/expenses/junet/3
+PATCH https://api-spendwise.agilearn.id/expenses/junet/3
 Content-Type: application/json
 
 {
@@ -164,4 +164,4 @@ Content-Type: application/json
 }
 
 ###
-DELETE  http://194.233.93.124:7171/expenses/junet/4
+DELETE  https://api-spendwise.agilearn.id/expenses/junet/4

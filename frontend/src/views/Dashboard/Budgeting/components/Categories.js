@@ -50,7 +50,7 @@ const Categories = ({ title }) => {
       try {
         if (username) {
           const response = await axios.get(
-            `http://194.233.93.124:7171/categories/${username}`
+            `https://api-spendwise.agilearn.id/categories/${username}`
           );
           const categories = response.data.data || [];
           setCategoryData(categories);
@@ -89,7 +89,7 @@ const Categories = ({ title }) => {
   const deleteCategory = async (categoryName) => {
     try {
       const response = await axios.delete(
-        `http://194.233.93.124:7171/categories/${username}/${categoryName}`
+        `https://api-spendwise.agilearn.id/categories/${username}/${categoryName}`
       );
 
       if (response.status === 200) {

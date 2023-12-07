@@ -51,7 +51,7 @@ export default function HeaderLinks(props) {
 
 const fetchUsers = async (username) => {
   try {
-    const response = await axios.get(`http://localhost:5000/users/${username}`);
+    const response = await axios.get(`https://api-spendwise.agilearn.id/users/${username}`);
     console.log("Full response:", response);
     console.log("User data:", response.data);
     setUser(response.data.data); // Update this line
@@ -60,7 +60,7 @@ const fetchUsers = async (username) => {
   }
 };
 
-const userImageUrl = user && user.image ? `http://localhost:5000/user/image/${user.image}` : null;  
+const userImageUrl = user && user.image ? `https://api-spendwise.agilearn.id/user/image/${user.image}` : null;  
 console.log("User Image URL:", userImageUrl);
 
 const renderProfileIcon = () => {

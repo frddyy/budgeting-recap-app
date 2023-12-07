@@ -69,7 +69,7 @@ const AddBudget = ({ isOpen, onClose, onSuccess, categoryName }) => {
       try {
         if (username) {
           const response = await axios.get(
-            `http://194.233.93.124:7171/users/${username}`
+            `https://api-spendwise.agilearn.id/users/${username}`
           );
           setUserId(response.data.data.id);
         }
@@ -88,7 +88,7 @@ const AddBudget = ({ isOpen, onClose, onSuccess, categoryName }) => {
 
       try {
         const response = await axios.get(
-          `http://194.233.93.124:7171/categories/${username}`
+          `https://api-spendwise.agilearn.id/categories/${username}`
         );
         console.log("Categories response data:", response.data.data);
 
@@ -159,7 +159,7 @@ const AddBudget = ({ isOpen, onClose, onSuccess, categoryName }) => {
 
       // Gunakan URL yang benar sesuai dengan setup server Anda
       const response = await axios.post(
-        "http://194.233.93.124:7171/budgets",
+        "https://api-spendwise.agilearn.id/budgets",
         budgetData
       );
 

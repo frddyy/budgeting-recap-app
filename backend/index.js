@@ -14,7 +14,7 @@ import ExpenseRoute from "./routes/ExpenseRoute.js";
 const port = 7171;
 const app = express();
 
-// app.use(cors({ credentials: true, origin: 'http://194.233.93.124:7171' }));
+// app.use(cors({ credentials: true, origin: 'https://api-spendwise.agilearn.id' }));
 app.use(cors());
 app.use(express.json());
 

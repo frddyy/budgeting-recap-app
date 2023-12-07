@@ -64,7 +64,7 @@ const EditIncome = ({ isOpen, onClose, onSuccess, incomeData }) => {
     const fetchWallets = async () => {
       try {
         const response = await axios.get(
-          `http://194.233.93.124:7171/wallets/${username}`
+          `https://api-spendwise.agilearn.id/wallets/${username}`
         );
         const fetchedWallets = response.data.data || [];
         setWallets(fetchedWallets);
@@ -97,7 +97,7 @@ const EditIncome = ({ isOpen, onClose, onSuccess, incomeData }) => {
 
     try {
       const response = await axios.patch(
-        `http://194.233.93.124:7171/incomes/${username}/${income.id}`,
+        `https://api-spendwise.agilearn.id/incomes/${username}/${income.id}`,
         {
           ...income,
           date: new Date(income.date).toISOString(),

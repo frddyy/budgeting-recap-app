@@ -50,7 +50,7 @@ const AddIncome = ({ isOpen, onClose, onSuccess }) => {
     const fetchWallets = async () => {
       try {
         const response = await axios.get(
-          `http://194.233.93.124:7171/wallets/${username}`
+          `https://api-spendwise.agilearn.id/wallets/${username}`
         );
         const fetchedWallets = response.data.data || [];
         setWallets(fetchedWallets);
@@ -99,7 +99,7 @@ const AddIncome = ({ isOpen, onClose, onSuccess }) => {
       try {
         if (username) {
           const response = await axios.get(
-            `http://194.233.93.124:7171/users/${username}`
+            `https://api-spendwise.agilearn.id/users/${username}`
           );
           setUserId(response.data.data.id);
         }
@@ -141,7 +141,7 @@ const AddIncome = ({ isOpen, onClose, onSuccess }) => {
       };
 
       const response = await axios.post(
-        "http://194.233.93.124:7171/incomes",
+        "https://api-spendwise.agilearn.id/incomes",
         incomeData
       );
 

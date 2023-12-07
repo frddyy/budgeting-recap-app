@@ -77,7 +77,7 @@ const EditBudget = ({
 
     try {
       const response = await axios.patch(
-        `http://194.233.93.124:7171/budgets/${username}/${budgetData.id}`, // Gunakan budget.id
+        `https://api-spendwise.agilearn.id/budgets/${username}/${budgetData.id}`, // Gunakan budget.id
         budget
       );
 

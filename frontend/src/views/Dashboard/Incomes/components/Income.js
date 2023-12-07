@@ -45,7 +45,7 @@ const Wallets = ({ title }) => {
       try {
         if (username) {
           const response = await axios.get(
-            `http://194.233.93.124:7171/wallets/${username}`
+            `https://api-spendwise.agilearn.id/wallets/${username}`
           );
           setWalletData(response.data.data || []);
         }
@@ -60,7 +60,7 @@ const Wallets = ({ title }) => {
   const handleDelete = async (walletName) => {
     try {
       const response = await axios.delete(
-        `http://194.233.93.124:7171/wallets/${username}/${walletName}`
+        `https://api-spendwise.agilearn.id/wallets/${username}/${walletName}`
       );
       const updatedWalletData = walletData.filter(
         (wallet) => wallet.name !== walletName

@@ -133,7 +133,7 @@ const Report = ({ title }) => {
 
     try {
       const expenseResponse = await axios.get(
-        `http://194.233.93.124:7171/expenses/${username}`,
+        `https://api-spendwise.agilearn.id/expenses/${username}`,
         { params: { startDate, endDate } }
       );
       if (expenseResponse && expenseResponse.data) {
@@ -141,7 +141,7 @@ const Report = ({ title }) => {
       }
 
       const incomeResponse = await axios.get(
-        `http://194.233.93.124:7171/incomes/${username}`,
+        `https://api-spendwise.agilearn.id/incomes/${username}`,
         { params: { startDate, endDate } }
       );
       if (incomeResponse && incomeResponse.data) {

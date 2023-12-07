@@ -55,7 +55,7 @@ const Wallets = ({ title, onTotalBalanceChange }) => {
       try {
         if (username) {
           const response = await axios.get(
-            `http://194.233.93.124:7171/wallets/${username}`
+            `https://api-spendwise.agilearn.id/wallets/${username}`
           );
           const wallets = response.data.data || [];
           setWalletData(wallets);
@@ -100,7 +100,7 @@ const Wallets = ({ title, onTotalBalanceChange }) => {
   const deleteWallet = async (walletName) => {
     try {
       const response = await axios.delete(
-        `http://194.233.93.124:7171/wallets/${username}/${walletName}`
+        `https://api-spendwise.agilearn.id/wallets/${username}/${walletName}`
       );
   
       if (response.status === 200) {

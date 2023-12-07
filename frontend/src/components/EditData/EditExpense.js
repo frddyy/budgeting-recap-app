@@ -68,7 +68,7 @@ const EditExpense = ({ isOpen, onClose, onSuccess, expenseData }) => {
       const fetchWallets = async () => {
         try {
           const response = await axios.get(
-            `http://194.233.93.124:7171/wallets/${username}`
+            `https://api-spendwise.agilearn.id/wallets/${username}`
           );
           const fetchedWallets = response.data.data || [];
           setWallets(fetchedWallets);
@@ -88,7 +88,7 @@ const EditExpense = ({ isOpen, onClose, onSuccess, expenseData }) => {
       const fetchBudgets = async () => {
         try {
           const response = await axios.get(
-            `http://194.233.93.124:7171/budgets/${username}`
+            `https://api-spendwise.agilearn.id/budgets/${username}`
           );
           const fetchedBudgets = response.data.budgets || [];
           setBudgets(fetchedBudgets);
@@ -121,7 +121,7 @@ const EditExpense = ({ isOpen, onClose, onSuccess, expenseData }) => {
 
     try {
       const response = await axios.patch(
-        `http://194.233.93.124:7171/expenses/${username}/${expense.id}`,
+        `https://api-spendwise.agilearn.id/expenses/${username}/${expense.id}`,
         {
           ...expense,
           amount: parseFloat(expense.amount), // Ensure amount is an integer
