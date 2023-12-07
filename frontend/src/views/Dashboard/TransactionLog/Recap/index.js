@@ -34,15 +34,21 @@ const formatAmount = (amount) => {
   if (amount >= 1000000000) {
     // Untuk "B"
     const result = amount / 1000000000;
-    formattedAmount = `${result % 1 === 0 ? result.toFixed(0) : result.toFixed(1)}B`;
+    formattedAmount = `${
+      result % 1 === 0 ? result.toFixed(0) : result.toFixed(1)
+    }B`;
   } else if (amount >= 1000000) {
     // Untuk "M"
     const result = amount / 1000000;
-    formattedAmount = `${result % 1 === 0 ? result.toFixed(0) : result.toFixed(1)}M`;
+    formattedAmount = `${
+      result % 1 === 0 ? result.toFixed(0) : result.toFixed(1)
+    }M`;
   } else if (amount >= 1000) {
     // Untuk "K"
     const result = amount / 1000;
-    formattedAmount = `${result % 1 === 0 ? result.toFixed(0) : result.toFixed(1)}K`;
+    formattedAmount = `${
+      result % 1 === 0 ? result.toFixed(0) : result.toFixed(1)
+    }K`;
   } else {
     // Tanpa konversi
     formattedAmount = amount.toFixed(0);
@@ -51,6 +57,23 @@ const formatAmount = (amount) => {
   return `Rp ${formattedAmount}`;
 };
 
+// Fungsi untuk mengagregasi data berdasarkan tanggal
+const aggregateDataByDate = (data) => {
+  const groupedData = data.reduce((acc, item) => {
+    const date = new Date(item.date);
+    if (isNaN(date.getTime())) {
+      // Cek apakah tanggal valid
+      return acc;
+    }
+    const dateString = date.toDateString();
+    if (!acc[dateString]) {
+      acc[dateString] = { date: dateString, amount: 0 };
+    }
+    acc[dateString].amount += parseFloat(item.amount);
+    return acc;
+  }, {});
+  return Object.values(groupedData);
+};
 
 // Opsi untuk konfigurasi grafik (dapat disesuaikan)
 export const lineChartOptions = {
@@ -100,7 +123,7 @@ export const lineChartOptions = {
     },
   },
   legend: {
-    show: true,
+    show: false,
   },
   grid: {
     strokeDashArray: 5,
@@ -111,10 +134,13 @@ export const lineChartOptions = {
       shade: "light",
       type: "vertical",
       shadeIntensity: 0.5,
+      gradientToColors: undefined, // optional, if not defined - uses the shades of same color in series
       inverseColors: true,
       opacityFrom: 0.8,
       opacityTo: 0,
+      stops: [],
     },
+    colors: ["#4FD1C5", "#2D3748"],
   },
   colors: ["#4FD1C5", "#2D3748"],
 };
@@ -139,9 +165,9 @@ const Recap = ({ title }) => {
   useEffect(() => {
     const storedUsername = Cookies.get("username");
     if (storedUsername) {
-      fetchRecap(storedUsername);
+      fetchRecap(storedUsername, startDate, endDate);
     }
-  }, []);
+  }, [startDate, endDate]);
 
   const fetchRecap = async (username, startDate, endDate) => {
     try {
@@ -176,41 +202,38 @@ const Recap = ({ title }) => {
   };
 
   useEffect(() => {
-    // Siapkan data untuk grafik dengan struktur baru
-    const incomeDataPoints = incomeData.map((item) =>
-      parseFloat(formatAmount(item.amount).replace(/[^\d.-]/g, ""))
-    );
-    const expenseDataPoints = expenseData.map((item) =>
-      parseFloat(formatAmount(item.amount).replace(/[^\d.-]/g, ""))
-    );
+    // Agregasi data
+    if (expenseData.length > 0 || incomeData.length > 0) {
+      const aggregatedExpenseData = aggregateDataByDate(expenseData).sort(
+        (a, b) => new Date(a.date) - new Date(b.date)
+      );
+      const aggregatedIncomeData = aggregateDataByDate(incomeData).sort(
+        (a, b) => new Date(a.date) - new Date(b.date)
+      );
+      // Siapkan data untuk grafik
+      const modifiedChartData = [
+        {
+          name: "Income",
+          data: aggregatedIncomeData.map((item) => ({
+            x: new Date(item.date).getTime(),
+            y: item.amount,
+          })),
+          color: "#3EBD93",
+        },
+        {
+          name: "Expense",
+          data: aggregatedExpenseData.map((item) => ({
+            x: new Date(item.date).getTime(),
+            y: item.amount,
+          })),
+          color: "#F5587B",
+        },
+      ];
 
-    const modifiedChartData = [
-      {
-        name: "Income",
-        data: incomeData.map((item) => {
-          return {
-            x: new Date(item.date).getTime(), // Konversi ke timestamp
-            // y: parseFloat(formatAmount(item.amount).replace(/[^\d.-]/g, "")),
-            y: parseFloat(item.amount)
-          };
-        }),
-        color: "#3EBD93",
-      },
-      {
-        name: "Expense",
-        data: expenseData.map((item) => {
-          return {
-            x: new Date(item.date).getTime(), // Konversi ke timestamp
-            // y: parseFloat(formatAmount(item.amount).replace(/[^\d.-]/g, "")),
-            y: parseFloat(item.amount)
-          };
-        }),
-        color: "#F5587B",
-      },
-    ];
-
-    setChartData(modifiedChartData);
-    console.log("Updated chart data:", modifiedChartData);
+      setChartData(modifiedChartData);
+    } else {
+      setChartData([]); // Atur chartData ke array kosong jika tidak ada data
+    }
   }, [expenseData, incomeData]);
 
   const handleGenerateClick = () => {
@@ -280,7 +303,7 @@ const Recap = ({ title }) => {
           </Flex>
         </Flex>
       </CardHeader>
-      {isGenerated && (
+      {isGenerated && incomeData.length > 0 && expenseData.length > 0 ? (
         <CardBody>
           <Box w="100%">
             <TransactionsOverview
@@ -352,6 +375,16 @@ const Recap = ({ title }) => {
             </Table>
           </Box>
         </CardBody>
+      ) : (
+        <Text
+          color={textColor}
+          fontSize="lg"
+          mt="65px"
+          mb="73px"
+          textAlign="center"
+        >
+          Loading or No Data Available
+        </Text>
       )}
     </Card>
   );

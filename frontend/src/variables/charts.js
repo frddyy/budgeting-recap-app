@@ -162,3 +162,4 @@ export const lineChartOptions = {
   },
   colors: ["#4FD1C5", "#2D3748"],
 };
+

@@ -24,6 +24,21 @@ import Cookies from "js-cookie";
 import TransactionsOverview from "./components/TransactionsOverview";
 import LineChart from "components/Charts/LineChart";
 
+// Fungsi untuk mengagregasi data berdasarkan tanggal
+const aggregateDataByDate = (data) => {
+  const groupedData = data.reduce((acc, item) => {
+    const date = new Date(item.date).toDateString();
+    if (!acc[date]) {
+      acc[date] = { date, amount: 0 };
+    }
+    acc[date].amount += parseFloat(item.amount);
+    return acc;
+  }, {});
+  const aggregatedData = Object.values(groupedData);
+  console.log("Aggregated Data:", aggregatedData); // Debug
+  return aggregatedData;
+};
+
 // Opsi untuk konfigurasi grafik (dapat disesuaikan)
 export const lineChartOptions = {
   chart: {
@@ -72,7 +87,7 @@ export const lineChartOptions = {
     },
   },
   legend: {
-    show: true,
+    show: false,
   },
   grid: {
     strokeDashArray: 5,
@@ -83,14 +98,16 @@ export const lineChartOptions = {
       shade: "light",
       type: "vertical",
       shadeIntensity: 0.5,
+      gradientToColors: undefined, // optional, if not defined - uses the shades of same color in series
       inverseColors: true,
       opacityFrom: 0.8,
       opacityTo: 0,
+      stops: [],
     },
+    colors: ["#4FD1C5", "#2D3748"],
   },
   colors: ["#4FD1C5", "#2D3748"],
 };
-
 
 const Report = ({ title }) => {
   const textColor = useColorModeValue("gray.700", "white");
@@ -105,12 +122,48 @@ const Report = ({ title }) => {
   const [chartData, setChartData] = useState([]);
   const [isGenerated, setIsGenerated] = useState(false);
 
+  // Tambahkan state untuk menyimpan semua transaksi
+  const [allTransactions, setAllTransactions] = useState([]);
+  // Define availableMonths in the component's state
+  const [availableMonths, setAvailableMonths] = useState([]);
+
+  // useEffect untuk mengambil semua transaksi dan menentukan bulan yang tersedia
   useEffect(() => {
     const storedUsername = Cookies.get("username");
-    if (storedUsername && selectedMonth) {
-      fetchReport(storedUsername, selectedMonth);
+    if (storedUsername) {
+      // Ambil semua transaksi tanpa filter bulan
+      const fetchAllTransactions = async () => {
+        try {
+          const expenseResponse = await axios.get(
+            `http://localhost:5000/expenses/${storedUsername}`
+          );
+          const incomeResponse = await axios.get(
+            `http://localhost:5000/incomes/${storedUsername}`
+          );
+
+          // Gabungkan transaksi dan simpan di state
+          setAllTransactions([
+            ...expenseResponse.data.expenses,
+            ...incomeResponse.data.incomes,
+          ]);
+        } catch (error) {
+          console.error("Error fetching all transactions:", error);
+        }
+      };
+
+      fetchAllTransactions();
     }
-  }, [selectedMonth]);
+  }, []);
+
+  // useEffect untuk menentukan bulan yang tersedia berdasarkan semua transaksi
+  useEffect(() => {
+    const months = new Set(
+      allTransactions.map((transaction) =>
+        new Date(transaction.date).toLocaleString("default", { month: "long" })
+      )
+    );
+    setAvailableMonths(Array.from(months));
+  }, [allTransactions]);
 
   const calculateMonthDates = (month) => {
     const year = new Date().getFullYear();
@@ -147,35 +200,48 @@ const Report = ({ title }) => {
       if (incomeResponse && incomeResponse.data) {
         setIncomeData(incomeResponse.data.incomes);
       }
+
+      // After fetching, use the fetched data to determine available months
+      const expenseMonths = expenseResponse.data.expenses.map((item) =>
+        new Date(item.date).toLocaleString("default", { month: "long" })
+      );
+      const incomeMonths = incomeResponse.data.incomes.map((item) =>
+        new Date(item.date).toLocaleString("default", { month: "long" })
+      );
+
+      // Combine and deduplicate the months from both expenses and incomes
+      setAvailableMonths(
+        Array.from(new Set([...expenseMonths, ...incomeMonths]))
+      );
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
 
   useEffect(() => {
-    const defaultChartData = [{ x: new Date().getTime(), y: 0 }];
-  
-    const incomeChartData = incomeData.length > 0
-      ? incomeData.map((item) => ({
-          x: new Date(item.date).getTime(),
-          y: parseFloat(item.amount),
-        }))
-      : defaultChartData;
-  
-    const expenseChartData = expenseData.length > 0
-      ? expenseData.map((item) => ({
-          x: new Date(item.date).getTime(),
-          y: parseFloat(item.amount),
-        }))
-      : defaultChartData;
-  
-    setChartData([
-      { name: "Income", data: incomeChartData, color: "#3EBD93" },
-      { name: "Expense", data: expenseChartData, color: "#F5587B" }
-    ]);
+    if (incomeData.length > 0 && expenseData.length > 0) {
+      const aggregatedIncomeData = aggregateDataByDate(incomeData).sort(
+        (a, b) => new Date(a.date) - new Date(b.date)
+      );
+      const aggregatedExpenseData = aggregateDataByDate(expenseData).sort(
+        (a, b) => new Date(a.date) - new Date(b.date)
+      );
+
+      const incomeChartData = aggregatedIncomeData.map((item) => ({
+        x: item.date,
+        y: item.amount,
+      }));
+      const expenseChartData = aggregatedExpenseData.map((item) => ({
+        x: item.date,
+        y: item.amount,
+      }));
+
+      setChartData([
+        { name: "Income", data: incomeChartData, color: "#3EBD93" },
+        { name: "Expense", data: expenseChartData, color: "#F5587B" },
+      ]);
+    }
   }, [expenseData, incomeData]);
-  
-  
 
   const handleGenerateClick = () => {
     const username = Cookies.get("username");
@@ -215,18 +281,11 @@ const Report = ({ title }) => {
                   }}
                   placeholder="Select a month"
                 >
-                  <option value="1">January</option>
-                  <option value="2">February</option>
-                  <option value="3">March</option>
-                  <option value="4">April</option>
-                  <option value="5">May</option>
-                  <option value="6">June</option>
-                  <option value="7">July</option>
-                  <option value="8">August</option>
-                  <option value="9">September</option>
-                  <option value="10">October</option>
-                  <option value="11">November</option>
-                  <option value="12">December</option>
+                  {availableMonths.map((month) => (
+                    <option key={month} value={month}>
+                      {month}
+                    </option>
+                  ))}
                 </Select>
               </FormControl>
             </Flex>
@@ -245,7 +304,7 @@ const Report = ({ title }) => {
           </Flex>
         </Flex>
       </CardHeader>
-      {isGenerated && (
+      {isGenerated && incomeData.length > 0 && expenseData.length > 0 ? (
         <CardBody>
           <Box w="100%">
             <TransactionsOverview
@@ -315,6 +374,16 @@ const Report = ({ title }) => {
             </Table>
           </Box>
         </CardBody>
+      ) : (
+        <Text
+          color={textColor}
+          fontSize="lg"
+          mt="65px"
+          mb="73px"
+          textAlign="center"
+        >
+          Loading or No Data Available
+        </Text>
       )}
     </Card>
   );
