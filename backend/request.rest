@@ -111,10 +111,10 @@ DELETE http://localhost:5000/incomes/junet/2
 
 //////////////////////// CRUD BUDGET ////////////////////////////
 ###
-GET  http://localhost:5000/budgets/rezaanta
+GET  http://localhost:5000/budgets/ferdyfauzan
 
 ###
-GET  http://localhost:5000/budgets/ferdy/Transport
+GET  http://localhost:5000/budgets/ferdyfauzan/Tagihan
 
 ###
 POST http://localhost:5000/budgets

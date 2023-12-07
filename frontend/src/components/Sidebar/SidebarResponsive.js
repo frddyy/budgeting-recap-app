@@ -46,6 +46,9 @@ function SidebarResponsive(props) {
       if (prop.redirect) {
         return null;
       }
+      if (prop.hidden) {
+        return null; // Jika prop.hidden adalah true, maka tidak render item ini
+      }
       if (prop.category) {
         var st = {};
         st[prop["state"]] = !state[prop.state];

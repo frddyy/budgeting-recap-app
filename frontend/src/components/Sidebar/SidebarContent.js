@@ -38,6 +38,7 @@ const SidebarContent = ({ logoText, routes }) => {
   const activeRoute = (routeName) => {
     return location.pathname === routeName ? "active" : "";
   };
+  
   const createLinks = (routes) => {
     // Chakra Color Mode
     const activeBg = useColorModeValue("white", "gray.700");
