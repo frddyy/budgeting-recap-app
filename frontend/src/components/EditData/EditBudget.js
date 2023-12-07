@@ -164,7 +164,7 @@ const EditBudget = ({
                 size="md"
                 name="date"
                 value={budget.date}
-                type="datetime-local"
+                type="date"
                 onChange={handleInputChange}
                 style={{
                   borderRadius: "13px", // Adjust the border-radius to your preference

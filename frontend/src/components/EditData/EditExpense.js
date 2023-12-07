@@ -124,6 +124,7 @@ const EditExpense = ({ isOpen, onClose, onSuccess, expenseData }) => {
         `http://localhost:5000/expenses/${username}/${expense.id}`,
         {
           ...expense,
+          date: new Date(expense.date).toISOString(),
           amount: parseFloat(expense.amount), // Ensure amount is an integer
           wallet_id: parseInt(expense.wallet_id), // Ensure amount is an integer
           budget_id: parseInt(expense.budget_id), // Ensure amount is an integer
