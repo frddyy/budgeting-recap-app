@@ -188,21 +188,23 @@ export default function Dashboard() {
         if (isValidDate(transactionDate)) {
           const dateTimestamp = transactionDate.getTime();
           if (transaction.type === "income") {
-            incomeData[dateTimestamp] = (incomeData[dateTimestamp] || 0) + transaction.amount;
+            incomeData[dateTimestamp] =
+              (incomeData[dateTimestamp] || 0) + transaction.amount;
           } else if (transaction.type === "expense") {
-            expenseData[dateTimestamp] = (expenseData[dateTimestamp] || 0) + transaction.amount;
+            expenseData[dateTimestamp] =
+              (expenseData[dateTimestamp] || 0) + transaction.amount;
           }
         }
       });
     });
 
-    const incomeSeries = Object.entries(incomeData).map(
-      ([timestamp, total]) => ({ x: parseInt(timestamp), y: total })
-    );
+    const incomeSeries = Object.entries(
+      incomeData
+    ).map(([timestamp, total]) => ({ x: parseInt(timestamp), y: total }));
 
-    const expenseSeries = Object.entries(expenseData).map(
-      ([timestamp, total]) => ({ x: parseInt(timestamp), y: total })
-    );
+    const expenseSeries = Object.entries(
+      expenseData
+    ).map(([timestamp, total]) => ({ x: parseInt(timestamp), y: total }));
 
     return [
       { name: "Income", data: incomeSeries, color: "#4FD1C5" },
@@ -212,24 +214,32 @@ export default function Dashboard() {
 
   const fetchTransactions = async (username) => {
     try {
-      const incomesResponse = await axios.get(`http://localhost:5000/incomes/${username}`);
-      const expensesResponse = await axios.get(`http://localhost:5000/expenses/${username}`);
+      const incomesResponse = await axios.get(
+        `http://localhost:5000/incomes/${username}`
+      );
+      const expensesResponse = await axios.get(
+        `http://localhost:5000/expenses/${username}`
+      );
 
       if (incomesResponse.data && expensesResponse.data) {
-        const incomes = (incomesResponse.data.incomes || []).map(item => ({
+        const incomes = (incomesResponse.data.incomes || []).map((item) => ({
           ...item,
           type: "income",
         }));
-        const expenses = (expensesResponse.data.expenses || []).map(item => ({
+        const expenses = (expensesResponse.data.expenses || []).map((item) => ({
           ...item,
           type: "expense",
         }));
 
         const combinedTransactions = [...incomes, ...expenses];
         if (combinedTransactions.length > 0) {
-          combinedTransactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+          combinedTransactions.sort(
+            (a, b) => new Date(b.date) - new Date(a.date)
+          );
           const latestTransactions = combinedTransactions.slice(0, 7);
-          const groupedTransactions = groupTransactionsByDate(latestTransactions);
+          const groupedTransactions = groupTransactionsByDate(
+            latestTransactions
+          );
           setTransactions(groupedTransactions);
           const chartData = processChartData(groupedTransactions);
           setChartData(chartData);
@@ -307,12 +317,18 @@ export default function Dashboard() {
           percentage={23}
           chart={<PieChart />}
         />
-        {chartData && chartData.length > 0 && (
-          <RecentTransactionsOverview
-            title={"Recent Transactions Overview"}
-            chart={<LineChart data={chartData} />}
-          />
-        )}
+        <RecentTransactionsOverview
+          title={"Recent Transactions Overview"}
+          chart={
+            chartData && chartData.length > 0 ? (
+              <LineChart data={chartData} />
+            ) : (
+              <div style={{ marginTop: "115px", textAlign: "center" }}>
+                No Data Transactions Available
+              </div> // Anda bisa mengganti teks ini sesuai kebutuhan
+            )
+          }
+        />
       </Grid>
       <Grid
         templateColumns={{ sm: "1fr", md: "1fr", lg: "1fr" }}
@@ -320,6 +336,7 @@ export default function Dashboard() {
         gap="25px"
       >
         <Transactions transactions={transactions} />
+
         {/* <Projects
           title={"Projects"}
           amount={30}

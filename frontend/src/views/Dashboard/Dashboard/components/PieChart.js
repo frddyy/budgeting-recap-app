@@ -195,8 +195,8 @@ export default function Conversion(props) {
         w="100%"
         mb="8px"
       >
-        <Text color={textColor} fontSize="md" fontWeight="600" mb="4px">
-          Your Budgeting
+        <Text color={textColor} fontSize="lg" fontWeight="600" mb="4px">
+          Your Category Budgeting
         </Text>
         <Select
           fontSize="sm"
@@ -224,13 +224,13 @@ export default function Conversion(props) {
             chartOptions={pieChartOptions}
           />
         ) : (
-          <Text color={textColor} fontSize="lg" mt="65px" mb="73px">
-            Select data Budgeting
+          <Text color={textColor} fontSize="md" mt="65px" mb="73px">
+            Select Monthly Category Budgeting
           </Text>
         )
       ) : (
-        <Text color={textColor} fontSize="lg" mt="65px" mb="73px">
-          Select data Budgeting
+        <Text color={textColor} fontSize="md" mt="65px" mb="73px">
+          Select Monthly Category Budgeting
         </Text>
       )}
     </Card>

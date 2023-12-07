@@ -13,8 +13,9 @@ const Transactions = ({ transactions }) => {
   // Chakra color mode
   const textColor = useColorModeValue("gray.700", "white");
   console.log(transactions);
+  const hasTransactions = transactions && Object.keys(transactions).length > 0;
 
-  return (
+  return hasTransactions ? (
     <Card my="24px">
       <CardHeader mb="12px">
         <Flex direction="column" w="100%">
@@ -74,6 +75,8 @@ const Transactions = ({ transactions }) => {
         </Flex>
       </CardBody>
     </Card>
+  ) : (
+    <Text color={textColor} mt="24px" textAlign="center"></Text>
   );
 };
 

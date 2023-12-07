@@ -60,18 +60,20 @@ const formatAmount = (amount) => {
 // Fungsi untuk mengagregasi data berdasarkan tanggal
 const aggregateDataByDate = (data) => {
   const groupedData = data.reduce((acc, item) => {
-    const date = new Date(item.date).toDateString();
-    if (!acc[date]) {
-      acc[date] = { date, amount: 0 };
+    const date = new Date(item.date);
+    if (isNaN(date.getTime())) {
+      // Cek apakah tanggal valid
+      return acc;
     }
-    acc[date].amount += parseFloat(item.amount);
+    const dateString = date.toDateString();
+    if (!acc[dateString]) {
+      acc[dateString] = { date: dateString, amount: 0 };
+    }
+    acc[dateString].amount += parseFloat(item.amount);
     return acc;
   }, {});
-  const aggregatedData = Object.values(groupedData);
-  console.log("Aggregated Data:", aggregatedData); // Debug
-  return aggregatedData;
+  return Object.values(groupedData);
 };
-
 
 // Opsi untuk konfigurasi grafik (dapat disesuaikan)
 export const lineChartOptions = {
@@ -163,9 +165,9 @@ const Recap = ({ title }) => {
   useEffect(() => {
     const storedUsername = Cookies.get("username");
     if (storedUsername) {
-      fetchRecap(storedUsername);
+      fetchRecap(storedUsername, startDate, endDate);
     }
-  }, []);
+  }, [startDate, endDate]);
 
   const fetchRecap = async (username, startDate, endDate) => {
     try {
@@ -201,36 +203,38 @@ const Recap = ({ title }) => {
 
   useEffect(() => {
     // Agregasi data
-    const aggregatedExpenseData = aggregateDataByDate(expenseData).sort(
-      (a, b) => new Date(a.date) - new Date(b.date)
-    );
-    const aggregatedIncomeData = aggregateDataByDate(incomeData).sort(
-      (a, b) => new Date(a.date) - new Date(b.date)
-    );
-  
-    // Siapkan data untuk grafik
-    const modifiedChartData = [
-      {
-        name: "Income",
-        data: aggregatedIncomeData.map((item) => ({
-          x: new Date(item.date).getTime(),
-          y: item.amount,
-        })),
-        color: "#3EBD93",
-      },
-      {
-        name: "Expense",
-        data: aggregatedExpenseData.map((item) => ({
-          x: new Date(item.date).getTime(),
-          y: item.amount,
-        })),
-        color: "#F5587B",
-      },
-    ];
-  
-    setChartData(modifiedChartData);
+    if (expenseData.length > 0 || incomeData.length > 0) {
+      const aggregatedExpenseData = aggregateDataByDate(expenseData).sort(
+        (a, b) => new Date(a.date) - new Date(b.date)
+      );
+      const aggregatedIncomeData = aggregateDataByDate(incomeData).sort(
+        (a, b) => new Date(a.date) - new Date(b.date)
+      );
+      // Siapkan data untuk grafik
+      const modifiedChartData = [
+        {
+          name: "Income",
+          data: aggregatedIncomeData.map((item) => ({
+            x: new Date(item.date).getTime(),
+            y: item.amount,
+          })),
+          color: "#3EBD93",
+        },
+        {
+          name: "Expense",
+          data: aggregatedExpenseData.map((item) => ({
+            x: new Date(item.date).getTime(),
+            y: item.amount,
+          })),
+          color: "#F5587B",
+        },
+      ];
+
+      setChartData(modifiedChartData);
+    } else {
+      setChartData([]); // Atur chartData ke array kosong jika tidak ada data
+    }
   }, [expenseData, incomeData]);
-  
 
   const handleGenerateClick = () => {
     const username = Cookies.get("username");
@@ -299,7 +303,7 @@ const Recap = ({ title }) => {
           </Flex>
         </Flex>
       </CardHeader>
-      {isGenerated && (
+      {isGenerated && incomeData.length > 0 && expenseData.length > 0 ? (
         <CardBody>
           <Box w="100%">
             <TransactionsOverview
@@ -371,6 +375,16 @@ const Recap = ({ title }) => {
             </Table>
           </Box>
         </CardBody>
+      ) : (
+        <Text
+          color={textColor}
+          fontSize="lg"
+          mt="65px"
+          mb="73px"
+          textAlign="center"
+        >
+          Loading or No Data Available
+        </Text>
       )}
     </Card>
   );

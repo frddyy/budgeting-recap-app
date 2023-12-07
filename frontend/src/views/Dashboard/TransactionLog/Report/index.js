@@ -375,7 +375,13 @@ const Report = ({ title }) => {
           </Box>
         </CardBody>
       ) : (
-        <Text color={textColor} fontSize="lg" mt="65px" mb="73px">
+        <Text
+          color={textColor}
+          fontSize="lg"
+          mt="65px"
+          mb="73px"
+          textAlign="center"
+        >
           Loading or No Data Available
         </Text>
       )}

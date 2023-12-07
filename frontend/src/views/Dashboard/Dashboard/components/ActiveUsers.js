@@ -20,6 +20,7 @@ import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { FaSackDollar as BudgetIcon } from "react-icons/fa6";
 
 import ChartStatistics from "./ChartStatistics";
 
@@ -122,6 +123,12 @@ const ActiveUsers = ({ title, percentage, chart }) => {
     return ((amountNow / totalAmount) * 100).toFixed(2);
   };
 
+  useEffect(() => {
+    if (categoryData.length === 0) {
+      setSelectedCategory("");
+    }
+  }, [categoryData]);
+
   return (
     <Card p="16px">
       <CardBody>
@@ -136,28 +143,39 @@ const ActiveUsers = ({ title, percentage, chart }) => {
             >
               {title}
             </Text>
-            <Select
-              placeholder="Select category"
-              onChange={handleCategoryChange}
-            >
-              {categoryData.map((category, index) => (
-                <option value={category.name} key={index}>
-                  {category.name}
-                </option>
-              ))}
-            </Select>
+            {categoryData.length > 0 ? (
+              <Select
+                placeholder="Select category"
+                onChange={handleCategoryChange}
+                value={selectedCategory}
+              >
+                {categoryData.map((category, index) => (
+                  <option value={category.name} key={index}>
+                    {category.name}
+                  </option>
+                ))}
+              </Select>
+            ) : (
+              <Text textAlign="center">No data category budget</Text>
+            )}
           </Flex>
-          <SimpleGrid gap={{ sm: "12px", md: "15px", xl:"15px" }} columns={4} m={"10px"}>
-          {specificCategoryData &&
-            specificCategoryData.map((data, index) => (
-              <ChartStatistics
-                key={index}
-                title={data.title}
-                amount={formatAmount(data.amount_now)}
-                percentage={calculatePercentage(data.amount_now, data.amount)}
-                icon={<StatsIcon h={"15px"} w={"15px"} color={iconBoxInside} />}
-              />
-            ))}
+          <SimpleGrid
+            gap={{ sm: "12px", md: "15px", xl: "15px" }}
+            columns={4}
+            m={"10px"}
+          >
+            {specificCategoryData &&
+              specificCategoryData.map((data, index) => (
+                <ChartStatistics
+                  key={index}
+                  title={data.title}
+                  amount={formatAmount(data.amount_now)}
+                  percentage={calculatePercentage(data.amount_now, data.amount)}
+                  icon={
+                    <BudgetIcon h={"15px"} w={"15px"} color={iconBoxInside} />
+                  }
+                />
+              ))}
           </SimpleGrid>
         </Flex>
       </CardBody>
