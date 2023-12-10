@@ -33,7 +33,7 @@ export default function Conversion(props) {
       try {
         if (username) {
           const response = await axios.get(
-            `http://localhost:5000/budgets/${username}`
+            `https://api-spendwise.agilearn.id/budgets/${username}`
           );
           const data = response.data.budgets || [];
           setBudgetData(data);

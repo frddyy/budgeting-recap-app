@@ -48,7 +48,7 @@ const MiniStatistics = ({
       try {
         if (username) {
           const response = await axios.get(
-            `http://localhost:5000/wallets/${username}`
+            `https://api-spendwise.agilearn.id/wallets/${username}`
           );
           const wallets = response.data.data || [];
           setWalletData(wallets);
@@ -72,7 +72,7 @@ const MiniStatistics = ({
       try {
         if (username) {
           const response = await axios.get(
-            `http://localhost:5000/incomes/${username}`
+            `https://api-spendwise.agilearn.id/incomes/${username}`
           );
           console.log(response.data); // Tambahkan ini untuk memeriksa respon
 
@@ -100,7 +100,7 @@ const MiniStatistics = ({
       try {
         if (username) {
           const response = await axios.get(
-            `http://localhost:5000/expenses/${username}`
+            `https://api-spendwise.agilearn.id/expenses/${username}`
           );
           console.log(response.data); // Tambahkan ini untuk memeriksa respon
 

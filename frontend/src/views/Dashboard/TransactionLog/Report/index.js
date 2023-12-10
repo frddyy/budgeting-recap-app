@@ -135,10 +135,10 @@ const Report = ({ title }) => {
       const fetchAllTransactions = async () => {
         try {
           const expenseResponse = await axios.get(
-            `http://localhost:5000/expenses/${storedUsername}`
+            `https://api-spendwise.agilearn.id/expenses/${storedUsername}`
           );
           const incomeResponse = await axios.get(
-            `http://localhost:5000/incomes/${storedUsername}`
+            `https://api-spendwise.agilearn.id/incomes/${storedUsername}`
           );
 
           // Gabungkan transaksi dan simpan di state

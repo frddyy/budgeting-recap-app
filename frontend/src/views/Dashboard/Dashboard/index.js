@@ -145,7 +145,7 @@ export default function Dashboard() {
       try {
         if (username) {
           const response = await axios.get(
-            `http://localhost:5000/wallets/${username}`
+            `https://api-spendwise.agilearn.id/wallets/${username}`
           );
           const wallets = response.data.data || [];
           setWalletData(wallets);
@@ -215,10 +215,10 @@ export default function Dashboard() {
   const fetchTransactions = async (username) => {
     try {
       const incomesResponse = await axios.get(
-        `http://localhost:5000/incomes/${username}`
+        `https://api-spendwise.agilearn.id/incomes/${username}`
       );
       const expensesResponse = await axios.get(
-        `http://localhost:5000/expenses/${username}`
+        `https://api-spendwise.agilearn.id/expenses/${username}`
       );
 
       if (incomesResponse.data && expensesResponse.data) {

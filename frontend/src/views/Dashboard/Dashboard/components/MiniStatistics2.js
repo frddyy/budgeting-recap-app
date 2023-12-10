@@ -60,7 +60,7 @@ const MiniStatistics = ({
       try {
         if (username) {
           const response = await axios.get(
-            `http://localhost:5000/wallets/${username}`
+            `https://api-spendwise.agilearn.id/wallets/${username}`
           );
           const wallets = response.data.data || [];
           setWalletData(wallets);

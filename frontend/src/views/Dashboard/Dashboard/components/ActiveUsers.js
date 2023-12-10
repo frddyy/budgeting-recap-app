@@ -72,7 +72,7 @@ const ActiveUsers = ({ title, percentage, chart }) => {
       try {
         if (username) {
           const response = await axios.get(
-            `http://localhost:5000/categories/${username}`
+            `https://api-spendwise.agilearn.id/categories/${username}`
           );
           const categories = response.data.data;
           if (categories && Array.isArray(categories)) {
@@ -95,7 +95,7 @@ const ActiveUsers = ({ title, percentage, chart }) => {
         if (username && selectedCategory) {
           const categoryName = encodeURIComponent(selectedCategory);
           const response = await axios.get(
-            `http://localhost:5000/budgets/${username}/${categoryName}`
+            `https://api-spendwise.agilearn.id/budgets/${username}/${categoryName}`
           );
           const categoryData = response.data.budgets; // Access the budgets key
           console.log("data api", response);
