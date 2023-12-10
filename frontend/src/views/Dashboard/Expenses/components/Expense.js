@@ -73,6 +73,12 @@ const Expenses = ({ title }) => {
         (expense) => expense.id !== expense_id
       );
       setExpenseData(updatedExpenseData);
+      console.log("Expense deleted successfully");
+      Swal.fire(
+        'Deleted!',
+        'Your expense has been deleted.',
+        'success'
+      );
     } catch (error) {
       console.error("Error deleting expense:", error);
       console.error("Detailed error response:", error.response); // Log the detailed error response

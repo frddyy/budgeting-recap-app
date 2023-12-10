@@ -74,6 +74,12 @@ const Incomes = ({ title, onTotalAmountChange }) => {
         (income) => income.id !== income_id
       );
       setIncomeData(updatedIncomeData);
+      console.log("Income deleted successfully");
+      Swal.fire(
+        'Deleted!',
+        'Your income has been deleted.',
+        'success'
+      );
     } catch (error) {
       console.error("Error deleting income:", error);
       console.error("Detailed error response:", error.response); // Log the detailed error response
